@@ -1,0 +1,8 @@
+{
+	"name": "soderlind/super-admin-all-sites-menu",
+	"description": "For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.",
+	"type": "wordpress-plugin",
+	"homepage": "https://github.com/soderlind/super-admin-all-sites-menu",
+	"license": "GPL-2.0-or-later",
+	"require": {}
+}
