@@ -57,7 +57,7 @@ add_action(
 			}
 		);
 
-		add_action( 'admin_bar_menu', __NAMESPACE__ . '\\super_admin_all_sites_menu' );
+		add_action( 'admin_bar_menu', __NAMESPACE__ . '\\super_admin_all_sites_menu', 30 );
 	}
 );
 
@@ -163,16 +163,22 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 	);
 
 	$sites = \get_sites();
-	foreach ( (array) $sites as $site ) {
 
-		$blavatar  = '<div class="blavatar"></div>';
+	foreach ( $sites as $site ) {
+
+		$blogid    = $site->blog_id;
 		$blogname  = $site->__get( 'blogname' );
-		$menu_id   = 'blog-' . $site->blog_id;
+		$menu_id   = 'blog-' . $blogid;
+		$blavatar  = get_blavatar( $blogid );
 		$siteurl   = $site->__get( 'siteurl' );
 		$admin_url = $siteurl . '/wp-admin';
 
 		if ( ! $blogname ) {
 			$blogname = preg_replace( '#^(https?://)?(www.)?#', '', $siteurl );
+		}
+
+		if ( 2 == (int) $site->public ) {
+			$blogname = '<span style="color:#FF1493">' . $blogname . '</span>';
 		}
 
 		$wp_admin_bar->add_menu(
@@ -224,4 +230,20 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 			]
 		);
 	}
+}
+
+
+function get_blavatar( $blogid ) : string {
+
+	if ( has_site_icon() ) {
+			$blavatar = sprintf(
+				'<img class="blavatar" src="%s" srcset="%s 2x" alt="" width="16" height="16" />',
+				esc_url( get_site_icon_url( 16, '', $blogid ) ),
+				esc_url( get_site_icon_url( 32 ), '', $blogid )
+			);
+	} else {
+		$blavatar = '<div class="blavatar"></div>';
+	}
+
+	return $blavatar;
 }
