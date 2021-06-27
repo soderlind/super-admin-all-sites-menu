@@ -13,7 +13,15 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 ## Screenshot
 <img src="assets/screenshot.jpg">
 
+## Prerequisite
+
+WordPress Multisite
+
 ## Install
+
+- [Download the plugin](https://github.com/soderlind/super-admin-all-sites-menu/archive/refs/heads/main.zip)
+- [Upload and install it](https://wordpress.org/support/article/managing-plugins/#manual-upload-via-wordpress-admin)
+- Network activate the plugin.
 
 You knw the drill, download, install and network activate.
 
