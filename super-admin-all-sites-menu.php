@@ -79,7 +79,7 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 	$wp_admin_bar->add_menu(
 		[
 			'id'    => 'my-sites',
-			'title' => __( 'All Sites' ),
+			'title' => __( 'All Sites', 'super-admin-sites-menu' ),
 			'href'  => $my_sites_url,
 		]
 	);
@@ -177,7 +177,7 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 			$blogname = preg_replace( '#^(https?://)?(www.)?#', '', $siteurl );
 		}
 
-		// The %site->public value is set to 2, by the Restricted Site Access plugin, when a site has restricted access.
+		// The $site->public value is set to 2, by the Restricted Site Access plugin, when a site has restricted access.
 		if ( 2 == (int) $site->public ) {
 			$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
 		}
