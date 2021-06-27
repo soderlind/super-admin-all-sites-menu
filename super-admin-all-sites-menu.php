@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.0.0
+ * Version:     1.0.1
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -57,7 +57,7 @@ add_action(
 			}
 		);
 
-		add_action( 'admin_bar_menu', __NAMESPACE__ . '\\super_admin_all_sites_menu', 30 );
+		add_action( 'admin_bar_menu', __NAMESPACE__ . '\\super_admin_all_sites_menu', 99 );
 	}
 );
 
@@ -70,11 +70,11 @@ add_action(
  */
 function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 
-	if ( $wp_admin_bar->user->active_blog ) {
-		$my_sites_url = \get_admin_url( $wp_admin_bar->user->active_blog->blog_id, 'my-sites.php' );
-	} else {
+	// if ( $wp_admin_bar->user->active_blog ) {
+	// $my_sites_url = \get_admin_url( $wp_admin_bar->user->active_blog->blog_id, 'my-sites.php' );
+	// } else {
 		$my_sites_url = \admin_url( '/my-sites.php' );
-	}
+	// }
 
 	$wp_admin_bar->add_menu(
 		[
@@ -157,7 +157,7 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 			'parent' => 'my-sites',
 			'id'     => 'my-sites-list',
 			'meta'   => [
-				'class' => \is_super_admin() ? 'ab-sub-secondary' : '',
+				'class' => 'ab-sub-secondary',
 			],
 		]
 	);
@@ -169,7 +169,7 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 		$blogid    = $site->blog_id;
 		$blogname  = $site->__get( 'blogname' );
 		$menu_id   = 'blog-' . $blogid;
-		$blavatar  = get_blavatar( $blogid );
+		$blavatar  = '<div class="blavatar"></div>';
 		$siteurl   = $site->__get( 'siteurl' );
 		$admin_url = $siteurl . '/wp-admin';
 
@@ -177,8 +177,9 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 			$blogname = preg_replace( '#^(https?://)?(www.)?#', '', $siteurl );
 		}
 
+		// The %site->public value is set to 2, by the Restricted Site Access plugin, when a site has restricted access.
 		if ( 2 == (int) $site->public ) {
-			$blogname = '<span style="color:#FF1493">' . $blogname . '</span>';
+			$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
 		}
 
 		$wp_admin_bar->add_menu(
@@ -208,7 +209,7 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 		$wp_admin_bar->add_menu(
 			[
 				'parent' => $menu_id,
-				'id'     => $menu_id . '-x',
+				'id'     => $menu_id . '-o',
 				'title'  => \get_post_type_object( 'page' )->labels->new_item,
 				'href'   => $admin_url . '/post-new.php?post_type=page',
 			]
@@ -230,20 +231,4 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 			]
 		);
 	}
-}
-
-
-function get_blavatar( $blogid ) : string {
-
-	if ( has_site_icon() ) {
-			$blavatar = sprintf(
-				'<img class="blavatar" src="%s" srcset="%s 2x" alt="" width="16" height="16" />',
-				esc_url( get_site_icon_url( 16, '', $blogid ) ),
-				esc_url( get_site_icon_url( 32 ), '', $blogid )
-			);
-	} else {
-		$blavatar = '<div class="blavatar"></div>';
-	}
-
-	return $blavatar;
 }
