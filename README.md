@@ -8,7 +8,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 - List all subsites, retrieved using `get_sites()`. WP Admin Bar My Sites only list sites you're a local admin on.
 - Mark (red icon) sites that has [restricted site access](https://github.com/10up/restricted-site-access).
 - It's compatible with [My Sites Search](https://github.com/trepmal/my-sites-search).
-- Add 'New page' submenu per site.
+- Add 'New Page' submenu per site.
 
 ## Screenshot
 <img src="assets/screenshot.jpg">
