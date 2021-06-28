@@ -20,9 +20,7 @@ WordPress Multisite
 ## Install
 
 - [Download the plugin](https://github.com/soderlind/super-admin-all-sites-menu/archive/refs/heads/main.zip)
-- [Upload and activate the plugin](https://wordpress.org/support/article/managing-plugins/#manual-upload-via-wordpress-admin)
-- Network activate the plugin.
-
+- [Upload and network activate the plugin](https://wordpress.org/support/article/managing-plugins/#manual-upload-via-wordpress-admin)
 
 ## Copyright and License
 
