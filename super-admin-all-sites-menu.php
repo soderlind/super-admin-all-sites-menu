@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.0.2
+ * Version:     1.0.3
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -28,16 +28,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	wp_die();
 }
 
+
 /**
- * Fires as an admin screen or script is being initialized.
+ * De-register the native WP Admin Bar My Sites function.
  */
 add_action(
-	'admin_init',
+	'add_admin_bar_menus',
 	function() : void {
-
-		if ( ! \is_user_logged_in() ) {
-			return;
-		}
 
 		if ( ! \is_multisite() ) {
 			return;
@@ -46,20 +43,12 @@ add_action(
 		if ( ! \is_super_admin() ) {
 			return;
 		}
-
-		/**
-		 * De-register the native WP Admin Bar My Sites function.
-		 */
-		add_action(
-			'add_admin_bar_menus',
-			function() : void {
-				remove_action( 'admin_bar_menu', 'wp_admin_bar_my_sites_menu', 20 );
-			}
-		);
-
-		add_action( 'admin_bar_menu', __NAMESPACE__ . '\\super_admin_all_sites_menu', 99 );
+		remove_action( 'admin_bar_menu', 'wp_admin_bar_my_sites_menu', 20 );
 	}
 );
+
+add_action( 'admin_bar_menu', __NAMESPACE__ . '\\super_admin_all_sites_menu', 25 );
+
 
 /**
  * Add the "All Sites/[Site Name]" menu and all submenus, listing all subsites.
@@ -69,6 +58,14 @@ add_action(
  * @param \WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance, passed by reference.
  */
 function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
+
+	if ( ! \is_multisite() ) {
+		return;
+	}
+
+	if ( ! \is_super_admin() ) {
+		return;
+	}
 
 	$my_sites_url = \admin_url( '/my-sites.php' );
 	$wp_admin_bar->add_menu(
