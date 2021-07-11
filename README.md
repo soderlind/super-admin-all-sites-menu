@@ -14,8 +14,8 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
    - 'Plugins'
    - 'Settings'
 
-## Screenshot
-<img src="assets/screenshot.jpg">
+## Demo
+<img src="assets/all-sites.gif">
 
 ## Prerequisite
 
