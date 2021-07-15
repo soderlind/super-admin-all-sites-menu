@@ -1,0 +1,33 @@
+@media screen and (min-width: 783px) {
+	 #wp-admin-bar-my-sites > .ab-sub-wrapper {
+		 overflow-y: auto;
+		 margin-top: 32px;
+		 height: calc(100vh - 32px);
+		 -ms-overflow-style: none;
+		 scrollbar-width: none;
+	}
+	 #wp-admin-bar-my-sites > .ab-sub-wrapper::-webkit-scrollbar {
+		 display: none;
+	}
+	 #wp-admin-bar-my-sites > .ab-sub-wrapper #wp-admin-bar-network-admin-default {
+		 position: fixed;
+		 background: #32373c;
+	}
+	 #wp-admin-bar-my-sites > .ab-sub-wrapper ul#wp-admin-bar-my-sites-list {
+		 background-color: #464b50;
+		 padding-bottom: 32px !important;
+	}
+	 #wp-admin-bar-my-sites > .ab-sub-wrapper ul#wp-admin-bar-my-sites-list li.menupop {
+		 position: relative;
+	}
+	 #wp-admin-bar-my-sites > .ab-sub-wrapper ul#wp-admin-bar-my-sites-list li.menupop div.ab-sub-wrapper ul.ab-submenu {
+		 position: fixed;
+		 background-color: #464b50;
+	}
+	 #wp-admin-bar-my-sites > .ab-sub-wrapper.site_single {
+		 height: auto;
+	}
+	 #wp-admin-bar-my-sites > .ab-sub-wrapper.site_single ul#wp-admin-bar-my-sites-list {
+		 padding-bottom: 6px !important;
+	}
+}
