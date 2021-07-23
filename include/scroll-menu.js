@@ -1,12 +1,13 @@
-var maxHeight = 10;
+var maxHeight = 400;
 
 jQuery(function ($) {
 
-	$("#wp-admin-bar-my-sites-list > li").hover(function () {
+	// $("#wp-admin-bar-my-sites-list > li.menupop").hover(function () {
+	$("#wp-admin-bar-my-sites-list > ul").hover(function () {
 		console.log("hover");
 		var $container = $(this),
-			$list = $container.find("ul"),
-			$anchor = $container.find("a"),
+			$list = $container.find("li"),
+			$anchor = $list.find("a"),
 			height = $list.height() * 1.1,       // make sure there is enough room at the bottom
 			multiplier = height / maxHeight;     // needs to move faster if list is taller
 
