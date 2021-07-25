@@ -49,7 +49,7 @@ add_action(
 
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\super_admin_all_sites_menu', 25 );
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\action_admin_enqueue_scripts' );
-// add_action( 'wp_ajax_all_sites_menu_action', __NAMESPACE__ . '\all_sites_menu_action' );
+add_action( 'wp_ajax_all_sites_menu_action', __NAMESPACE__ . '\all_sites_menu_action' );
 // add_action( 'wp_ajax_nopriv_all_sites_menu_action', __NAMESPACE__ . '\all_sites_menu_action' );
 
 /**
@@ -173,12 +173,12 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 		// ]
 		// );
 
-	$sites = \get_sites(
-		[
-			'orderby' => 'path',
-			'number'  => 20,
-		]
-	);
+	// $sites = \get_sites(
+	// 	[
+	// 		'orderby' => 'path',
+	// 		'number'  => 20,
+	// 	]
+	// );
 		// Sort blogs alphabetically.
 	// uasort(
 	// $sites,
@@ -188,90 +188,90 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 	// }
 	// );
 
-	foreach ( (array) $sites as $site ) {
+	// foreach ( (array) $sites as $site ) {
 
-		$blogid    = $site->blog_id;
-		$blogname  = $site->__get( 'blogname' );
-		$menu_id   = 'blog-' . $blogid;
-		$blavatar  = '<div class="blavatar"></div>';
-		$siteurl   = $site->__get( 'siteurl' );
-		$admin_url = $siteurl . '/wp-admin';
+	// 	$blogid    = $site->blog_id;
+	// 	$blogname  = $site->__get( 'blogname' );
+	// 	$menu_id   = 'blog-' . $blogid;
+	// 	$blavatar  = '<div class="blavatar"></div>';
+	// 	$siteurl   = $site->__get( 'siteurl' );
+	// 	$admin_url = $siteurl . '/wp-admin';
 
-		if ( ! $blogname ) {
-			$blogname = preg_replace( '#^(https?://)?(www.)?#', '', $siteurl );
-		}
+	// 	if ( ! $blogname ) {
+	// 		$blogname = preg_replace( '#^(https?://)?(www.)?#', '', $siteurl );
+	// 	}
 
-		// The $site->public value is set to 2, by the Restricted Site Access plugin, when a site has restricted access.
-		if ( 2 === (int) $site->public ) {
-			$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
-		}
+	// 	// The $site->public value is set to 2, by the Restricted Site Access plugin, when a site has restricted access.
+	// 	if ( 2 === (int) $site->public ) {
+	// 		$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
+	// 	}
 
-		$wp_admin_bar->add_menu(
-			[
-				'parent' => 'my-sites-list',
-				'id'     => $menu_id,
-				'title'  => $blavatar . $blogname,
-				'href'   => $admin_url,
-			]
-		);
-		$wp_admin_bar->add_menu(
-			[
-				'parent' => $menu_id,
-				'id'     => $menu_id . '-d',
-				'title'  => __( 'Dashboard' ),
-				'href'   => $admin_url,
-			]
-		);
-		$wp_admin_bar->add_menu(
-			[
-				'parent' => $menu_id,
-				'id'     => $menu_id . '-n',
-				'title'  => \get_post_type_object( 'post' )->labels->new_item,
-				'href'   => $admin_url . '/post-new.php',
-			]
-		);
-		$wp_admin_bar->add_menu(
-			[
-				'parent' => $menu_id,
-				'id'     => $menu_id . '-o',
-				'title'  => \get_post_type_object( 'page' )->labels->new_item,
-				'href'   => $admin_url . '/post-new.php?post_type=page',
-			]
-		);
-		$wp_admin_bar->add_menu(
-			[
-				'parent' => $menu_id,
-				'id'     => $menu_id . '-c',
-				'title'  => __( 'Manage Comments' ),
-				'href'   => $admin_url . '/edit-comments.php',
-			]
-		);
-		$wp_admin_bar->add_menu(
-			[
-				'parent' => $menu_id,
-				'id'     => $menu_id . '-u',
-				'title'  => __( 'Users' ),
-				'href'   => $admin_url . '/users.php',
-			]
-		);
-		$wp_admin_bar->add_menu(
-			[
-				'parent' => $menu_id,
-				'id'     => $menu_id . '-p',
-				'title'  => __( 'Plugins' ),
-				'href'   => $admin_url . '/plugins.php',
-			]
-		);
-		$wp_admin_bar->add_menu(
-			[
-				'parent' => $menu_id,
-				'id'     => $menu_id . '-s',
-				'title'  => __( 'Settings' ),
-				'href'   => $admin_url . '/options-general.php',
-			]
-		);
+	// 	$wp_admin_bar->add_menu(
+	// 		[
+	// 			'parent' => 'my-sites-list',
+	// 			'id'     => $menu_id,
+	// 			'title'  => $blavatar . $blogname,
+	// 			'href'   => $admin_url,
+	// 		]
+	// 	);
+	// 	$wp_admin_bar->add_menu(
+	// 		[
+	// 			'parent' => $menu_id,
+	// 			'id'     => $menu_id . '-d',
+	// 			'title'  => __( 'Dashboard' ),
+	// 			'href'   => $admin_url,
+	// 		]
+	// 	);
+	// 	$wp_admin_bar->add_menu(
+	// 		[
+	// 			'parent' => $menu_id,
+	// 			'id'     => $menu_id . '-n',
+	// 			'title'  => \get_post_type_object( 'post' )->labels->new_item,
+	// 			'href'   => $admin_url . '/post-new.php',
+	// 		]
+	// 	);
+	// 	$wp_admin_bar->add_menu(
+	// 		[
+	// 			'parent' => $menu_id,
+	// 			'id'     => $menu_id . '-o',
+	// 			'title'  => \get_post_type_object( 'page' )->labels->new_item,
+	// 			'href'   => $admin_url . '/post-new.php?post_type=page',
+	// 		]
+	// 	);
+	// 	$wp_admin_bar->add_menu(
+	// 		[
+	// 			'parent' => $menu_id,
+	// 			'id'     => $menu_id . '-c',
+	// 			'title'  => __( 'Manage Comments' ),
+	// 			'href'   => $admin_url . '/edit-comments.php',
+	// 		]
+	// 	);
+	// 	$wp_admin_bar->add_menu(
+	// 		[
+	// 			'parent' => $menu_id,
+	// 			'id'     => $menu_id . '-u',
+	// 			'title'  => __( 'Users' ),
+	// 			'href'   => $admin_url . '/users.php',
+	// 		]
+	// 	);
+	// 	$wp_admin_bar->add_menu(
+	// 		[
+	// 			'parent' => $menu_id,
+	// 			'id'     => $menu_id . '-p',
+	// 			'title'  => __( 'Plugins' ),
+	// 			'href'   => $admin_url . '/plugins.php',
+	// 		]
+	// 	);
+	// 	$wp_admin_bar->add_menu(
+	// 		[
+	// 			'parent' => $menu_id,
+	// 			'id'     => $menu_id . '-s',
+	// 			'title'  => __( 'Settings' ),
+	// 			'href'   => $admin_url . '/options-general.php',
+	// 		]
+	// 	);
 
-	}
+	// }
 
 	$wp_admin_bar->add_menu(
 		[
@@ -283,7 +283,7 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 			'meta'   => [
 				// 'target'   => '_self',
 				// 'title'    => __( 'Hello', 'some-textdomain' ),
-				// 'html'     => '<p>Hello</p>',
+				'html'     => '<span id="load-more-offset" data-offset="0"></span>',
 				'class'    => 'load-more hide-if-no-js',
 				'onclick'  => 'alert("Hello");',
 				'aaa'      => 'bbb',
@@ -338,15 +338,40 @@ function action_admin_enqueue_scripts( string $hook_suffix ) : void {
 function all_sites_menu_action() {
 	header( 'Content-type: application/json' );
 	if ( check_ajax_referer( 'all_sites_menu_nonce', 'nonce', false ) ) {
+		$offset = ( isset( $_POST['offset'] ) ) ? filter_var( wp_unslash( $_POST['offset'] ), FILTER_VALIDATE_INT, [ 'default' => 0 ] ) : 0;
 
-		$sites = get_sites();
+		ray($offset);
+
+		$sites = \get_sites(
+			[
+				'orderby' => 'path',
+				'number'  => 80,
+				'offset'   => $offset,
+			]
+		);
 		$menu  = [];
 		foreach ( $sites as $site ) {
+
+			$blogid    = $site->blog_id;
+			$blogname  = $site->__get( 'blogname' );
+			$menu_id   = 'blog-' . $blogid;
+			$blavatar  = '<div class="blavatar"></div>';
+			$siteurl   = $site->__get( 'siteurl' );
+			$admin_url = $siteurl . '/wp-admin';
+
+			if ( ! $blogname ) {
+				$blogname = preg_replace( '#^(https?://)?(www.)?#', '', $siteurl );
+			}
+
+			// The $site->public value is set to 2, by the Restricted Site Access plugin, when a site has restricted access.
+			if ( 2 === (int) $site->public ) {
+				$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
+			}
 			$menu[] = [
-				'id'     => $site->blog_id,
-				'parent' => $site->domain,
-				'title'  => $site->blog_name,
-				'href'   => get_home_url( $site->blog_id ),
+				'parent' => 'my-sites-list',
+				'id'     => $menu_id,
+				'title'  => $blavatar . $blogname,
+				'href'   => $admin_url,
 			];
 		}
 
@@ -354,8 +379,8 @@ function all_sites_menu_action() {
 			$response['response'] = 'success';
 			$response['data']     = $menu;
 		} else {
-			$response['response'] = 'failed';
-			$response['data']     = 'something went wrong ...';
+			$response['response'] = 'unobserve';
+			$response['data']     = 'something went wrong ...' . count($menu) . ' items returned'; ;
 		}
 	} else {
 		$response['response'] = 'failed';
