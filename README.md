@@ -6,8 +6,9 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 - Doesn't use `switch_to_blog()` i.e. it's faster and uses less resources than the WP Admin Bar My Sites menu
 - List all subsites, retrieved using `get_sites()`. WP Admin Bar My Sites only list sites you're a local admin on.
+   - The subsites menu is lazy loaded, using IntersectionObserver and AJAX.
 - Mark sites that has [restricted site access](https://github.com/10up/restricted-site-access) with a red icon.
-- It's compatible with [My Sites Search](https://github.com/trepmal/my-sites-search).
+- ~~It's compatible with [My Sites Search](https://github.com/trepmal/my-sites-search).~~(I'm working on a ajax live search)
 - Add more menu choices:
    - Network Admin
 	   - Add New Site
@@ -22,12 +23,23 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ## Prerequisite
 
-WordPress Multisite
+- WordPress Multisite
+- A modern browser, IE 11 isn't supported.
 
 ## Install
 
 - [Download the plugin](https://github.com/soderlind/super-admin-all-sites-menu/archive/refs/heads/main.zip)
 - [Upload and network activate the plugin](https://wordpress.org/support/article/managing-plugins/#manual-upload-via-wordpress-admin)
+
+## Changelog
+
+### 1.1.0
+
+- Lazy loaded the subsite menu, using IntersectionObserver and AJAX.
+- Make subsites menu scrollable.
+
+### 1.0.x
+- Initial release.
 
 ## Copyright and License
 
