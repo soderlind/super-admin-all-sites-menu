@@ -6,16 +6,16 @@ class LazyLoadSites {
 		this.observedContainer = document.querySelector("#wp-admin-bar-load-more")
 		this.adminBar = document.getElementById('wpadminbar')
 		this.observer = {}
+
 	}
 
-	init() {
-		// const container = document.querySelector("#wp-admin-bar-load-more")
+	observeSitesMenu() {
 		this.observer = new IntersectionObserver(entries => {
 			entries.forEach(entry => {
 				const { isIntersecting } = entry
 
 				if (isIntersecting) {
-					this.load()
+					this.loadSites()
 				}
 			}, {
 				root: this.observedContainer
@@ -25,20 +25,18 @@ class LazyLoadSites {
 		this.observer.observe(this.observedContainer)
 	}
 
-	async load() {
+	async loadSites() {
 
 		const data = new FormData();
 		data.append("action", "all_sites_menu_action");
 		data.append("nonce", pluginAllSitesMenu.nonce);
 		data.append("offset", this.offsetStore.dataset.offset);
 
-
 		const url = pluginAllSitesMenu.ajaxurl;
 		try {
 			const response = await fetch(
 				url,
 				{
-					// POST the data to WordPress
 					method: "POST",
 					credentials: "same-origin",
 					body: data,
@@ -48,23 +46,24 @@ class LazyLoadSites {
 			const res = await response.json();
 			if (res.response === "success") {
 				this.offsetStore.dataset.offset = parseInt(this.offsetStore.dataset.offset) + 80;
-				this.update(res.data);
+				this.updateSitesMenu(res.data);
 				console.log(res);
 			} else if (res.response === "unobserve") {
 				this.observer.unobserve(this.observedContainer);
+				this.observedContainer.style.display = 'none';
 			}
 		} catch (err) {
 			console.error(err);
 		}
 	}
 
-	update(data) {
+	updateSitesMenu(data) {
 		let sites = ''
 		data.forEach(site => {
 			sites += this.siteMenuTemplate(site)
 		})
 		this.sitesContainer.insertAdjacentHTML('beforeBegin', sites)
-		this.refreshAdminbar();
+		this.refreshAdminBar();
 	}
 
 	siteMenuTemplate(site) {
@@ -96,10 +95,13 @@ class LazyLoadSites {
 	}
 
 
-	refreshAdminbar() {
-		let topMenuItems = this.adminBar.querySelectorAll('li.menupop')
-		console.log(topMenuItems.length)
+	/**
+	 * Methods below are from the wp-includes/js/admin-bar.js file.
+	 */
 
+	refreshAdminBar() {
+
+		let topMenuItems = this.adminBar.querySelectorAll('li.menupop')
 		for (let i = 0; i < topMenuItems.length; i++) {
 			// Adds or removes the hover class based on the hover intent.
 			window.hoverintent(
@@ -114,7 +116,6 @@ class LazyLoadSites {
 			topMenuItems[i].addEventListener('keydown', this.toggleHoverIfEnter);
 		}
 	}
-
 
 	/**
 	 * Add class to an element.
@@ -138,6 +139,23 @@ class LazyLoadSites {
 
 			element.className += className;
 		}
+
+		/**
+		 * Adjust submmenu offset..
+		 */
+
+		let rect = element.getBoundingClientRect()
+		let top = rect.top;
+		let subMenu = element.querySelector('.ab-submenu');
+		subMenu.style.top = top - 6 + 'px'
+
+		// console.log({ wh: window.innerHeight, b: subMenu.getBoundingClientRect().bottom })
+
+		if (subMenu.getBoundingClientRect().bottom > window.innerHeight) {
+			subMenu.style.top = 'auto'
+			subMenu.style.bottom = '0'
+		}
+
 	}
 
 	/**
@@ -269,6 +287,7 @@ class LazyLoadSites {
 
 }
 
-
-const lazyLoadsites = new LazyLoadSites()
-lazyLoadsites.init()
+document.addEventListener("DOMContentLoaded", () => {
+	const lazyLoadsites = new LazyLoadSites()
+	lazyLoadsites.observeSitesMenu()
+})
