@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.0.8
+ * Version:     1.1.0
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -50,7 +50,6 @@ add_action(
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\super_admin_all_sites_menu', 25 );
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\action_admin_enqueue_scripts' );
 add_action( 'wp_ajax_all_sites_menu_action', __NAMESPACE__ . '\all_sites_menu_action' );
-// add_action( 'wp_ajax_nopriv_all_sites_menu_action', __NAMESPACE__ . '\all_sites_menu_action' );
 
 /**
  * Add the "All Sites/[Site Name]" menu and all submenus, listing all subsites.
@@ -164,169 +163,20 @@ function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 		]
 	);
 
-		// $wp_admin_bar->add_menu(
-		// [
-		// 'parent' => 'my-sites-list',
-		// 'id'     => $menu_id,
-		// 'title'  => $blavatar . $blogname,
-		// 'href'   => $admin_url,
-		// ]
-		// );
-
-	// $sites = \get_sites(
-	// 	[
-	// 		'orderby' => 'path',
-	// 		'number'  => 20,
-	// 	]
-	// );
-		// Sort blogs alphabetically.
-	// uasort(
-	// $sites,
-	// function( $a, $b ) {
-	// Compare site blog names alphabetically for sorting purposes.
-	// return strcmp( $a->__get( 'blogname' ), $b->__get( 'blogname' ) );
-	// }
-	// );
-
-	// foreach ( (array) $sites as $site ) {
-
-	// 	$blogid    = $site->blog_id;
-	// 	$blogname  = $site->__get( 'blogname' );
-	// 	$menu_id   = 'blog-' . $blogid;
-	// 	$blavatar  = '<div class="blavatar"></div>';
-	// 	$siteurl   = $site->__get( 'siteurl' );
-	// 	$admin_url = $siteurl . '/wp-admin';
-
-	// 	if ( ! $blogname ) {
-	// 		$blogname = preg_replace( '#^(https?://)?(www.)?#', '', $siteurl );
-	// 	}
-
-	// 	// The $site->public value is set to 2, by the Restricted Site Access plugin, when a site has restricted access.
-	// 	if ( 2 === (int) $site->public ) {
-	// 		$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
-	// 	}
-
-	// 	$wp_admin_bar->add_menu(
-	// 		[
-	// 			'parent' => 'my-sites-list',
-	// 			'id'     => $menu_id,
-	// 			'title'  => $blavatar . $blogname,
-	// 			'href'   => $admin_url,
-	// 		]
-	// 	);
-	// 	$wp_admin_bar->add_menu(
-	// 		[
-	// 			'parent' => $menu_id,
-	// 			'id'     => $menu_id . '-d',
-	// 			'title'  => __( 'Dashboard' ),
-	// 			'href'   => $admin_url,
-	// 		]
-	// 	);
-	// 	$wp_admin_bar->add_menu(
-	// 		[
-	// 			'parent' => $menu_id,
-	// 			'id'     => $menu_id . '-n',
-	// 			'title'  => \get_post_type_object( 'post' )->labels->new_item,
-	// 			'href'   => $admin_url . '/post-new.php',
-	// 		]
-	// 	);
-	// 	$wp_admin_bar->add_menu(
-	// 		[
-	// 			'parent' => $menu_id,
-	// 			'id'     => $menu_id . '-o',
-	// 			'title'  => \get_post_type_object( 'page' )->labels->new_item,
-	// 			'href'   => $admin_url . '/post-new.php?post_type=page',
-	// 		]
-	// 	);
-	// 	$wp_admin_bar->add_menu(
-	// 		[
-	// 			'parent' => $menu_id,
-	// 			'id'     => $menu_id . '-c',
-	// 			'title'  => __( 'Manage Comments' ),
-	// 			'href'   => $admin_url . '/edit-comments.php',
-	// 		]
-	// 	);
-	// 	$wp_admin_bar->add_menu(
-	// 		[
-	// 			'parent' => $menu_id,
-	// 			'id'     => $menu_id . '-u',
-	// 			'title'  => __( 'Users' ),
-	// 			'href'   => $admin_url . '/users.php',
-	// 		]
-	// 	);
-	// 	$wp_admin_bar->add_menu(
-	// 		[
-	// 			'parent' => $menu_id,
-	// 			'id'     => $menu_id . '-p',
-	// 			'title'  => __( 'Plugins' ),
-	// 			'href'   => $admin_url . '/plugins.php',
-	// 		]
-	// 	);
-	// 	$wp_admin_bar->add_menu(
-	// 		[
-	// 			'parent' => $menu_id,
-	// 			'id'     => $menu_id . '-s',
-	// 			'title'  => __( 'Settings' ),
-	// 			'href'   => $admin_url . '/options-general.php',
-	// 		]
-	// 	);
-
-	// }
-
+	// Add an observable container, used by the IntersectionObserver.
 	$wp_admin_bar->add_menu(
 		[
 			'id'     => 'load-more',
 			'parent' => 'my-sites-list',
-			// 'group'  => null,
-			'title'  => __( 'Load more..', 'some-textdomain' ),
-			// 'href'   => get_edit_profile_url( get_current_user_id() ),
+			'title'  => __( 'Loading..', 'some-textdomain' ),
 			'meta'   => [
-				// 'target'   => '_self',
-				// 'title'    => __( 'Hello', 'some-textdomain' ),
 				'html'     => '<span id="load-more-offset" data-offset="0"></span>',
 				'class'    => 'load-more hide-if-no-js',
-				'onclick'  => 'alert("Hello");',
-				'aaa'      => 'bbb',
 				'tabindex' => -1,
 			],
 		]
 	);
 
-}
-
-
-
-/**
- * Enqueue scripts for all admin pages.
- *
- * @param string $hook_suffix The current admin page.
- */
-function action_admin_enqueue_scripts( string $hook_suffix ) : void {
-
-	$path_style = plugin_dir_url( __FILE__ ) . 'include/multisite_menu_patch.css';
-	$deps_style = [];
-	// wp_register_style( 'multisite_menu_patch_style', $path_style, $depth_style, '1.0.0' );
-	// wp_enqueue_style( 'multisite_menu_patch_style' );
-
-	// $path_script = plugin_dir_url( __FILE__ ) . 'include/multisite_menu_patch.js';
-	// $deps_script = [ 'admin-bar' ];
-	// wp_register_script( 'multisite_menu_patch_script', $path_script, $deps_script, '1.0.0' );
-	// wp_enqueue_script( 'multisite_menu_patch_script' );
-	$ajaxurl     = get_ajax_url();
-	$path_script = plugin_dir_url( __FILE__ ) . 'include/load-sites.js';
-	$deps_script = [ 'admin-bar' ];
-	wp_enqueue_script( 'super-admin-sites-menu', $path_script, $deps_script, wp_rand( 1, 100 ), true );
-	// wp_register_script( 'super-admin-sites-menu', $path_script, $deps_script, rand( 1, 100 ), true );
-	// wp_enqueue_script( 'super-admin-sites-menu' );
-	$data = wp_json_encode(
-		[
-			'nonce'   => wp_create_nonce( 'all_sites_menu_nonce' ),
-			'ajaxurl' => $ajaxurl,
-		]
-	);
-	wp_add_inline_script( 'super-admin-sites-menu', "const pluginAllSitesMenu = ${data};" );
-
-	// wp_enqueue_script( 'all-sites-scroll', plugin_dir_url( __FILE__ ) . 'include/load-sites.js', [ 'jquery' ], rand(), true );
 }
 
 
@@ -340,13 +190,13 @@ function all_sites_menu_action() {
 	if ( check_ajax_referer( 'all_sites_menu_nonce', 'nonce', false ) ) {
 		$offset = ( isset( $_POST['offset'] ) ) ? filter_var( wp_unslash( $_POST['offset'] ), FILTER_VALIDATE_INT, [ 'default' => 0 ] ) : 0;
 
-		ray($offset);
+		ray( $offset );
 
 		$sites = \get_sites(
 			[
 				'orderby' => 'path',
 				'number'  => 80,
-				'offset'   => $offset,
+				'offset'  => $offset,
 			]
 		);
 		$menu  = [];
@@ -380,7 +230,7 @@ function all_sites_menu_action() {
 			$response['data']     = $menu;
 		} else {
 			$response['response'] = 'unobserve';
-			$response['data']     = 'something went wrong ...' . count($menu) . ' items returned'; ;
+			$response['data']     = 'something went wrong ...' . count( $menu ) . ' items returned';
 		}
 	} else {
 		$response['response'] = 'failed';
@@ -392,25 +242,26 @@ function all_sites_menu_action() {
 
 
 
-/**
- * Add Scripts.
- *
- * @return void
- */
-function wp_scripts() {
-	$ajaxurl = get_ajax_url();
-	$url     = plugins_url( '', __FILE__ );
 
-	// Load fetch polyfill, url via https://polyfill.io/v3/url-builder/.
-	wp_enqueue_script( 'polyfill-fetch', 'https://polyfill.io/v3/polyfill.min.js?features=fetch', [], ES6_WP_AJAX_DEMO_VERSION, true );
-	wp_enqueue_script( 'es6-wp-ajax', $url . '/es6-wp-ajax-demo.js', [ 'polyfill-fetch' ], ES6_WP_AJAX_DEMO_VERSION, true );
+/**
+ * Enqueue scripts for all admin pages.
+ *
+ * @param string $hook_suffix The current admin page.
+ */
+function action_admin_enqueue_scripts( string $hook_suffix ) : void {
+
+	wp_register_style( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/my-sites.css', [], '1.1.0' );
+	wp_enqueue_style( 'super-admin-sites-menu' );
+
+	wp_register_script( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/load-sites.js', [ 'admin-bar' ], '1.1.0', true );
+	wp_enqueue_script( 'super-admin-sites-menu' );
 	$data = wp_json_encode(
 		[
-			'nonce'   => wp_create_nonce( 'es6_wp_ajax_nonce' ),
-			'ajaxurl' => $ajaxurl,
+			'nonce'   => wp_create_nonce( 'all_sites_menu_nonce' ),
+			'ajaxurl' => get_ajax_url(),
 		]
 	);
-	wp_add_inline_script( 'es6-wp-ajax', "const pluginES6WPAjax = ${data};" );
+	wp_add_inline_script( 'super-admin-sites-menu', "const pluginAllSitesMenu = ${data};" );
 }
 
 /**
