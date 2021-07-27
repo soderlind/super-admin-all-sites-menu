@@ -33,6 +33,10 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ## Changelog
 
+### 1.1.1
+
+- Housekeeping.
+
 ### 1.1.0
 
 - Lazy load the subsite menu, using IntersectionObserver and AJAX, loading only 80 subsites at a time.
