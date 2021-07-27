@@ -47,7 +47,6 @@ class LazyLoadSites {
 			if (res.response === "success") {
 				this.offsetStore.dataset.offset = parseInt(this.offsetStore.dataset.offset) + 80;
 				this.updateSitesMenu(res.data);
-				console.log(res);
 			} else if (res.response === "unobserve") {
 				this.observer.unobserve(this.observedContainer);
 				this.observedContainer.style.display = 'none';
