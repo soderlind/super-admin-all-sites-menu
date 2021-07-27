@@ -35,7 +35,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ### 1.1.0
 
-- Lazy loaded the subsite menu, using IntersectionObserver and AJAX.
+- Lazy load the subsite menu, using IntersectionObserver and AJAX.
 - Make subsites menu scrollable.
 
 ### 1.0.x
