@@ -33,6 +33,10 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ## Changelog
 
+### 1.1.2
+
+- Fix translations.
+
 ### 1.1.1
 
 - Housekeeping.
