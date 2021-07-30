@@ -257,6 +257,15 @@ function action_admin_enqueue_scripts( string $hook_suffix ) : void {
 		[
 			'nonce'   => wp_create_nonce( 'all_sites_menu_nonce' ),
 			'ajaxurl' => get_ajax_url(),
+			'l10n'    => [
+				'dashboard'      => __( 'Dashboard' ),
+				'newpost'        => __( 'New Post' ),
+				'newpage'        => __( 'New Page' ),
+				'managecomments' => __( 'Manage Comments' ),
+				'users'          => __( 'Users' ),
+				'plugins'        => __( 'Plugins' ),
+				'settings'       => __( 'Settings' ),
+			],
 		]
 	);
 	wp_add_inline_script( 'super-admin-sites-menu', "const pluginAllSitesMenu = ${data};" );
