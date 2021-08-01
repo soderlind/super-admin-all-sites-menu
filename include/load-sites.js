@@ -1,3 +1,5 @@
+import { openDB } from 'https://unpkg.com/idb?module';
+
 class LazyLoadSites {
 
 	constructor() {
@@ -7,6 +9,7 @@ class LazyLoadSites {
 		this.adminBar = document.getElementById('wpadminbar')
 		this.observer = {}
 
+		this.allsites = this.read()
 	}
 
 	observeSitesMenu() {
@@ -23,6 +26,37 @@ class LazyLoadSites {
 		})
 
 		this.observer.observe(this.observedContainer)
+	}
+
+	async save(sites) {
+
+		// await idb.deleteDB('super-admin-sites-menu', {});
+
+		const db = await openDB('SuperAdminAllSites', 1, {
+			upgrade(db) {
+				const store = db.createObjectStore('sites', {
+					keyPath: 'id',
+					autoIncrement: true,
+				});
+				store.createIndex('name', 'name');
+			},
+		});
+
+		await sites.forEach(site => {
+			site.name = site.title.replace(/(<([^>]+)>)/gi, "")
+			db.put('sites', site)
+		})
+		db.close()
+	}
+
+
+	async read() {
+
+		const db = await openDB('SuperAdminAllSites', 1);
+		const sites = await db.getAllFromIndex('sites', 'name');
+		db.close();
+
+		return sites;
 	}
 
 	async loadSites() {
@@ -46,7 +80,10 @@ class LazyLoadSites {
 			const res = await response.json();
 			if (res.response === "success") {
 				this.offsetStore.dataset.offset = parseInt(this.offsetStore.dataset.offset) + 80;
-				this.updateSitesMenu(res.data);
+				// this.updateSitesMenu(res.data);
+				this.save(res.data)
+				// console.log(this.allsites)
+				this.updateSitesMenu(this.allsites);
 			} else if (res.response === "unobserve") {
 				this.observer.unobserve(this.observedContainer);
 				this.observedContainer.style.display = 'none';
@@ -56,9 +93,12 @@ class LazyLoadSites {
 		}
 	}
 
-	updateSitesMenu(data) {
+
+
+	async updateSitesMenu(data) {
+		let d = await data
 		let sites = ''
-		data.forEach(site => {
+		d.forEach(site => {
 			sites += this.siteMenuTemplate(site)
 		})
 		this.sitesContainer.insertAdjacentHTML('beforeBegin', sites)
@@ -96,6 +136,8 @@ class LazyLoadSites {
 
 	/**
 	 * Methods below are from the wp-includes/js/admin-bar.js file.
+	 *
+	 * See addClass() for the implementation of submmenu offset adjustment.
 	 */
 
 	refreshAdminBar() {

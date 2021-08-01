@@ -48,8 +48,11 @@ add_action(
 );
 
 add_action( 'admin_bar_menu', __NAMESPACE__ . '\\super_admin_all_sites_menu', 25 );
-add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\action_admin_enqueue_scripts' );
 add_action( 'wp_ajax_all_sites_menu_action', __NAMESPACE__ . '\all_sites_menu_action' );
+
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\action_admin_enqueue_scripts' );
+add_filter( 'script_loader_tag',__NAMESPACE__ . '\\filter_script_loader_tag', 10, 3 );
+
 
 /**
  * Add the "All Sites/[Site Name]" menu and all submenus, listing all subsites.
@@ -248,13 +251,18 @@ function all_sites_menu_action() {
  */
 function action_admin_enqueue_scripts( string $hook_suffix ) : void {
 
-	wp_register_style( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/my-sites.css', [], '1.1.0' );
+	wp_register_style( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/my-sites.css', [], '1.2.0' );
 	wp_enqueue_style( 'super-admin-sites-menu' );
 
-	wp_register_script( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/load-sites.js', [ 'admin-bar' ], '1.1.0', true );
-	wp_enqueue_script( 'super-admin-sites-menu' );
-	$data = wp_json_encode(
-		[
+	// wp_register_script( 'idb', 'https://unpkg.com/idb/build/iife/index-min.js', [], '1.1.0', true );
+	// wp_register_script( 'idb-keyval', 'https://cdn.jsdelivr.net/npm/idb-keyval@5/dist/iife/index-min.js', [], '1.1.0', true );
+	// wp_enqueue_script( 'idb-keyval' );
+
+
+	// wp_register_script( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/load-sites.js', [ 'admin-bar' ], '1.2.0' );
+	wp_enqueue_script( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/load-sites.js', [ 'admin-bar' ], '1.2.0', true );
+	// wp_enqueue_script( 'super-admin-sites-menu' );
+	$data = [
 			'nonce'   => wp_create_nonce( 'all_sites_menu_nonce' ),
 			'ajaxurl' => get_ajax_url(),
 			'l10n'    => [
@@ -266,9 +274,29 @@ function action_admin_enqueue_scripts( string $hook_suffix ) : void {
 				'plugins'        => __( 'Plugins' ),
 				'settings'       => __( 'Settings' ),
 			],
-		]
-	);
-	wp_add_inline_script( 'super-admin-sites-menu', "const pluginAllSitesMenu = ${data};" );
+		];
+
+	wp_localize_script( 'super-admin-sites-menu','pluginAllSitesMenu', $data );
+	// wp_add_inline_script( 'super-admin-sites-menu', "const pluginAllSitesMenu = ${data};" );
+}
+
+
+/**
+ * Add type=module attribute to the script tag
+ *
+ * @param string $tag    The <code>&lt;script&gt;</code> tag for the enqueued script.
+ * @param string $handle The script's registered handle.
+ * @param string $src    The script's source URL.
+ * @return string The <code>&lt;script&gt;</code> tag for the enqueued script.
+ */
+function filter_script_loader_tag( string $tag, string $handle, string $src ) : string {
+
+	if ( 'super-admin-sites-menu' === $handle ) {
+		// return '<script type="module" src="' . esc_url( $src ) . '"></script>';
+		return sprintf( '<script src="%s" type="module" id="%s-js" ></script>', esc_url( $src ), $handle );
+	}
+
+	return $tag;
 }
 
 /**
