@@ -2,18 +2,27 @@
 # This file is distributed under the same license as the Super Admin All Sites Menu plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Super Admin All Sites Menu 1.0.1\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/super-admin-all-sites-menu\n"
+"Project-Id-Version: Super Admin All Sites Menu 1.2.0\n"
+"Report-Msgid-Bugs-To: https://github.com/soderlind/super-admin-all-sites-menu/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-06-27T21:30:43+00:00\n"
+"POT-Creation-Date: 2021-08-11T10:50:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: super-admin-sites-menu\n"
 
-#: super-admin-all-sites-menu.php:82
+
+#: super-admin-all-sites-menu.php:103
 msgid "All Sites"
+msgstr ""
+
+#: super-admin-all-sites-menu.php:201
+msgid "Filter My Sites"
+msgstr ""
+
+#: super-admin-all-sites-menu.php:202
+msgid "Search Sites"
 msgstr ""
