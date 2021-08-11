@@ -33,6 +33,12 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ## Changelog
 
+### 1.2.0
+
+- Store subsite info in IndexedDB (local storage).
+   - IndexedDB is updated when a site is added / deleted.
+- Add search.
+
 ### 1.1.2
 
 - Fix translations.
@@ -48,6 +54,10 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ### 1.0.x
 - Initial release.
+
+## Credits
+- Submmenu offset adjustment: https://qiita.com/zephyr7501/items/dd0967fddabd888b28c4
+- CSS for search field from https://github.com/trepmal/my-sites-search
 
 ## Copyright and License
 
