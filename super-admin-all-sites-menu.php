@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.2.1
+ * Version:     1.2.2
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -34,11 +34,21 @@ const LOADINCREMENTS = 100; // Number of sites to load at a time.
  */
 class SuperAdminAllSitesMenu {
 
-
+	/**
+	 * Plugins triggering update local storages.
+	 *
+	 * @var array
+	 */
 	private $plugins = [
-		'restricted-site-access/restricted_site_access.php'
+		'restricted-site-access/restricted_site_access.php',
 	];
 
+	/**
+	 * Plugin version.
+	 *
+	 * @var string
+	 */
+	private $version = '1.2.2';
 	/**
 	 * Undocumented function
 	 */
@@ -313,10 +323,10 @@ class SuperAdminAllSitesMenu {
 	 */
 	public function action_enqueue_scripts( string $hook_suffix ) : void {
 
-		wp_register_style( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/all-sites.css', [], '1.2.0' );
+		wp_register_style( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/all-sites.css', [], $this->version );
 		wp_enqueue_style( 'super-admin-sites-menu' );
 
-		wp_register_script( 'dexie', 'https://unpkg.com/dexie@latest/dist/dexie.js', [], '1.2.0', true );
+		wp_register_script( 'dexie', 'https://unpkg.com/dexie@latest/dist/dexie.js', [], $this->version, true );
 		wp_enqueue_script( 'dexie' );
 
 		wp_register_script( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/all-sites.js', [ 'admin-bar', 'dexie', 'jquery' ], '1.2.0', true );

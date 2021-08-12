@@ -64,7 +64,10 @@ class AllSitesMenu {
 			this.incrementStore.dataset.increment = 0;
 			await this.loadSites();
 		}
-		await this.read();
+		const sites = await this.read();
+		await this.updateSitesMenu(sites);
+		this.observer.unobserve(this.observedContainer);
+		this.observedContainer.style.display = "none";
 	}
 
 	/**
@@ -140,9 +143,7 @@ class AllSitesMenu {
 		}).catch((err) => {
 			console.error(err);
 		});
-		await this.updateSitesMenu(sites);
-		this.observer.unobserve(this.observedContainer);
-		this.observedContainer.style.display = "none";
+		return sites;
 	}
 
 	async deleteDB() {

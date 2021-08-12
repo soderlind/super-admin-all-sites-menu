@@ -35,6 +35,10 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ## Changelog
 
+### 1.2.2
+
+- Housekeeping.
+
 ### 1.2.1
 
 - Update IndexedDB when Restricted Site Access is (de)activated.
