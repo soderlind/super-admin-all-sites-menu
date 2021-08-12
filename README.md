@@ -4,13 +4,14 @@
 For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 
-- Doesn't use `switch_to_blog()` i.e. it's faster and uses less resources than the WP Admin Bar My Sites menu
-- List all subsites, retrieved using `get_sites()`. WP Admin Bar My Sites only list sites you're a local admin on.
-   - The subsites menu is lazy loaded, using [IntersectionObserver](https://caniuse.com/intersectionobserver) and AJAX, loading only 80 subsites at a time.
+- Doesn't use `switch_to_blog()` i.e. it's faster and uses less resources than the WP Admin Bar My Sites menu.
+- Subsite menu data is stored locally in IndexedDB (did I say it's fast?). The local storage is updated when a site is added or deleted, or when Restriced Site Access is activated or deactivated.
+- List all subsites. WP Admin Bar My Sites only list sites you're a local admin on.
 - Mark sites that has [restricted site access](https://github.com/10up/restricted-site-access) with a red icon.
-- ~~It's compatible with [My Sites Search](https://github.com/trepmal/my-sites-search).~~(I'm working on a ajax live search)
+- Sites menu is sorted alphabetically.
+- Search filter.
 - Add more menu choices:
-   - Network Admin
+   - Under "Network Admin"
 	   - Add New Site
    - Per subsite.
      - 'New Page'
@@ -33,6 +34,16 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ## Changelog
 
+### 1.2.1
+
+- Update IndexedDB when Restricted Site Access is (de)activated.
+
+### 1.2.0
+
+- Store subsite menu data in IndexedDB (local storage).
+   - IndexedDB is updated when a site is added / deleted.
+- Add search.
+
 ### 1.1.2
 
 - Fix translations.
@@ -48,6 +59,10 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ### 1.0.x
 - Initial release.
+
+## Credits
+- Submmenu offset adjustment: https://qiita.com/zephyr7501/items/dd0967fddabd888b28c4
+- CSS for search field from https://github.com/trepmal/my-sites-search
 
 ## Copyright and License
 

@@ -38,3 +38,33 @@
 		padding-bottom: 6px !important;
 	}
 }
+
+/*
+ * Search CSS from https://github.com/trepmal/my-sites-search
+ */
+
+/* #wp-admin-bar-all-sites-search.hide-if-no-js {
+	display: none;
+} */
+
+#wp-admin-bar-all-sites-search label[for="all-sites-search-text"] {
+	clip: rect(1px, 1px, 1px, 1px);
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+}
+
+#wp-admin-bar-all-sites-search {
+	height: 38px;
+}
+
+#wp-admin-bar-all-sites-search .ab-item {
+	height: 34px;
+}
+
+#wp-admin-bar-all-sites-search input {
+	padding: 0 2px;
+	width: 95%;
+	width: calc( 100% - 4px);
+}

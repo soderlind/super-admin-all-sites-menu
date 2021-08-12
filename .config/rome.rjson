@@ -1,0 +1,7 @@
+// For configuration documentation see http://romefrontend.dev/#project-configuration
+name: "super-admin-all-sites-menu"
+root: true
+lint: {
+	ignore: []
+	globals: ["pluginAllSitesMenu","Dexie"]
+}
