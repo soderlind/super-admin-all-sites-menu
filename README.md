@@ -11,7 +11,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 - Sites menu is sorted alphabetically.
 - Search filter.
 - Add more menu choices:
-   - Network Admin
+   - Under "Network Admin"
 	   - Add New Site
    - Per subsite.
      - 'New Page'
