@@ -95,9 +95,8 @@ class AllSitesMenu {
 					parseInt(this.incrementStore.dataset.increment) +
 					pluginAllSitesMenu.loadincrements;
 				this.save(res.data);
-				this.loadSites(); // load more.
+				await this.loadSites(); // load more.
 			} else if (res.response === "unobserve") {
-				await this.read();
 				this.observer.unobserve(this.observedContainer);
 				this.observedContainer.style.display = "none";
 			}

@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.2.0
+ * Version:     1.2.1
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -35,7 +35,9 @@ const LOADINCREMENTS = 100; // Number of sites to load at a time.
 class SuperAdminAllSitesMenu {
 
 
-	private $refresh_data = false;
+	private $plugins = [
+		'restricted-site-access/restricted_site_access.php'
+	];
 
 	/**
 	 * Undocumented function
@@ -53,6 +55,21 @@ class SuperAdminAllSitesMenu {
 		add_action( 'wp_insert_site', [ $this, 'update_local_storage' ] );
 		add_action( 'wp_delete_site', [ $this, 'update_local_storage' ] );
 
+		add_action( 'activated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 2 );
+		add_action( 'deactivated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 2 );
+
+	}
+
+	/**
+	 * Fires before a plugin is activated.
+	 *
+	 * @param string $plugin       Path to the plugin file relative to the plugins directory.
+	 * @param bool   $network_wide Whether to enable the plugin for all sites in the network                             or just the current site. Multisite only. Default false.
+	 */
+	public function plugin_update_local_storage( string $plugin, bool $network_wide ) : void {
+		if ( in_array( $plugin, $this->plugins, true ) ) {
+			update_site_option( 'allsitemenurefresh', true );
+		}
 	}
 
 	/**
