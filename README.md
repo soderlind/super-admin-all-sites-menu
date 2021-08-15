@@ -5,7 +5,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 
 - Doesn't use `switch_to_blog()` i.e. it's faster and uses less resources than the WP Admin Bar My Sites menu.
-- Subsite menu data are stored locally in IndexedDB (did I say it's fast?). The local storage is updated when a site is added or deleted, or when Restriced Site Access is activated or deactivated.
+- Subsite menu data are stored locally in IndexedDB (did I say it's fast?). The local storage is updated when a site is added or deleted, or when Restricted Site Access is activated or deactivated.
 - When subsite menu data is updated, AJAX is used and it's done in increments (100 sites per increment).
 - List all subsites. WP Admin Bar My Sites only list sites you're a local admin on.
 - Mark sites that has [restricted site access](https://github.com/10up/restricted-site-access) with a red icon.
@@ -66,6 +66,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 - Initial release.
 
 ## Credits
+- [Dexie.js](https://github.com/dfahlander/Dexie.js), which has an Apache License Version 2.0
 - Submmenu offset adjustment: https://qiita.com/zephyr7501/items/dd0967fddabd888b28c4
 - CSS for search field from https://github.com/trepmal/my-sites-search
 
