@@ -35,6 +35,10 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ## Changelog
 
+### 1.2.3
+
+- Remove `window.hoverintent`, it's slow when you have a lot of sites, use `addEventListener` in capturing mode instead.
+
 ### 1.2.2
 
 - Housekeeping.

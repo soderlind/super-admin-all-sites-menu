@@ -247,19 +247,42 @@ class AllSitesMenu {
 	 * @memberof AllSitesMenu
 	 */
 	refreshAdminBar() {
-		let topMenuItems = this.adminBar.querySelectorAll("li.menupop");
-		for (let i = 0; i < topMenuItems.length; i++) {
-			// Adds or removes the hover class based on the hover intent.
-			window.hoverintent(
-				topMenuItems[i],
-				this.addClass.bind(null, topMenuItems[i], "hover"),
-				this.removeClass.bind(null, topMenuItems[i], "hover"),
-			).options({
-				timeout: 180,
-			});
+		const sitemenu = document.getElementById("wp-admin-bar-my-sites-list");
+		if (sitemenu) {
+			sitemenu.addEventListener(
+				"mouseenter",
+				(e) => {
+					e.stopPropagation();
+					if (e.target.classList.contains("menupop")) {
+						this.addClass(e.target, "hover");
+					}
+				},
+				{capture: true},
+			);
 
-			// Toggle hover class if the enter key is pressed.
-			topMenuItems[i].addEventListener("keydown", this.toggleHoverIfEnter);
+			sitemenu.addEventListener(
+				"mouseleave",
+				(e) => {
+					e.stopPropagation();
+					if (e.target.classList.contains("menupop")) {
+						this.removeClass(e.target, "hover");
+					}
+				},
+				{capture: true},
+			);
+
+			sitemenu.addEventListener(
+				"keydown",
+				(e) => {
+					if (e.key === "Tab") {
+						e.preventDefault();
+						if (e.target.classList.contains("menupop")) {
+							this.toggleClass(e.target, "hover");
+						}
+					}
+				},
+				{capture: true},
+			);
 		}
 	}
 

@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.2.2
+ * Version:     1.2.3
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -48,7 +48,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var string
 	 */
-	private $version = '1.2.2';
+	private $version = '1.2.3';
 	/**
 	 * Undocumented function
 	 */
@@ -70,17 +70,6 @@ class SuperAdminAllSitesMenu {
 
 	}
 
-	/**
-	 * Fires before a plugin is activated.
-	 *
-	 * @param string $plugin       Path to the plugin file relative to the plugins directory.
-	 * @param bool   $network_wide Whether to enable the plugin for all sites in the network                             or just the current site. Multisite only. Default false.
-	 */
-	public function plugin_update_local_storage( string $plugin, bool $network_wide ) : void {
-		if ( in_array( $plugin, $this->plugins, true ) ) {
-			update_site_option( 'allsitemenurefresh', true );
-		}
-	}
 
 	/**
 	 * Remove the default WP Admin Bar My Sites menu.
@@ -95,15 +84,6 @@ class SuperAdminAllSitesMenu {
 		}
 		remove_action( 'admin_bar_menu', 'wp_admin_bar_my_sites_menu', 20 );
 
-	}
-
-	/**
-	 * Update local storage with the current sites. Fires once a site has been added to or deleted from the database.
-	 *
-	 * @param \WP_Site $site Site object.
-	 */
-	public function update_local_storage( \WP_Site $site ) : void {
-		update_site_option( 'allsitemenurefresh', true );
 	}
 
 	/**
@@ -368,6 +348,39 @@ class SuperAdminAllSitesMenu {
 
 		return $tag;
 	}
+
+
+	/**
+	 * Update local storage with the current sites. Fires once a site has been added to or deleted from the database.
+	 *
+	 * @param \WP_Site $site Site object.
+	 */
+	public function update_local_storage( \WP_Site $site ) : void {
+		$this->refresh_local_storage();
+	}
+
+	/**
+	 * Fires after a plugin is activated/deactivated.
+	 *
+	 * @param string $plugin       Path to the plugin file relative to the plugins directory.
+	 * @param bool   $network_wide Whether to enable the plugin for all sites in the network                             or just the current site. Multisite only. Default false.
+	 */
+	public function plugin_update_local_storage( string $plugin, bool $network_wide ) : void {
+		if ( in_array( $plugin, $this->plugins, true ) ) {
+			$this->refresh_local_storage();
+		}
+	}
+
+
+	/**
+	 * When options allsitemenurefresh is true, refresh the local storage.
+	 *
+	 * @return void
+	 */
+	public function refresh_local_storage() : void {
+		update_site_option( 'allsitemenurefresh', true );
+	}
+
 
 	/**
 	 * Get the Ajax URL.
