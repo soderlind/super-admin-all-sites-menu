@@ -6,7 +6,7 @@
 	#wp-admin-bar-my-sites>.ab-sub-wrapper {
 		overflow-y: auto;
 		margin-top: 32px;
-		height: calc(100vh - 32px);
+		/* height: calc(100vh - 32px); */
 		-ms-overflow-style: none;
 		scrollbar-width: none;
 	}
@@ -19,7 +19,7 @@
 	}
 	#wp-admin-bar-my-sites>.ab-sub-wrapper ul#wp-admin-bar-my-sites-list {
 		background-color: #464b50;
-		padding-bottom: 32px !important;
+		/* padding-bottom: 32px !important; */
 	}
 	#wp-admin-bar-my-sites>.ab-sub-wrapper ul#wp-admin-bar-my-sites-list li.menupop {
 		position: relative;

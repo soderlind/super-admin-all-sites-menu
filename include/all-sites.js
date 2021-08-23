@@ -2,7 +2,7 @@
  * Save/load all sites.
  *
  * @author Per Søderlind
- * @date  10.09.2021
+ * @date  10.06.2021
  * @class AllSitesMenu
  */
 class AllSitesMenu {
@@ -12,12 +12,17 @@ class AllSitesMenu {
 		this.sitesContainer = document.querySelector(".load-more");
 		this.incrementStore = document.querySelector("#load-more-increment");
 		this.observedContainer = document.querySelector("#wp-admin-bar-load-more");
+		this.observedWrapper = document.querySelector(
+			"ul#wp-admin-bar-my-sites-list",
+		);
 		this.adminBar = document.getElementById("wpadminbar");
 		this.observer = {};
+		this.wrapperObserver = {};
 	}
 
 	init() {
 		this.observeSitesMenu();
+		this.observeMenuHeight();
 		this.addSearch();
 		if (this.incrementStore.dataset.refresh === "refresh") {
 			this.deleteDB();
@@ -45,6 +50,27 @@ class AllSitesMenu {
 		});
 
 		this.observer.observe(this.observedContainer);
+	}
+	/**
+	 * Change the wrapper height.
+	 *
+	 * @see https://stackoverflow.com/a/66428317
+	 * @author Per Søderlind
+	 */
+	observeMenuHeight() {
+		this.wrapperObserver = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					const bcr = entry.boundingClientRect;
+					const isBottomVisible = bcr.bottom < window.innerHeight && bcr.bottom;
+
+					this.setHeight(isBottomVisible);
+				});
+			},
+			{threshold: Array(11).fill().map((_, i) => i * 0.1)},
+		);
+
+		this.wrapperObserver.observe(this.observedWrapper);
 	}
 
 	/**
@@ -233,6 +259,30 @@ class AllSitesMenu {
 				}
 			},
 		);
+	}
+
+
+	/**
+	 * Set the site menu wrapper height.
+	 *
+	 * @author Per Søderlind
+	 * @param {boolean} isBottomVisible
+	 */
+	setHeight(isBottomVisible) {
+		const mx = window.matchMedia("(min-width: 783px)");
+		if (mx.matches) {
+			const wrapper = document.querySelector(
+				"#wp-admin-bar-my-sites>.ab-sub-wrapper",
+			);
+
+			if (isBottomVisible) {
+				wrapper.style.height = "";
+				wrapper.querySelector("ul#wp-admin-bar-my-sites-list").style.paddingBottom = "0";
+			} else {
+				wrapper.style.height = "calc(100vh - 32px)";
+				wrapper.querySelector("ul#wp-admin-bar-my-sites-list").style.paddingBottom = "32px";
+			}
+		}
 	}
 
 	/**
