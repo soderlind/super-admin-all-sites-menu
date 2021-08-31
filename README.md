@@ -35,6 +35,12 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ## Changelog
 
+### 1.3.0
+
+- Refactor
+	- Split JavaScript into modules
+	- If empty, populate IndexedDB with sites menu data.
+
 ### 1.2.4
 
 - Adjust the sites menu wrapper height
