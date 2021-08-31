@@ -35,6 +35,14 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 ## Changelog
 
+### 1.3.3
+
+- Update IndexedDB when you change a blog name.
+
+### 1.3.2
+
+- Only change `text/javscript`to `module` when tag has `src` attribute
+
 ### 1.3.0
 
 - Refactor

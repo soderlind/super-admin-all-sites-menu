@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.3.2
+ * Version:     1.3.3
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -48,7 +48,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var string
 	 */
-	private $version = '1.3.2';
+	private $version = '1.3.3';
 	/**
 	 * Undocumented function
 	 */
@@ -64,6 +64,8 @@ class SuperAdminAllSitesMenu {
 
 		add_action( 'wp_insert_site', [ $this, 'update_local_storage' ] );
 		add_action( 'wp_delete_site', [ $this, 'update_local_storage' ] );
+
+		add_action( 'update_option_blogname', [ $this, 'action_update_option_option' ], 10, 3 );
 
 		add_action( 'activated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 2 );
 		add_action( 'deactivated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 2 );
@@ -375,6 +377,18 @@ class SuperAdminAllSitesMenu {
 		}
 	}
 
+	/**
+	 * Fires after the a blog is renamed.
+	 *
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 * @param string $option    Option name.
+	 */
+	public function action_update_option_option( $old_value, $value, string $option ) : void {
+		if ( $old_value !== $value ) {
+			$this->refresh_local_storage();
+		}
+	}
 
 	/**
 	 * When options allsitemenurefresh is true, refresh the local storage.
