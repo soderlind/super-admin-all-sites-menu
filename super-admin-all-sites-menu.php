@@ -48,7 +48,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var string
 	 */
-	private $version = '1.3.0';
+	private $version = '1.3.1';
 	/**
 	 * Undocumented function
 	 */
