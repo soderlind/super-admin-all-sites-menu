@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.3.3
+ * Version:     1.3.4
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -30,9 +30,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 const LOADINCREMENTS = 100; // Number of sites to load at a time.
 
 /**
- * Undocumented class
+ * Super Admin All Sites Menu
  */
 class SuperAdminAllSitesMenu {
+
+	private $load_increments = LOADINCREMENTS;
 
 	/**
 	 * Plugins triggering update local storages.
@@ -44,11 +46,17 @@ class SuperAdminAllSitesMenu {
 	];
 
 	/**
+	 * Sort menu by site name.
+	 *
+	 * @var string
+	 */
+	private $order_by = 'name';
+	/**
 	 * Plugin version.
 	 *
 	 * @var string
 	 */
-	private $version = '1.3.3';
+	private $version = '1.3.4';
 	/**
 	 * Undocumented function
 	 */
@@ -70,8 +78,31 @@ class SuperAdminAllSitesMenu {
 		add_action( 'activated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 2 );
 		add_action( 'deactivated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 2 );
 
+		$this->do_filters();
 	}
 
+	/**
+	 * Update private properties from hooks.
+	 *
+	 * @return void
+	 */
+	public function do_filters() : void {
+		$this->plugins  = \apply_filters( 'all_sites_menu_plugin_trigger', $this->plugins );
+		if ( ! is_array( $this->plugins ) ) {
+			$this->plugins = [ 'restricted-site-access/restricted_site_access.php' ];
+		}
+
+
+		$this->order_by = \apply_filters( 'all_sites_menu_order_by', $this->order_by );
+		if ( ! in_array( $this->order_by, [ 'name', 'url', 'id' ], true ) ) {
+			$this->order_by = 'name';
+		}
+
+		$this->load_increments = \apply_filters( 'all_sites_menu_load_increments', $this->load_increments );
+		if ( ! is_numeric( $this->load_increments ) || $this->load_increments < 1 ) {
+			$this->load_increments = LOADINCREMENTS;
+		}
+	}
 
 	/**
 	 * Remove the default WP Admin Bar My Sites menu.
@@ -317,7 +348,8 @@ class SuperAdminAllSitesMenu {
 			[
 				'nonce'          => wp_create_nonce( 'all_sites_menu_nonce' ),
 				'ajaxurl'        => $this->get_ajax_url(),
-				'loadincrements' => LOADINCREMENTS,
+				'loadincrements' => \apply_filters( 'all_sites_menu_load_increments', LOADINCREMENTS ),
+				'orderBy'        => $this->order_by,
 				'l10n'           => [
 					'dashboard'      => __( 'Dashboard' ),
 					'newpost'        => __( 'New Post' ),

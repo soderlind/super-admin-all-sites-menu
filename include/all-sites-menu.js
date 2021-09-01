@@ -31,7 +31,7 @@ class AllSitesMenu {
 
 		Search.add();
 
-		this.db = new DB("allsites", 1, "id,name,href");
+		this.db = new DB("allsites", 1, "id,name,url");
 		const incrementStore = document.querySelector("#load-more-increment");
 		if (incrementStore.dataset.refresh === "refresh") {
 			this.db.delete();
@@ -57,7 +57,7 @@ class AllSitesMenu {
 	 * @author Per Søderlind
 	 */
 	async getSites(observer) {
-		const sites = await this.db.read();
+		const sites = await this.db.read(pluginAllSitesMenu.orderBy);
 		await this.updateSitesMenu(sites);
 		observer.unobserveMenu();
 	}

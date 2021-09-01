@@ -37,7 +37,23 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 - [Download the plugin](https://github.com/soderlind/super-admin-all-sites-menu/archive/refs/heads/main.zip)
 - [Upload and network activate the plugin](https://wordpress.org/support/article/managing-plugins/#manual-upload-via-wordpress-admin)
 
+## Filters
+
+You can use the following filters to override the defaults:
+
+- `all_sites_menu_order_by`
+	- Sort menu by. Default value is `name`, accepts `id`, `url` or `name`
+- `all_sites_menu_load_increments`
+  - AJAX load increments. Default value is 100.
+- `all_sites_menu_plugin_trigger`
+  - Trigger an update of local storage (IndexedDB) when a plugin is (de)activated. Default is `[ 'restricted-site-access/restricted_site_access.php' ]`.
+	>Note: Must be an array and each element in the array must point to the main plugin file. Syntax `'plugin-dir/plugin-file.php'`
+
 ## Changelog
+
+### 1.3.4
+
+- Add filters to defaults.
 
 ### 1.3.3
 

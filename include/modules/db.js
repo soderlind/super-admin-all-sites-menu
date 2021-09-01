@@ -35,14 +35,14 @@ class DB {
 	 *
 	 * @author Per Søderlind
 	 */
-	async read() {
+	async read( orderBy = "name" ) {
 		const db = new Dexie(this.name);
 		db.version(this.version).stores({
 			sites: this.keys,
 		});
 
 		const sites = await db.sites
-			.orderBy("name")
+			.orderBy(orderBy)
 			.toArray()
 			.then((data) => {
 				db.close();
