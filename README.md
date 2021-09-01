@@ -51,6 +51,14 @@ You can use the following filters to override the defaults:
 
 ## Changelog
 
+### 1.3.6
+
+- Fix load increments bug.
+
+### 1.3.5
+
+- Housekeeping.
+
 ### 1.3.4
 
 - Add filters to defaults.
