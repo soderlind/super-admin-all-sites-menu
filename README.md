@@ -48,8 +48,14 @@ You can use the following filters to override the defaults:
 - `all_sites_menu_plugin_trigger`
   - Trigger an update of local storage (IndexedDB) when a plugin is (de)activated. Default is `[ 'restricted-site-access/restricted_site_access.php' ]`.
 	>Note: Must be an array and each element in the array must point to the main plugin file. Syntax `'plugin-dir/plugin-file.php'`
+- `all_sites_menu_search_threshold`
+  - Don't display search field if there's less than N subsites. Default value is 20.
 
 ## Changelog
+
+### 1.3.7
+
+- Don't display search field if there's less than 20 subsites. The threshold is adjustable using the `all_sites_menu_search_threshold` filter
 
 ### 1.3.6
 

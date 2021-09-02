@@ -29,7 +29,9 @@ class AllSitesMenu {
 		this.observe.SitesMenu(this.getSites.bind(this));
 		this.observe.MenuHeight();
 
-		Search.add();
+		if (pluginAllSitesMenu.displaySearch === true) {
+			Search.add();
+		}
 
 		this.db = new DB("allsites", 1, "id,name,url");
 		const incrementStore = document.querySelector("#load-more-increment");

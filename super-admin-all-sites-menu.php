@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.3.6
+ * Version:     1.3.7
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -28,6 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	wp_die();
 }
 const LOADINCREMENTS = 100; // Number of sites to load at a time.
+const SEARCHTHRESHOLD = 20; // Number of sites before showing the search box.
 
 /**
  * Super Admin All Sites Menu
@@ -39,7 +40,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var string
 	 */
-	private $version = '1.3.6';
+	private $version = '1.3.7';
 
 	/**
 	 * AJAX load increments.
@@ -64,6 +65,10 @@ class SuperAdminAllSitesMenu {
 	 */
 	private $order_by = 'name';
 
+
+	private $number_of_sites = 0;
+
+	private $search_threshold = SEARCHTHRESHOLD;
 	/**
 	 * Undocumented function
 	 */
@@ -84,6 +89,8 @@ class SuperAdminAllSitesMenu {
 
 		add_action( 'activated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 2 );
 		add_action( 'deactivated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 2 );
+
+		$this->number_of_sites = $this->get_number_of_sites();
 
 		$this->do_filters();
 	}
@@ -108,6 +115,11 @@ class SuperAdminAllSitesMenu {
 		$this->load_increments = \apply_filters( 'all_sites_menu_load_increments', $this->load_increments );
 		if ( ! is_numeric( $this->load_increments ) || $this->load_increments < 1 ) {
 			$this->load_increments = LOADINCREMENTS;
+		}
+
+		$this->search_threshold = \apply_filters( 'all_sites_menu_search_threshold', $this->search_threshold );
+		if ( ! is_numeric( $this->search_threshold ) || $this->search_threshold < 1 ) {
+			$this->search_threshold = SEARCHTHRESHOLD;
 		}
 	}
 
@@ -238,6 +250,7 @@ class SuperAdminAllSitesMenu {
 			]
 		);
 
+		if ( $this->number_of_sites > $this->search_threshold ) {
 		// Add search field.
 		$wp_admin_bar->add_menu(
 			[
@@ -253,7 +266,7 @@ class SuperAdminAllSitesMenu {
 				],
 			]
 		);
-
+	}
 		// Add an observable container, used by the IntersectionObserver.
 
 		$refresh = ( get_site_option( 'allsitemenurefresh', false ) ) ? 'refresh' : 'no-refresh';
@@ -357,6 +370,7 @@ class SuperAdminAllSitesMenu {
 				'ajaxurl'        => $this->get_ajax_url(),
 				'loadincrements' => $this->load_increments,
 				'orderBy'        => $this->order_by,
+				'displaySearch' => ( $this->number_of_sites > $this->search_threshold ) ? true : false,
 				'l10n'           => [
 					'dashboard'      => __( 'Dashboard' ),
 					'newpost'        => __( 'New Post' ),
@@ -453,6 +467,12 @@ class SuperAdminAllSitesMenu {
 			$ajaxurl = site_url( '/wp-admin/admin-ajax.php', $http_scheme );
 		}
 		return $ajaxurl;
+	}
+
+	private function get_number_of_sites() : int {
+		global $wpdb;
+		$sql = "SELECT COUNT(*) FROM {$wpdb->blogs} WHERE spam = 0 AND deleted = 0 AND archived = 0";
+		return (int) $wpdb->get_var( $sql );
 	}
 
 }
