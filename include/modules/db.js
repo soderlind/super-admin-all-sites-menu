@@ -1,11 +1,30 @@
-class DB {
+
+/**
+ * IndexedDB wrapper.
+ *
+ * @author Per Søderlind
+ * @class DB
+ */
+class IndexedDB {
 	name = "db";
 	version = "1.0";
+	table = "table"
 	key = "id";
 
-	constructor(name, version, keys) {
+
+	/**
+	 * Creates an instance of DB.
+	 *
+	 * @author Per Søderlind
+	 * @param {string} name Database name
+	 * @param {string} version Database version
+	 * @param {string} table Table name
+	 * @param {string} keys Indexed keys
+	 */
+	constructor(name, version, table, keys) {
 		this.name = name;
 		this.version = version;
+		this.table = table;
 		this.keys = keys;
 	}
 
@@ -18,9 +37,9 @@ class DB {
 	async save(sites) {
 		const db = new Dexie(this.name);
 		db.version(this.version).stores({
-			sites: this.keys,
+			[this.table]: this.keys,
 		});
-		await db.sites
+		await db[this.table]
 			.bulkPut(sites)
 			.then(() => {
 				db.close();
@@ -38,10 +57,10 @@ class DB {
 	async read( orderby = "name" ) {
 		const db = new Dexie(this.name);
 		db.version(this.version).stores({
-			sites: this.keys,
+			[this.table]: this.keys,
 		});
 
-		const sites = await db.sites
+		const sites = await db[this.table]
 			.orderBy(orderby)
 			.toArray()
 			.then((data) => {
@@ -68,12 +87,13 @@ class DB {
 	}
 
 	async count() {
+		// const table = `${this.table}`;
 		const db = new Dexie(this.name);
 		db.version(this.version).stores({
-			sites: this.keys,
+			[this.table]: this.keys,
 		});
 
-		const count = await db.sites
+		const count = await db[this.table]
 			.count()
 			.then((data) => {
 				db.close();
@@ -86,4 +106,4 @@ class DB {
 	}
 }
 
-export { DB };
+export { IndexedDB };

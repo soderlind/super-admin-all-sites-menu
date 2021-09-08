@@ -8,7 +8,7 @@
 
 import { Observe } from "./modules/observe.js";
 import { Search } from "./modules/search.js";
-import { DB } from "./modules/db.js";
+import { IndexedDB } from "./modules/db.js";
 import { Refresh } from "./modules/refresh.js";
 import { Ajax } from "./modules/ajax.js";
 import { Menu } from "./modules/menu.js";
@@ -24,7 +24,7 @@ class AllSitesMenu {
 	 *
 	 * @author Per Søderlind
 	 */
-	init() {
+	constructor() {
 		this.observe = new Observe(this.observedContainer, this.observedWrapper);
 		this.observe.SitesMenu(this.getSites.bind(this));
 		this.observe.MenuHeight();
@@ -33,7 +33,7 @@ class AllSitesMenu {
 			Search.add();
 		}
 
-		this.db = new DB("allsites", 1, "id,name,url");
+		this.db = new IndexedDB("allsites", 1, "sites", "id,name,url");
 		const incrementStore = document.querySelector("#load-more-increment");
 		if (incrementStore.dataset.refresh === "refresh") {
 			this.db.delete();
@@ -72,10 +72,9 @@ class AllSitesMenu {
 	 */
 	async updateSitesMenu(sites) {
 		const sitesContainer = document.querySelector(".load-more");
-		let sitesMenu = "";
-		sites.forEach((site) => {
-			sitesMenu += Menu.item(site);
-		});
+		const sitesMenu = sites.reduce((acc, site) => {
+			return acc + Menu.item(site);
+		}, "");
 		sitesContainer.insertAdjacentHTML("beforeBegin", sitesMenu);
 		new Refresh().adminbar();
 	}
@@ -83,5 +82,4 @@ class AllSitesMenu {
 
 document.addEventListener("DOMContentLoaded", () => {
 	const allsitesmenu = new AllSitesMenu();
-	allsitesmenu.init();
 });

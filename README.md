@@ -53,6 +53,10 @@ You can use the following filters to override the defaults:
 
 ## Changelog
 
+### 1.3.8
+
+- Refactor and rename db module.
+
 ### 1.3.7
 
 - Don't display search field if there's less than 20 subsites. The threshold is adjustable using the `all_sites_menu_search_threshold` filter
