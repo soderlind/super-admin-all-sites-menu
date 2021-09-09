@@ -1,19 +1,20 @@
 
 /**
- * IndexedDB wrapper.
+ * Dexie.js wrapper.
+ *
+ * @see https://dexie.org/
  *
  * @author Per Søderlind
- * @class DB
+ * @class IndexedDB
  */
 class IndexedDB {
 	name = "db";
 	version = "1.0";
-	table = "table"
+	table = "table";
 	key = "id";
 
-
 	/**
-	 * Creates an instance of DB.
+	 * Creates an instance of IndexedDB.
 	 *
 	 * @author Per Søderlind
 	 * @param {string} name Database name
@@ -54,7 +55,7 @@ class IndexedDB {
 	 *
 	 * @author Per Søderlind
 	 */
-	async read( orderby = "name" ) {
+	async read(orderby = "name") {
 		const db = new Dexie(this.name);
 		db.version(this.version).stores({
 			[this.table]: this.keys,
