@@ -43,14 +43,35 @@ You can use the following filters to override the defaults:
 
 - `all_sites_menu_order_by`
 	- Sort menu by. Default value is `name`, accepts `id`, `url` or `name`
+		```php
+		add_filter( 'all_sites_menu_order_by', function(string $order_by ) : string {
+			return 'url';
+		} );
+		```
 - `all_sites_menu_load_increments`
   - AJAX load increments. Default value is 100.
+	```php
+	add_filter( 'all_sites_menu_load_increments', function(int $increments ) : int {
+		return 50;
+	} );
+	```
 - `all_sites_menu_plugin_trigger`
   - Trigger an update of local storage (IndexedDB) when a plugin is (de)activated. Default is `[ 'restricted-site-access/restricted_site_access.php' ]`.
 	>Note: Must be an array and each element in the array must point to the main plugin file. Syntax `'plugin-dir/plugin-file.php'`
+	```php
+	 add_filter( 'all_sites_menu_plugin_trigger', function( array $plugins ) : array {
+		return [
+			'restricted-site-access/restricted_site_access.php',
+		];
+	} );
+	```
 - `all_sites_menu_search_threshold`
   - Don't display search field if there's less than N subsites. Default value is 20.
-
+	```php
+	add_filter( 'all_sites_menu_load_increments', function( int $increments ) : int {
+		return 50;
+	} );
+	```
 ## Changelog
 
 ### 1.3.8
