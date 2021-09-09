@@ -62,6 +62,7 @@ You can use the following filters to override the defaults:
 	 add_filter( 'all_sites_menu_plugin_trigger', function( array $plugins ) : array {
 		return [
 			'restricted-site-access/restricted_site_access.php',
+			'myplugin/myplugin.php',
 		];
 	} );
 	```
