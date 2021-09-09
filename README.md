@@ -44,15 +44,15 @@ You can use the following filters to override the defaults:
 - `all_sites_menu_order_by`
 	- Sort menu by. Default value is `name`, accepts `id`, `url` or `name`
 		```php
-		add_filter( 'all_sites_menu_order_by', function(string $order_by ) : string {
+		add_filter( 'all_sites_menu_order_by', function( string $order_by ) : string {
 			return 'url';
 		} );
 		```
 - `all_sites_menu_load_increments`
   - AJAX load increments. Default value is 100.
 	```php
-	add_filter( 'all_sites_menu_load_increments', function(int $increments ) : int {
-		return 50;
+	add_filter( 'all_sites_menu_load_increments', function( int $increments ) : int {
+		return 300;
 	} );
 	```
 - `all_sites_menu_plugin_trigger`
@@ -69,7 +69,7 @@ You can use the following filters to override the defaults:
   - Don't display search field if there's less than N subsites. Default value is 20.
 	```php
 	add_filter( 'all_sites_menu_load_increments', function( int $increments ) : int {
-		return 50;
+		return 40;
 	} );
 	```
 ## Changelog
