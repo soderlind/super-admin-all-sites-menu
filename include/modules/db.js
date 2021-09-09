@@ -30,7 +30,7 @@ class IndexedDB {
 	}
 
 	/**
-	 * Save sites to local storage.
+	 * Save to local storage.
 	 *
 	 * @author Per Søderlind
 	 * @param {array} sites
@@ -51,7 +51,7 @@ class IndexedDB {
 	}
 
 	/**
-	 * Read sites from local storage and refresh the admin bar.
+	 * Read from local storage.
 	 *
 	 * @author Per Søderlind
 	 */
@@ -74,6 +74,11 @@ class IndexedDB {
 		return sites;
 	}
 
+	/**
+	 * Delete local storage.
+	 *
+	 * @author Per Søderlind
+	 */
 	async delete() {
 		const db = new Dexie(this.name);
 
@@ -87,8 +92,13 @@ class IndexedDB {
 			});
 	}
 
+	/**
+	 * Get number of records in local storage.
+	 *
+	 * @author Per Søderlind
+	 * @returns {*}
+	 */
 	async count() {
-		// const table = `${this.table}`;
 		const db = new Dexie(this.name);
 		db.version(this.version).stores({
 			[this.table]: this.keys,
