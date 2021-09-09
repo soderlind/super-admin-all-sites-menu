@@ -33,15 +33,15 @@ class IndexedDB {
 	 * Save to local storage.
 	 *
 	 * @author Per Søderlind
-	 * @param {array} sites
+	 * @param {array} data
 	 */
-	async save(sites) {
+	async save(data) {
 		const db = new Dexie(this.name);
 		db.version(this.version).stores({
 			[this.table]: this.keys,
 		});
 		await db[this.table]
-			.bulkPut(sites)
+			.bulkPut(data)
 			.then(() => {
 				db.close();
 			})
@@ -61,7 +61,7 @@ class IndexedDB {
 			[this.table]: this.keys,
 		});
 
-		const sites = await db[this.table]
+		const data = await db[this.table]
 			.orderBy(orderby)
 			.toArray()
 			.then((data) => {
@@ -71,7 +71,7 @@ class IndexedDB {
 			.catch((err) => {
 				console.error(err);
 			});
-		return sites;
+		return data;
 	}
 
 	/**
