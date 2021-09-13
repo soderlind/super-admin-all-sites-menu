@@ -27,7 +27,7 @@ namespace Soderlind\Multisite;
 if ( ! defined( 'ABSPATH' ) ) {
 	wp_die();
 }
-const LOADINCREMENTS = 100; // Number of sites to load at a time.
+const LOADINCREMENTS  = 100; // Number of sites to load at a time.
 const SEARCHTHRESHOLD = 20; // Number of sites before showing the search box.
 
 /**
@@ -101,11 +101,10 @@ class SuperAdminAllSitesMenu {
 	 * @return void
 	 */
 	public function do_filters() : void {
-		$this->plugins  = \apply_filters( 'all_sites_menu_plugin_trigger', $this->plugins );
+		$this->plugins = \apply_filters( 'all_sites_menu_plugin_trigger', $this->plugins );
 		if ( ! is_array( $this->plugins ) ) {
 			$this->plugins = [ 'restricted-site-access/restricted_site_access.php' ];
 		}
-
 
 		$this->order_by = \apply_filters( 'all_sites_menu_order_by', $this->order_by );
 		if ( ! in_array( $this->order_by, [ 'name', 'url', 'id' ], true ) ) {
@@ -251,22 +250,22 @@ class SuperAdminAllSitesMenu {
 		);
 
 		if ( $this->number_of_sites > $this->search_threshold ) {
-		// Add search field.
-		$wp_admin_bar->add_menu(
-			[
-				'parent' => 'my-sites-list',
-				'id'     => 'all-sites-search',
-				'title'  => sprintf(
-					'<label for="all-sites-search-text">%s</label><input type="text" id="all-sites-search-text" placeholder="%s" />',
-					esc_html__( 'Filter My Sites', 'super-admin-sites-menu' ),
-					esc_attr__( 'Search Sites', 'super-admin-sites-menu' )
-				),
-				'meta'   => [
-					'class' => 'hide-if-no-js',
-				],
-			]
-		);
-	}
+			// Add search field.
+			$wp_admin_bar->add_menu(
+				[
+					'parent' => 'my-sites-list',
+					'id'     => 'all-sites-search',
+					'title'  => sprintf(
+						'<label for="all-sites-search-text">%s</label><input type="text" id="all-sites-search-text" placeholder="%s" />',
+						esc_html__( 'Filter My Sites', 'super-admin-sites-menu' ),
+						esc_attr__( 'Search Sites', 'super-admin-sites-menu' )
+					),
+					'meta'   => [
+						'class' => 'hide-if-no-js',
+					],
+				]
+			);
+		}
 		// Add an observable container, used by the IntersectionObserver.
 
 		$refresh = ( get_site_option( 'allsitemenurefresh', false ) ) ? 'refresh' : 'no-refresh';
@@ -370,7 +369,7 @@ class SuperAdminAllSitesMenu {
 				'ajaxurl'        => $this->get_ajax_url(),
 				'loadincrements' => $this->load_increments,
 				'orderBy'        => $this->order_by,
-				'displaySearch' => ( $this->number_of_sites > $this->search_threshold ) ? true : false,
+				'displaySearch'  => ( $this->number_of_sites > $this->search_threshold ) ? true : false,
 				'l10n'           => [
 					'dashboard'      => __( 'Dashboard' ),
 					'newpost'        => __( 'New Post' ),
@@ -410,7 +409,7 @@ class SuperAdminAllSitesMenu {
 
 
 	/**
-	 * Update local storage with the current sites. Fires once a site has been added to or deleted from the database.
+	 * Fires after a site has been added to or deleted from the database.
 	 *
 	 * @param \WP_Site $site Site object.
 	 */

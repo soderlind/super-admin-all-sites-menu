@@ -5,9 +5,9 @@ class Ajax {
 	 * @author Per Søderlind
 	 */
 	static async loadSites(db) {
-		const data = new FormData();
 		const incrementStore = document.querySelector("#load-more-increment");
 
+		const data = new FormData();
 		data.append("action", "all_sites_menu_action");
 		data.append("nonce", pluginAllSitesMenu.nonce);
 		data.append("increment", incrementStore.dataset.increment);
