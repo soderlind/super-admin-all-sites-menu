@@ -5,81 +5,56 @@
  * @date  10.06.2021
  * @class AllSitesMenu
  */
-
-import { Observe } from "./modules/observe.js";
-import { Search } from "./modules/search.js";
+import { addSearch } from "./modules/search.js";
 import { IndexedDB } from "./modules/db.js";
-import { Refresh } from "./modules/refresh.js";
-import { Ajax } from "./modules/ajax.js";
-import { Menu } from "./modules/menu.js";
-
-class AllSitesMenu {
-	observedContainer = document.querySelector("#wp-admin-bar-load-more");
-	observedWrapper = document.querySelector("ul#wp-admin-bar-my-sites-list");
-	observe = null;
-	db = null;
-
-	/**
-	 * Add observer and search, and initialize db.
-	 *
-	 * @author Per Søderlind
-	 */
-	constructor() {
-		this.observe = new Observe(this.observedContainer, this.observedWrapper);
-		this.observe.SitesMenu(this.getSites.bind(this));
-		this.observe.MenuHeight();
-
-		if (pluginAllSitesMenu.displaySearch === true) {
-			Search.add();
-		}
-
-		this.db = new IndexedDB("allsites", 1, "sites", "id,name,url");
-		const incrementStore = document.querySelector("#load-more-increment");
-		if (incrementStore.dataset.refresh === "refresh") {
-			this.db.delete();
-		}
-		this.populateIndexedDB();
-	}
-
-	/**
-	 * If empty, populate IndexedDB with sites menu data.
-	 *
-	 * @author Per Søderlind
-	 */
-	async populateIndexedDB() {
-		if ((await this.db.count()) === 0) {
-			Ajax.reset(this.observedContainer);
-			await Ajax.loadSites(this.db);
-		}
-	}
-
-	/**
-	 * Gather sites from local storage and add them to the admin bar.
-	 *
-	 * @author Per Søderlind
-	 */
-	async getSites(observer) {
-		const sites = await this.db.read(pluginAllSitesMenu.orderBy);
-		await this.updateSitesMenu(sites);
-		observer.unobserveMenu();
-	}
-
-	/**
-	 * Update the sites menu.
-	 *
-	 * @author Per Søderlind
-	 * @param {object} data
-	 */
-	async updateSitesMenu(sites) {
-		const sitesContainer = document.querySelector(".load-more");
-		const sitesMenu = sites.reduce((acc, site) => {
-			return acc + Menu.item(site);
-		}, "");
-		sitesContainer.insertAdjacentHTML("beforeBegin", sitesMenu);
-		new Refresh().adminbar();
-	}
-}
+import { loadSites } from "./modules/ajax.js";
+import { observeContainer, observeMenuHeight } from "./modules/observe.js";
+import { refreshAdminbar } from "./modules/refresh.js";
+import { siteMenu } from "./modules/menu.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-	const allsitesmenu = new AllSitesMenu();
+	const el = {
+		load: document.querySelector("#wp-admin-bar-load-more"),
+		menu: document.querySelector("#wp-admin-bar-my-sites-list"),
+		increment: document.querySelector("#load-more-increment"),
+	};
+
+	if (pluginAllSitesMenu.displaySearch === true) {
+		addSearch();
+	}
+
+	const db = new IndexedDB("allsites", 1, "sites", "id,name,url");
+
+	populateDB(db, el);
+	observeMenuHeight(el.menu);
+
+	const observedLoadMore = observeContainer(el.load, async () => {
+		const sites = await db.read(pluginAllSitesMenu.orderBy);
+		const sitesMenu = sites.reduce((acc, site) => {
+			return acc + siteMenu(site);
+		}, "");
+		el.load.insertAdjacentHTML("beforeBegin", sitesMenu);
+		refreshAdminbar();
+
+		el.load.style.display = "none";
+		observedLoadMore.unobserve(el.load);
+	});
 });
+
+/**
+ * Populate the database with sites.
+ *
+ * @author Per Søderlind
+ * @param {IndexedDB} db
+ * @param {object} el
+ */
+async function populateDB(db, el) {
+	if (el.increment.dataset.refresh === "refresh") {
+		await db.delete();
+	}
+	if ((await db.count()) === 0) {
+		el.increment.dataset.increment = 0;
+		el.increment.style.display = "";
+		loadSites(db);
+	}
+}
