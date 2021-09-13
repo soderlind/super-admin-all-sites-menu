@@ -1,4 +1,3 @@
-
 /**
  * Dexie.js wrapper.
  *

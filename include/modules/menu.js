@@ -1,13 +1,13 @@
-class Menu {
-	/**
-	 * Create the site menu item.
-	 *
-	 * @author Per Søderlind
-	 * @param {object} site
-	 * @returns {string}
-	 */
-	static item(site) {
-		return `
+/**
+ * Create the site menu item.
+ *
+ * @author Per Søderlind
+ * @export
+ * @param {object} site
+ * @returns {string}
+ */
+export function siteMenu(site) {
+	return `
 				<li id="wp-admin-bar-${site.id}" class="menupop">
 				<a class="ab-item" aria-haspopup="true" href="${site.admin}/"><span class="wp-admin-bar-arrow" aria-hidden="true"></span>
 					${site.title}
@@ -34,7 +34,4 @@ class Menu {
 				</div>
 			</li>
 		`;
-	}
 }
-
-export { Menu };
