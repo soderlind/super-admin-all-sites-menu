@@ -133,6 +133,18 @@ class IndexedDB {
 			});
 		return count;
 	}
+
+	async getVersion() {
+		const version = new Dexie(this.name)
+			.open()
+			.then((db) => {
+				return db.verno;
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+		return version;
+	}
 }
 
 export { IndexedDB };

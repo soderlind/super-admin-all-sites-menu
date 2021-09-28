@@ -75,6 +75,10 @@ You can use the following filters to override the defaults:
 
 ## Changelog
 
+### 1.4.3
+
+- IndexedDB maintenance, i.e. remove old databases.
+
 ### 1.4.2
 
 - Dexie schema change, bump Dexie version number.

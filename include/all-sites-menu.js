@@ -12,6 +12,8 @@ import { observeContainer, observeMenuHeight } from "./modules/observe.js";
 import { refreshAdminbar } from "./modules/refresh.js";
 import { siteMenu } from "./modules/menu.js";
 
+const dbVersionNumber = 2;
+
 document.addEventListener("DOMContentLoaded", () => {
 	const el = {
 		load: document.querySelector("#wp-admin-bar-load-more"),
@@ -23,7 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
 		addSearch();
 	}
 
-	const db = new IndexedDB("allsites", 2, "sites", "id,name,url,timestamp");
+	const db = new IndexedDB(
+		"allsites",
+		dbVersionNumber,
+		"sites",
+		"id,name,url,timestamp"
+	);
 
 	populateDB(db, el);
 	observeMenuHeight(el.menu);
@@ -49,8 +56,12 @@ document.addEventListener("DOMContentLoaded", () => {
  * @param {object} el
  */
 async function populateDB(db, el) {
-	const data = await db.getFirstRow();
+	const version = await db.getVersion();
+	if (version < dbVersionNumber) {
+		await db.delete();
+	}
 
+	const data = await db.getFirstRow();
 	if (
 		typeof data !== "undefined" &&
 		typeof data.timestamp !== "undefined" &&
@@ -58,6 +69,7 @@ async function populateDB(db, el) {
 	) {
 		await db.delete();
 	}
+
 	if ((await db.count()) === 0) {
 		el.increment.dataset.increment = 0;
 		el.increment.style.display = "";
