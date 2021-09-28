@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		addSearch();
 	}
 
-	const db = new IndexedDB("allsites", 1, "sites", "id,name,url,timestamp");
+	const db = new IndexedDB("allsites", 2, "sites", "id,name,url,timestamp");
 
 	populateDB(db, el);
 	observeMenuHeight(el.menu);
