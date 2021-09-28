@@ -73,6 +73,25 @@ class IndexedDB {
 		return data;
 	}
 
+	async getFirstRow() {
+		const db = new Dexie(this.name);
+		db.version(this.version).stores({
+			[this.table]: this.keys,
+		});
+
+		const data = await db[this.table]
+			.orderBy(":id")
+			.first()
+			.then((data) => {
+				db.close();
+				return data;
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+		return data;
+	}
+
 	/**
 	 * Delete local storage.
 	 *

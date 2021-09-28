@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		addSearch();
 	}
 
-	const db = new IndexedDB("allsites", 1, "sites", "id,name,url");
+	const db = new IndexedDB("allsites", 1, "sites", "id,name,url,timestamp");
 
 	populateDB(db, el);
 	observeMenuHeight(el.menu);
@@ -49,7 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
  * @param {object} el
  */
 async function populateDB(db, el) {
-	if (el.increment.dataset.refresh === "refresh") {
+	const data = await db.getFirstRow();
+
+	if (
+		typeof data !== "undefined" &&
+		typeof data.timestamp !== "undefined" &&
+		el.increment.dataset.timestamp > data.timestamp
+	) {
 		await db.delete();
 	}
 	if ((await db.count()) === 0) {

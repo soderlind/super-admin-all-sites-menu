@@ -75,6 +75,10 @@ You can use the following filters to override the defaults:
 
 ## Changelog
 
+### 1.4.1
+
+- Make sure the local storage (IndexedDB) is in sync with server changes.
+
 ### 1.4.0
 
 - Refactored JavaScript again, I'm using this plugin to experiment with and to learn JavaScript better.

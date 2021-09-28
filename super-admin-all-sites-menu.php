@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.4.0
+ * Version:     1.4.1
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -40,7 +40,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var string
 	 */
-	private $version = '1.4.0';
+	private $version = '1.4.1';
 
 	/**
 	 * AJAX load increments.
@@ -66,11 +66,28 @@ class SuperAdminAllSitesMenu {
 	private $order_by = 'name';
 
 
+	/**
+	 * Store number of sites.
+	 *
+	 * @var integer
+	 */
 	private $number_of_sites = 0;
 
-	private $search_threshold = SEARCHTHRESHOLD;
 	/**
-	 * Undocumented function
+	 * Set the search threshold.
+	 *
+	 * @var [type]
+	 */
+	private $search_threshold = SEARCHTHRESHOLD;
+
+	/**
+	 * Store the timestamp.
+	 *
+	 * @var integer
+	 */
+	private $timestamp = 0;
+	/**
+	 * Constructor.
 	 */
 	public function __construct() {
 
@@ -90,9 +107,20 @@ class SuperAdminAllSitesMenu {
 		add_action( 'activated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 2 );
 		add_action( 'deactivated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 2 );
 
-		$this->number_of_sites = $this->get_number_of_sites();
+	}
 
+	/**
+	 * Init values.
+	 *
+	 * @return void
+	 */
+	public function init() : void {
+		$this->number_of_sites = $this->get_number_of_sites();
+		$this->timestamp       = $this->get_timestamp();
 		$this->do_filters();
+		if ( 0 === get_site_option( 'allsitemenutimestamp', 0 ) ) {
+			update_site_option( 'allsitemenutimestamp', $this->timestamp );
+		}
 	}
 
 	/**
@@ -124,6 +152,8 @@ class SuperAdminAllSitesMenu {
 
 	/**
 	 * Remove the default WP Admin Bar My Sites menu.
+	 *
+	 * @return void
 	 */
 	public function action_add_admin_bar_menus() : void {
 		if ( ! \is_multisite() ) {
@@ -142,7 +172,8 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * Essentially the same as the WP native one but doesn't use switch_to_blog();
 	 *
-	 * @param \WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance, passed by reference.
+	 * @param \WP_Admin_Bar $wp_admin_bar
+	 * @return void
 	 */
 	public function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 
@@ -266,16 +297,16 @@ class SuperAdminAllSitesMenu {
 				]
 			);
 		}
-		// Add an observable container, used by the IntersectionObserver.
 
-		$refresh = ( get_site_option( 'allsitemenurefresh', false ) ) ? 'refresh' : 'no-refresh';
+		// Add an observable container, used by the IntersectionObserver.
+		$timestamp = get_site_option( 'allsitemenutimestamp' );
 		$wp_admin_bar->add_menu(
 			[
 				'id'     => 'load-more',
 				'parent' => 'my-sites-list',
 				'title'  => __( 'Loading..', 'super-admin-sites-menu' ),
 				'meta'   => [
-					'html'     => sprintf( '<span id="load-more-increment" data-increment="0" data-refresh="%s"></span>', $refresh ),
+					'html'     => sprintf( '<span id="load-more-increment" data-increment="0" data-timestamp="%s"></span>', $timestamp ),
 					'class'    => 'load-more hide-if-no-js',
 					'tabindex' => -1,
 				],
@@ -294,14 +325,15 @@ class SuperAdminAllSitesMenu {
 		if ( check_ajax_referer( 'all_sites_menu_nonce', 'nonce', false ) ) {
 			$increment = ( isset( $_POST['increment'] ) ) ? filter_var( wp_unslash( $_POST['increment'] ), FILTER_VALIDATE_INT, [ 'default' => 0 ] ) : 0;
 
-			$sites = \get_sites(
+			$sites     = \get_sites(
 				[
 					'orderby' => 'path',
 					'number'  => $this->load_increments,
 					'offset'  => $increment,
 				]
 			);
-			$menu  = [];
+			$menu      = [];
+			$timestamp = time();
 			foreach ( $sites as $site ) {
 
 				$blogid   = $site->blog_id;
@@ -320,19 +352,20 @@ class SuperAdminAllSitesMenu {
 					$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
 				}
 				$menu[] = [
-					'parent' => 'my-sites-list',
-					'id'     => $menu_id,
-					'name'   => strtoupper( $blogname ), // Index in local storage.
-					'title'  => $blavatar . $blogname,
-					'admin'  => $adminurl,
-					'url'    => $siteurl,
+					'parent'    => 'my-sites-list',
+					'id'        => $menu_id,
+					'name'      => strtoupper( $blogname ), // Index in local storage.
+					'title'     => $blavatar . $blogname,
+					'admin'     => $adminurl,
+					'url'       => $siteurl,
+					'timestamp' => $timestamp,
 				];
 			}
 
 			if ( [] !== $menu ) {
 				$response['response'] = 'success';
 				$response['data']     = $menu;
-				update_site_option( 'allsitemenurefresh', false );
+				update_site_option( 'allsitemenutimestamp', $this->timestamp );
 			} else {
 				$response['response'] = 'unobserve';
 				$response['data']     = 'something went wrong ...' . count( $menu ) . ' items returned';
@@ -352,6 +385,7 @@ class SuperAdminAllSitesMenu {
 	 * Enqueue scripts for all admin pages.
 	 *
 	 * @param string $hook_suffix The current admin page.
+	 * @return void
 	 */
 	public function action_enqueue_scripts( string $hook_suffix ) : void {
 
@@ -412,6 +446,7 @@ class SuperAdminAllSitesMenu {
 	 * Fires after a site has been added to or deleted from the database.
 	 *
 	 * @param \WP_Site $site Site object.
+	 * @return void
 	 */
 	public function update_local_storage( \WP_Site $site ) : void {
 		$this->refresh_local_storage();
@@ -421,7 +456,8 @@ class SuperAdminAllSitesMenu {
 	 * Fires after a plugin is activated/deactivated.
 	 *
 	 * @param string $plugin       Path to the plugin file relative to the plugins directory.
-	 * @param bool   $network_wide Whether to enable the plugin for all sites in the network                             or just the current site. Multisite only. Default false.
+	 * @param bool   $network_wide Whether to enable the plugin for all sites in the network
+	 * @return void                           or just the current site. Multisite only. Default false.
 	 */
 	public function plugin_update_local_storage( string $plugin, bool $network_wide ) : void {
 		if ( in_array( $plugin, $this->plugins, true ) ) {
@@ -435,6 +471,7 @@ class SuperAdminAllSitesMenu {
 	 * @param mixed  $old_value The old option value.
 	 * @param mixed  $value     The new option value.
 	 * @param string $option    Option name.
+	 * @return void
 	 */
 	public function action_update_option_option( $old_value, $value, string $option ) : void {
 		if ( $old_value !== $value ) {
@@ -448,7 +485,7 @@ class SuperAdminAllSitesMenu {
 	 * @return void
 	 */
 	public function refresh_local_storage() : void {
-		update_site_option( 'allsitemenurefresh', true );
+		update_site_option( 'allsitemenutimestamp', $this->timestamp );
 	}
 
 
@@ -457,7 +494,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @return string
 	 */
-	protected function get_ajax_url() : string {
+	private function get_ajax_url() : string {
 		// multisite fix, use home_url() if domain mapped to avoid cross-domain issues.
 		$http_scheme = ( is_ssl() ) ? 'https' : 'http';
 		if ( home_url() !== site_url() ) {
@@ -468,12 +505,30 @@ class SuperAdminAllSitesMenu {
 		return $ajaxurl;
 	}
 
+	/**
+	 * Get number of sites.
+	 *
+	 * @return integer
+	 */
 	private function get_number_of_sites() : int {
-		global $wpdb;
-		$sql = "SELECT COUNT(*) FROM {$wpdb->blogs} WHERE spam = 0 AND deleted = 0 AND archived = 0";
-		return (int) $wpdb->get_var( $sql );
+		$network_id = get_current_network_id();
+
+		$args = [
+			'network_id'    => $network_id,
+			'number'        => 1,
+			'fields'        => 'ids',
+			'no_found_rows' => false,
+		];
+
+		$q = new \WP_Site_Query( $args );
+		return $q->found_sites;
+	}
+
+	private function get_timestamp() : string {
+		return (string) time();
 	}
 
 }
 
 $super_admin_sites_menu = new SuperAdminAllSitesMenu();
+$super_admin_sites_menu->init();
