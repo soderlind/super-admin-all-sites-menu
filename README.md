@@ -75,6 +75,10 @@ You can use the following filters to override the defaults:
 
 ## Changelog
 
+### 1.4.2
+
+- Dexie schema change, bump Dexie version number.
+
 ### 1.4.1
 
 - Make sure the local storage (IndexedDB) is in sync with server changes.
