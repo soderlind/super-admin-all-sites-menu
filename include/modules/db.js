@@ -135,10 +135,12 @@ class IndexedDB {
 	}
 
 	async getVersion() {
-		const version = new Dexie(this.name)
+		const version = await new Dexie(this.name)
 			.open()
 			.then((db) => {
-				return db.verno;
+				const v = db.verno;
+				db.close();
+				return v;
 			})
 			.catch((err) => {
 				console.error(err);
