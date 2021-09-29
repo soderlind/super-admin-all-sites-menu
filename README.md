@@ -75,6 +75,11 @@ You can use the following filters to override the defaults:
 
 ## Changelog
 
+### 1.4.4
+
+- Pass only one parameter to `plugin_update_local_storage()`
+- Close db connection when getting version number.
+
 ### 1.4.3
 
 - IndexedDB maintenance, i.e. remove old databases.
