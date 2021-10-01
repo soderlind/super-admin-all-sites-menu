@@ -7,6 +7,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
   - the plugin is activated.
   - a site is added or deleted.
   - you change a blog name.
+  - IndexDB is out of sync with site changes.
   - [Restricted Site Access](https://github.com/10up/restricted-site-access) is activated or deactivated.
 - When subsite menu data is updated, AJAX is used and it's done in increments (100 sites per increment).
 - List all subsites. WP Admin Bar My Sites only list sites you're a local admin on.
