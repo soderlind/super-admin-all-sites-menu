@@ -2,7 +2,7 @@
 
 For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
-- Doesn't use `switch_to_blog()` i.e. it's faster and uses less resources than the WP Admin Bar My Sites menu.
+- Doesn't use `switch_to_blog()` i.e. Super Admin All Sites Menu faster and uses less resources than the WP Admin Bar My Sites menu.
 - Subsite menu data are stored locally in IndexedDB (did I say it's fast?). The local storage is updated when;
   - the plugin is activated.
   - a site is added or deleted.
