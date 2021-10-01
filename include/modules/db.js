@@ -134,6 +134,12 @@ class IndexedDB {
 		return count;
 	}
 
+	/**
+	 * Get local storage version number.
+	 *
+	 * @author Per Søderlind
+	 * @returns {*}
+	 */
 	async getVersion() {
 		const version = await new Dexie(this.name)
 			.open()
