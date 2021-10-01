@@ -26,6 +26,12 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 <img src="assets/all-sites.gif">
 
+## IndexedDB
+
+Menu data are stored locally in IndexedDB.
+
+<img src="assets/Indexed-menu.png">
+
 ## Prerequisite
 
 - WordPress Multisite
