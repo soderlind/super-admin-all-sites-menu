@@ -75,7 +75,7 @@ You can use the following filters to override the defaults:
 - `all_sites_menu_search_threshold`
   - Don't display search field if there's less than N subsites. Default value is 20.
   ```php
-  add_filter( 'all_sites_menu_load_increments', function( int $increments ) : int {
+  add_filter( 'all_sites_menu_search_threshold', function( int $increments ) : int {
   	return 40;
   } );
   ```
