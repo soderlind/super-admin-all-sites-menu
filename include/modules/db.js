@@ -7,27 +7,38 @@
  * @class IndexedDB
  */
 class IndexedDB {
-	name = "db";
-	version = "1.0";
-	table = "table";
-	key = "id";
-
 	/**
 	 * Creates an instance of IndexedDB.
 	 *
 	 * @author Per Søderlind
 	 * @param {string} name Database name
-	 * @param {string} version Database version
 	 * @param {string} table Table name
-	 * @param {string} keys Indexed keys
+	 * @param {string[]} keys Indexed keys. If changing, oldest first.
 	 */
-	constructor(name, version, table, keys) {
+	constructor(name, table, keys) {
 		this.name = name;
-		this.version = version;
+		// this.version = version;
 		this.table = table;
 		this.keys = keys;
 	}
 
+	/**
+	 * Get local storage database.
+	 *
+	 * @author Per Søderlind
+	 * @returns {Dexie} Database
+	 */
+	database() {
+		const db = new Dexie(this.name);
+		let version = 1;
+		for (let keys of this.keys) {
+			db.version(version).stores({
+				[this.table]: keys,
+			});
+			version++;
+		}
+		return db;
+	}
 	/**
 	 * Save to local storage.
 	 *
@@ -35,10 +46,7 @@ class IndexedDB {
 	 * @param {array} data
 	 */
 	async save(data) {
-		const db = new Dexie(this.name);
-		db.version(this.version).stores({
-			[this.table]: this.keys,
-		});
+		const db = this.database();
 		await db[this.table]
 			.bulkPut(data)
 			.then(() => {
@@ -55,10 +63,7 @@ class IndexedDB {
 	 * @author Per Søderlind
 	 */
 	async read(orderby = "name") {
-		const db = new Dexie(this.name);
-		db.version(this.version).stores({
-			[this.table]: this.keys,
-		});
+		const db = this.database();
 
 		const data = await db[this.table]
 			.orderBy(orderby)
@@ -74,10 +79,7 @@ class IndexedDB {
 	}
 
 	async getFirstRow() {
-		const db = new Dexie(this.name);
-		db.version(this.version).stores({
-			[this.table]: this.keys,
-		});
+		const db = this.database();
 
 		const data = await db[this.table]
 			.orderBy(":id")
@@ -117,10 +119,7 @@ class IndexedDB {
 	 * @returns {*}
 	 */
 	async count() {
-		const db = new Dexie(this.name);
-		db.version(this.version).stores({
-			[this.table]: this.keys,
-		});
+		const db = this.database();
 
 		const count = await db[this.table]
 			.count()
