@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.4.4
+ * Version:     1.4.5
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -40,7 +40,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var string
 	 */
-	private $version = '1.4.4';
+	private $version = '1.4.5';
 
 	/**
 	 * AJAX load increments.
@@ -107,6 +107,7 @@ class SuperAdminAllSitesMenu {
 		add_action( 'activated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 1 );
 		add_action( 'deactivated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 1 );
 
+		register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
 	}
 
 	/**
@@ -156,9 +157,6 @@ class SuperAdminAllSitesMenu {
 	 * @return void
 	 */
 	public function action_add_admin_bar_menus() : void {
-		if ( ! \is_multisite() ) {
-			return;
-		}
 
 		if ( ! \is_super_admin() ) {
 			return;
@@ -172,14 +170,10 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * Essentially the same as the WP native one but doesn't use switch_to_blog();
 	 *
-	 * @param \WP_Admin_Bar $wp_admin_bar
+	 * @param \WP_Admin_Bar $wp_admin_bar The admin bar object.
 	 * @return void
 	 */
 	public function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
-
-		if ( ! \is_multisite() ) {
-			return;
-		}
 
 		if ( ! \is_super_admin() ) {
 			return;
@@ -298,7 +292,7 @@ class SuperAdminAllSitesMenu {
 			);
 		}
 
-		// Add an observable container, used by the IntersectionObserver.
+		// Add an observable container, used by the IntersectionObserver in include/modules/observe.js.
 		$timestamp = get_site_option( 'allsitemenutimestamp' );
 		$wp_admin_bar->add_menu(
 			[
@@ -316,7 +310,7 @@ class SuperAdminAllSitesMenu {
 	}
 
 	/**
-	 * Ajax action, triggered by loadsites() in include/all-sites.js
+	 * Ajax action, triggered by loadSites() in include/modules/ajax.js.
 	 *
 	 * @return void
 	 */
@@ -395,7 +389,7 @@ class SuperAdminAllSitesMenu {
 		wp_register_script( 'dexie', 'https://unpkg.com/dexie@latest/dist/dexie.js', [], $this->version, true );
 		wp_enqueue_script( 'dexie' );
 
-		wp_register_script( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/all-sites-menu.js', [ 'admin-bar', 'dexie', 'jquery' ], '1.2.0', true );
+		wp_register_script( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/all-sites-menu.js', [ 'admin-bar', 'dexie', 'jquery' ], $this->version, true );
 		wp_enqueue_script( 'super-admin-sites-menu' );
 		$data = wp_json_encode(
 			[
@@ -456,7 +450,6 @@ class SuperAdminAllSitesMenu {
 	 * Fires after a plugin is activated/deactivated.
 	 *
 	 * @param string $plugin       Path to the plugin file relative to the plugins directory.
-	 * @param bool   $network_wide Whether to enable the plugin for all sites in the network
 	 * @return void                           or just the current site. Multisite only. Default false.
 	 */
 	public function plugin_update_local_storage( string $plugin ) : void {
@@ -488,6 +481,14 @@ class SuperAdminAllSitesMenu {
 		update_site_option( 'allsitemenutimestamp', $this->timestamp );
 	}
 
+	/**
+	 * Remove site option when plugin is deactivated.
+	 *
+	 * @return void
+	 */
+	public function deactivate() : void {
+		delete_site_option( 'allsitemenutimestamp' );
+	}
 
 	/**
 	 * Get the Ajax URL.
@@ -524,11 +525,19 @@ class SuperAdminAllSitesMenu {
 		return $q->found_sites;
 	}
 
+	/**
+	 * Get the timestamp.
+	 *
+	 * @return string
+	 */
 	private function get_timestamp() : string {
 		return (string) time();
 	}
 
 }
 
-$super_admin_sites_menu = new SuperAdminAllSitesMenu();
-$super_admin_sites_menu->init();
+
+if ( \is_multisite() ) {
+	$super_admin_sites_menu = new SuperAdminAllSitesMenu();
+	$super_admin_sites_menu->init();
+}

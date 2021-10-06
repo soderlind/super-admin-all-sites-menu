@@ -1,5 +1,10 @@
 # Changelog
 
+### 1.4.5
+
+- Only run if multisite.
+- Improved Dexie versioning.
+
 ### 1.4.4
 
 - Pass only one parameter to `plugin_update_local_storage()`
