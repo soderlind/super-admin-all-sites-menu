@@ -26,8 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	const db = new IndexedDB("allsites", "sites", [
-		"id,name,url",
-		"id,name,url,timestamp", // version 2, add timestamp.
+		"id,name,url", // version 1.
+		"id,name,url,timestamp", // version 2, add timestamp. More on versioning at https://dexie.org/docs/Tutorial/Design#database-versioning
 	]);
 
 	populateDB(db, el);
