@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.7
+
+- Remove `type=module` from script tag. Not needed anymore since the script and modules are packed.
+
 ### 1.4.6
 
 - Pack JavaScript using webpack.

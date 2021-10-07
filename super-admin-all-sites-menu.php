@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.4.6
+ * Version:     1.4.7
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -40,7 +40,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var string
 	 */
-	private $version = '1.4.6';
+	private $version = '1.4.7';
 
 	/**
 	 * AJAX load increments.
@@ -97,7 +97,6 @@ class SuperAdminAllSitesMenu {
 
 		add_action( 'admin_enqueue_scripts', [ $this, 'action_enqueue_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'action_enqueue_scripts' ] );
-		add_filter( 'script_loader_tag', [ $this, 'filter_script_loader_tag' ], 10, 3 );
 
 		add_action( 'wp_insert_site', [ $this, 'update_local_storage' ] );
 		add_action( 'wp_delete_site', [ $this, 'update_local_storage' ] );
@@ -413,28 +412,6 @@ class SuperAdminAllSitesMenu {
 
 		wp_add_inline_script( 'super-admin-sites-menu', "const pluginAllSitesMenu = ${data};", 'before' );
 	}
-
-	/**
-	 * Add type=module attribute to the script tag
-	 *
-	 * @param string $tag    The <code>&lt;script&gt;</code> tag for the enqueued script.
-	 * @param string $handle The script's registered handle.
-	 * @param string $src    The script's source URL.
-	 * @return string The <code>&lt;script&gt;</code> tag for the enqueued script.
-	 */
-	public function filter_script_loader_tag( string $tag, string $handle, string $src ) : string {
-
-		if ( 'super-admin-sites-menu' === $handle && strpos( $tag, 'src=' ) > 0 ) {
-			if ( strpos( $tag, 'text/javascript' ) > 0 ) {
-				$tag = str_replace( " type='text/javascript' src", " type='module' src", $tag );
-			} else {
-				$tag = str_replace( ' src', ' type="module" src', $tag );
-			}
-		}
-
-		return $tag;
-	}
-
 
 	/**
 	 * Fires after a site has been added to or deleted from the database.
