@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.6
+
+- Pack JavaScript using webpack.
+
 ### 1.4.5
 
 - Only run if multisite.
