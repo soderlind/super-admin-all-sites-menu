@@ -75,10 +75,14 @@ You can use the following filters to override the defaults:
   	} );
   	`
 
+= Source =
+
+The source is available at https://github.com/soderlind/super-admin-all-sites-menu
+
 == Screenshots ==
 
-1. Demo<br>![Demo](.wordpress-org/screenshot-1.gif)
-2. Menu data are stored locally in IndexedDB.<br>![Menu data are stored locally in IndexedDB.](.wordpress-org/screenshot-2.png)
+1. Demo
+2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
 
