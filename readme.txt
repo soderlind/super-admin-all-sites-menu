@@ -77,7 +77,7 @@ You can use the following filters to override the defaults:
 
 = Development= 
 
-* Active development of this plugin is handled on [GitHub](https://github.com/soderlind/super-admin-all-sites-menu).
+* Active development of this plugin is handled [on GitHub](https://github.com/soderlind/super-admin-all-sites-menu).
 
 == Screenshots ==
 
