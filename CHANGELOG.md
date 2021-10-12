@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.8
+
+- Remove external dependencies.
+
 ### 1.4.7
 
 - Remove `type=module` from script tag. Not needed anymore since the script and modules are packed.

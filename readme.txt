@@ -75,9 +75,9 @@ You can use the following filters to override the defaults:
   	} );
   	`
 
-= Source =
+= Development= 
 
-The source is available at https://github.com/soderlind/super-admin-all-sites-menu
+* Active development of this plugin is handled on [GitHub](https://github.com/soderlind/super-admin-all-sites-menu).
 
 == Screenshots ==
 
@@ -85,6 +85,10 @@ The source is available at https://github.com/soderlind/super-admin-all-sites-me
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.4.8 =
+
+* Remove external dependencies.
 
 = 1.4.7 =
 
