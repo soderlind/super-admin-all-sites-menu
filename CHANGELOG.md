@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.10
+
+- Housekeeping
+
 ### 1.4.9
 
 - Deploy to https://wordpress.org/plugins/super-admin-all-sites-menu/
