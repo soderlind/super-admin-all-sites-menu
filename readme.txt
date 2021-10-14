@@ -86,6 +86,10 @@ You can use the following filters to override the defaults:
 
 == Changelog ==
 
+= 1.4.11 =
+
+* Add plugin banner
+
 = 1.4.10 =
 
 - Housekeeping
