@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.4.8  
+Stable tag: 1.4.9  
 Requires at least: 5.0  
 Tested up to: 5.8  
 Requires PHP: 7.3  
