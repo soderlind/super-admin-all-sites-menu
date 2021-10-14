@@ -1,5 +1,7 @@
 # Super Admin All Sites Menu
 
+> Also available at https://wordpress.org/plugins/super-admin-all-sites-menu/
+
 For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 - Doesn't use `switch_to_blog()`, i.e. Super Admin All Sites Menu is faster and uses less resources than the WP Admin Bar My Sites menu.
