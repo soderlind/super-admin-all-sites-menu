@@ -75,7 +75,7 @@ You can use the following filters to override the defaults:
   	} );
   	`
 
-= Development= 
+= Development = 
 
 * Active development of this plugin is handled [on GitHub](https://github.com/soderlind/super-admin-all-sites-menu).
 
