@@ -1,5 +1,17 @@
 # Changelog
 
+### 1.4.13
+
+- Don't list sites that are tagged as archived, deleted, mature or spam.
+
+### 1.4.12
+
+- Update plugin banner
+
+### 1.4.11
+
+- Add plugin banner
+
 ### 1.4.10
 
 - Housekeeping

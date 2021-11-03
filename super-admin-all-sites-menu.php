@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.4.12
+ * Version:     1.4.13
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -40,7 +40,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var string
 	 */
-	private $version = '1.4.12';
+	private $version = '1.4.13';
 
 	/**
 	 * AJAX load increments.
@@ -99,6 +99,7 @@ class SuperAdminAllSitesMenu {
 		add_action( 'wp_enqueue_scripts', [ $this, 'action_enqueue_scripts' ] );
 
 		add_action( 'wp_insert_site', [ $this, 'update_local_storage' ] );
+		add_action( 'wp_update_site', [ $this, 'update_local_storage' ] );
 		add_action( 'wp_delete_site', [ $this, 'update_local_storage' ] );
 
 		add_action( 'update_option_blogname', [ $this, 'action_update_option_option' ], 10, 3 );
@@ -320,13 +321,17 @@ class SuperAdminAllSitesMenu {
 
 			$sites     = \get_sites(
 				[
-					'orderby' => 'path',
-					'number'  => $this->load_increments,
-					'offset'  => $increment,
+					'orderby'  => 'path',
+					'number'   => $this->load_increments,
+					'offset'   => $increment,
+					'deleted'  => '0',
+					'mature'   => '0',
+					'archived' => '0',
+					'spam'     => '0',
 				]
 			);
 			$menu      = [];
-			$timestamp = time();
+			$timestamp = $this->timestamp;
 			foreach ( $sites as $site ) {
 
 				$blogid   = $site->blog_id;
