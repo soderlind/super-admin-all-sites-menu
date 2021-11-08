@@ -87,7 +87,7 @@ You can use the following filters to override the defaults:
 Test the plugin, locally, using [VS Code dev containers](https://code.visualstudio.com/docs/remote/containers).
 
 0. You must [have docker installed](https://code.visualstudio.com/docs/remote/containers#_system-requirements).
-1. In VS Code, install the [Remote - Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+1. In VS Code, install the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
 1. Clone Super Admin All Sites Menu: `git clone https://github.com/soderlind/super-admin-all-sites-menu`
 1. In `super-admin-all-sites-menu`, open VS Code: `code .`
 1. When VS Code opens, click on **Reopen container**
