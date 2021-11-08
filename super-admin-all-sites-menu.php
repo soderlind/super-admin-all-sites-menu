@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.4.13
+ * Version:     1.4.14
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -27,8 +27,9 @@ namespace Soderlind\Multisite;
 if ( ! defined( 'ABSPATH' ) ) {
 	wp_die();
 }
-const LOADINCREMENTS  = 100; // Number of sites to load at a time.
-const SEARCHTHRESHOLD = 20; // Number of sites before showing the search box.
+const LOADINCREMENTS   = 100; // Number of sites to load at a time.
+const SEARCHTHRESHOLD  = 20; // Number of sites before showing the search box.
+const CACHE_EXPIRATION = DAY_IN_SECONDS; // Time to cache the site list.
 
 /**
  * Super Admin All Sites Menu
@@ -40,7 +41,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var string
 	 */
-	private $version = '1.4.13';
+	private $version = '1.4.14';
 
 	/**
 	 * AJAX load increments.
@@ -81,11 +82,11 @@ class SuperAdminAllSitesMenu {
 	private $search_threshold = SEARCHTHRESHOLD;
 
 	/**
-	 * Store the timestamp.
+	 * The cache expiration time.
 	 *
 	 * @var integer
 	 */
-	private $timestamp = 0;
+	private $cache_expiration = CACHE_EXPIRATION;
 	/**
 	 * Constructor.
 	 */
@@ -117,11 +118,7 @@ class SuperAdminAllSitesMenu {
 	 */
 	public function init() : void {
 		$this->number_of_sites = $this->get_number_of_sites();
-		$this->timestamp       = $this->get_timestamp();
 		$this->do_filters();
-		if ( 0 === get_site_option( 'allsitemenutimestamp', 0 ) ) {
-			update_site_option( 'allsitemenutimestamp', $this->timestamp );
-		}
 	}
 
 	/**
@@ -148,6 +145,10 @@ class SuperAdminAllSitesMenu {
 		$this->search_threshold = \apply_filters( 'all_sites_menu_search_threshold', $this->search_threshold );
 		if ( ! is_numeric( $this->search_threshold ) || $this->search_threshold < 1 ) {
 			$this->search_threshold = SEARCHTHRESHOLD;
+		}
+		$this->cache_expiration = \apply_filters( 'all_sites_menu_force_refresh_expiration', $this->cache_expiration );
+		if ( ! is_numeric( $this->search_threshold ) || $this->cache_expiration < 0 ) {
+			$this->cache_expiration = CACHE_EXPIRATION;
 		}
 	}
 
@@ -293,7 +294,7 @@ class SuperAdminAllSitesMenu {
 		}
 
 		// Add an observable container, used by the IntersectionObserver in include/modules/observe.js.
-		$timestamp = get_site_option( 'allsitemenutimestamp' );
+		$timestamp = $this->get_timestamp();
 		$wp_admin_bar->add_menu(
 			[
 				'id'     => 'load-more',
@@ -331,7 +332,7 @@ class SuperAdminAllSitesMenu {
 				]
 			);
 			$menu      = [];
-			$timestamp = $this->timestamp;
+			$timestamp = $this->get_timestamp();
 			foreach ( $sites as $site ) {
 
 				$blogid   = $site->blog_id;
@@ -363,10 +364,9 @@ class SuperAdminAllSitesMenu {
 			if ( [] !== $menu ) {
 				$response['response'] = 'success';
 				$response['data']     = $menu;
-				update_site_option( 'allsitemenutimestamp', $this->timestamp );
 			} else {
 				$response['response'] = 'unobserve';
-				$response['data']     = 'something went wrong ...' . count( $menu ) . ' items returned';
+				// $response['data']     = 'something went wrong ...' . count( $menu ) . ' items returned';
 			}
 		} else {
 			$response['response'] = 'failed';
@@ -460,7 +460,7 @@ class SuperAdminAllSitesMenu {
 	 * @return void
 	 */
 	public function refresh_local_storage() : void {
-		update_site_option( 'allsitemenutimestamp', $this->timestamp );
+		$this->remove_timestamp();
 	}
 
 	/**
@@ -469,7 +469,7 @@ class SuperAdminAllSitesMenu {
 	 * @return void
 	 */
 	public function deactivate() : void {
-		delete_site_option( 'allsitemenutimestamp' );
+		$this->remove_timestamp();
 	}
 
 	/**
@@ -513,7 +513,17 @@ class SuperAdminAllSitesMenu {
 	 * @return string
 	 */
 	private function get_timestamp() : string {
-		return (string) time();
+		$timestamp = get_site_transient( 'allsitemenutimestamp' );
+		if ( ! $timestamp ) {
+			$timestamp = (string) time();
+			set_site_transient( 'allsitemenutimestamp', $timestamp, $this->cache_expiration );
+		}
+		return $timestamp;
+	}
+
+
+	private function remove_timestamp() : void {
+		delete_site_transient( 'allsitemenutimestamp' );
 	}
 
 }

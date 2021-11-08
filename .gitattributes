@@ -1,5 +1,6 @@
 /.github export-ignore
 /.config export-ignore
+/.devcontainer export-ignore
 /.wordpress-org export-ignore
 /src export-ignore
 .editorconfig export-ignore
