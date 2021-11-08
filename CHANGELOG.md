@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.14
+
+- Force refresh using a site transient.
+
 ### 1.4.13
 
 - Don't list sites that are tagged as archived, deleted, mature or spam.
