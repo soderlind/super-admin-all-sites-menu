@@ -2,6 +2,8 @@
 
 > Also available at https://wordpress.org/plugins/super-admin-all-sites-menu/
 
+[Use](#use) | [Prerequisite](#prerequisite) | [Install](#install) | [Filters](#filters) | [Demo](#demo) | [Changelog](CHANGELOG.md)
+
 For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 - Doesn't use `switch_to_blog()`, i.e. Super Admin All Sites Menu is faster and uses less resources than the WP Admin Bar My Sites menu.
@@ -25,7 +27,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
     - 'Plugins'
     - 'Settings'
 
-## Demo
+## Use
 
 <img src=".wordpress-org/screenshot-1.gif">
 
