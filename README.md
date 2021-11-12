@@ -85,6 +85,13 @@ You can use the following filters to override the defaults:
   	return 40;
   } );
   ```
+- `all_sites_menu_force_refresh_expiration`
+  - How often a forced refresh should be taken. Default value is `3600`. Set the value to `0` to disable forced refresh.
+    ```php
+    add_filter( 'all_sites_menu_force_refresh_expiration', function( int $seconds ) : int {
+    	return 3600;
+    } );
+    ```
 
 ## Demo
 
