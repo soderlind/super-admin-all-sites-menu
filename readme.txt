@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.4.14
+Stable tag: 1.4.15
 Requires at least: 5.0  
 Tested up to: 5.8  
 Requires PHP: 7.3  
@@ -85,6 +85,10 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.4.15 =
+
+* Only load the plugin code if the admin bar is available.
 
 = 1.4.14 =
 

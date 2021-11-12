@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.15
+
+- Only load the plugin code if the admin bar is available.
+
 ### 1.4.14
 
 - Force refresh using a site transient.

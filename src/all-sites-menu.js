@@ -5,6 +5,7 @@
  * @date  10.06.2021
  * @class AllSitesMenu
  */
+
 import { addSearch } from "./modules/search.js";
 import { IndexedDB } from "./modules/db.js";
 import { loadSites } from "./modules/ajax.js";
@@ -15,6 +16,10 @@ import { siteMenu } from "./modules/menu.js";
 const dbVersionNumber = 2;
 
 document.addEventListener("DOMContentLoaded", () => {
+	const $wpadminbar = document.getElementById("wpadminbar");
+	if (!$wpadminbar) {
+		return;
+	}
 	const el = {
 		load: document.querySelector("#wp-admin-bar-load-more"),
 		menu: document.querySelector("#wp-admin-bar-my-sites-list"),
