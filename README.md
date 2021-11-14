@@ -102,7 +102,7 @@ Test the plugin, locally, using [VS Code dev containers](https://code.visualstud
 1. Clone Super Admin All Sites Menu: `git clone https://github.com/soderlind/super-admin-all-sites-menu`
 1. In `super-admin-all-sites-menu`, open VS Code: `code .`
 1. When VS Code opens, click on **Reopen container**
-1. When the container is ready, open http://localhost:8080/wp-admin/
+1. Wait until the container is ready, then open http://localhost:8080/wp-admin/
    - Username: `admin`
    - Password: `password`
 
