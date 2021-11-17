@@ -95,7 +95,7 @@ You can use the following filters to override the defaults:
 
 ## Demo
 
-Test the plugin, locally, using [VS Code dev containers](https://code.visualstudio.com/docs/remote/containers).
+Test the plugin on a WordPress Multisite with 100 sites, locally, using [VS Code dev containers](https://code.visualstudio.com/docs/remote/containers).
 
 0. You must [have docker installed](https://code.visualstudio.com/docs/remote/containers#_system-requirements).
 1. In VS Code, install the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
