@@ -42,12 +42,12 @@ if [[ $IS_MULTISITE -eq 1 ]]; then
 	# Add multisite .htaccess to the root directory.
 	cp wp-content/plugins/${SLUG}/.devcontainer/.htaccess .htaccess
 
-	# Patch to allow using port 8080.
+	# Patch WordPress to allow using port 8080.
 	diff -u wp-admin/includes/network.php wp-content/plugins/${SLUG}/.devcontainer/patches/network.php | patch -p0 -i -
 	diff -u wp-includes/ms-settings.php wp-content/plugins/${SLUG}/.devcontainer/patches/ms-settings.php | patch -p0 -i -
 	diff -u wp-includes/ms-site.php wp-content/plugins/${SLUG}/.devcontainer/patches/ms-site.php | patch -p0 -i -
 
-	#Add 100 sub sites.
+	# Add 100 sub sites.
 	for ((i = 1; i <= 100; i++)); do
 		site_num=$(printf "%03d" $i)
 		wp site create --slug="site-$site_num" --title="Test Site $site_num"
