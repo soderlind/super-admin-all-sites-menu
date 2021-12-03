@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.17
+
+- Use correct AJAX URL
+
 ### 1.4.16
 
 - Upgrade Dexie.js to v 3.2.0
