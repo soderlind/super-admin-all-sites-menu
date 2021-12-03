@@ -100,6 +100,10 @@ You can use the following filters to override the defaults:
 
 == Changelog ==
 
+= 1.4.16 =
+
+* Upgrade Dexie.js to v 3.2.0
+
 = 1.4.15 =
 
 * Only load the plugin code if the admin bar is available.
