@@ -11,37 +11,37 @@
  * @export
  */
 export function refreshAdminbar() {
-	const sitemenu = document.getElementById("wp-admin-bar-my-sites-list");
+	const sitemenu = document.getElementById('wp-admin-bar-my-sites-list');
 	if (sitemenu) {
 		sitemenu.addEventListener(
-			"mouseenter",
+			'mouseenter',
 			(e) => {
 				e.stopPropagation();
-				if (e.target.classList.contains("menupop")) {
-					addClass(e.target, "hover");
+				if (e.target.classList.contains('menupop')) {
+					addClass(e.target, 'hover');
 				}
 			},
 			{ capture: true }
 		);
 
 		sitemenu.addEventListener(
-			"mouseleave",
+			'mouseleave',
 			(e) => {
 				e.stopPropagation();
-				if (e.target.classList.contains("menupop")) {
-					removeClass(e.target, "hover");
+				if (e.target.classList.contains('menupop')) {
+					removeClass(e.target, 'hover');
 				}
 			},
 			{ capture: true }
 		);
 
 		sitemenu.addEventListener(
-			"keydown",
+			'keydown',
 			(e) => {
-				if (e.key === "Tab") {
+				if (e.key === 'Tab') {
 					e.preventDefault();
-					if (e.target.classList.contains("menupop")) {
-						toggleClass(e.target, "hover");
+					if (e.target.classList.contains('menupop')) {
+						toggleClass(e.target, 'hover');
 					}
 				}
 			},
@@ -67,7 +67,7 @@ function addClass(element, className) {
 		element.classList.add(className);
 	} else if (!hasClass(element, className)) {
 		if (element.className) {
-			element.className += " ";
+			element.className += ' ';
 		}
 
 		element.className += className;
@@ -80,12 +80,12 @@ function addClass(element, className) {
 
 	let rect = element.getBoundingClientRect();
 	let top = rect.top;
-	let subMenu = element.querySelector(".ab-submenu");
+	let subMenu = element.querySelector('.ab-submenu');
 	subMenu.style.top = `${top - 6}px`;
 
 	if (subMenu.getBoundingClientRect().bottom > window.innerHeight) {
-		subMenu.style.top = "auto";
-		subMenu.style.bottom = "0";
+		subMenu.style.top = 'auto';
+		subMenu.style.bottom = '0';
 	}
 }
 
@@ -111,10 +111,10 @@ function removeClass(element, className) {
 		classes = ` ${element.className} `;
 
 		while (classes.indexOf(testName) > -1) {
-			classes = classes.replace(testName, "");
+			classes = classes.replace(testName, '');
 		}
 
-		element.className = classes.replace(/^[\s]+|[\s]+$/g, "");
+		element.className = classes.replace(/^[\s]+|[\s]+$/g, '');
 	}
 }
 
@@ -132,11 +132,11 @@ function toggleHoverIfEnter(event) {
 		return;
 	}
 
-	if (!getClosest(event.target, ".ab-sub-wrapper")) {
+	if (!getClosest(event.target, '.ab-sub-wrapper')) {
 		return;
 	}
 
-	wrapper = getClosest(event.target, ".menupop");
+	wrapper = getClosest(event.target, '.menupop');
 
 	if (!wrapper) {
 		return;
@@ -144,10 +144,10 @@ function toggleHoverIfEnter(event) {
 
 	event.preventDefault();
 
-	if (hasClass(wrapper, "hover")) {
-		removeClass(wrapper, "hover");
+	if (hasClass(wrapper, 'hover')) {
+		removeClass(wrapper, 'hover');
 	} else {
-		addClass(wrapper, "hover");
+		addClass(wrapper, 'hover');
 	}
 }
 
@@ -170,7 +170,7 @@ function hasClass(element, className) {
 	if (element.classList && element.classList.contains) {
 		return element.classList.contains(className);
 	} else if (element.className) {
-		classNames = element.className.split(" ");
+		classNames = element.className.split(' ');
 		return classNames.indexOf(className) > -1;
 	}
 

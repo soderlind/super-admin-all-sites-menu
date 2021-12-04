@@ -62,7 +62,7 @@ class IndexedDB {
 	 *
 	 * @author Per Søderlind
 	 */
-	async read(orderby = "name") {
+	async read(orderby = 'name') {
 		const db = this.database();
 
 		const data = await db[this.table]
@@ -82,7 +82,7 @@ class IndexedDB {
 		const db = this.database();
 
 		const data = await db[this.table]
-			.orderBy(":id")
+			.orderBy(':id')
 			.first()
 			.then((data) => {
 				db.close();

@@ -41,25 +41,26 @@ export function observeMenuHeight(observedWrapper) {
 		(entries) => {
 			entries.forEach((entry) => {
 				const bcr = entry.boundingClientRect;
-				const isBottomVisible = bcr.bottom < window.innerHeight && bcr.bottom;
+				const isBottomVisible =
+					bcr.bottom < window.innerHeight && bcr.bottom;
 
 				//Set the site menu wrapper height.
-				const mx = window.matchMedia("(min-width: 783px)");
+				const mx = window.matchMedia('(min-width: 783px)');
 				if (mx.matches) {
 					const wrapper = document.querySelector(
-						"#wp-admin-bar-my-sites>.ab-sub-wrapper"
+						'#wp-admin-bar-my-sites>.ab-sub-wrapper'
 					);
 
 					if (isBottomVisible) {
-						wrapper.style.height = "";
+						wrapper.style.height = '';
 						wrapper.querySelector(
-							"ul#wp-admin-bar-my-sites-list"
-						).style.paddingBottom = "0";
+							'ul#wp-admin-bar-my-sites-list'
+						).style.paddingBottom = '0';
 					} else {
-						wrapper.style.height = "calc(100vh - 32px)";
+						wrapper.style.height = 'calc(100vh - 32px)';
 						wrapper.querySelector(
-							"ul#wp-admin-bar-my-sites-list"
-						).style.paddingBottom = "32px";
+							'ul#wp-admin-bar-my-sites-list'
+						).style.paddingBottom = '32px';
 					}
 				}
 			});
