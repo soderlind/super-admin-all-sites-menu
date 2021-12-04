@@ -462,22 +462,6 @@ class SuperAdminAllSitesMenu {
 	}
 
 		/**
-		 * Get the Ajax URL.
-		 *
-		 * @return string
-		 */
-	private function get_ajax_url() : string {
-		// multisite fix, use home_url() if domain mapped to avoid cross-domain issues.
-		$http_scheme = ( is_ssl() ) ? 'https' : 'http';
-		if ( home_url() !== site_url() ) {
-			$ajaxurl = home_url( '/wp-admin/admin-ajax.php', $http_scheme );
-		} else {
-			$ajaxurl = site_url( '/wp-admin/admin-ajax.php', $http_scheme );
-		}
-		return $ajaxurl;
-	}
-
-		/**
 		 * Get number of sites.
 		 *
 		 * @return integer
