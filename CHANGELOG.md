@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.18
+
+- Replace webpack with wp-scripts
+
 ### 1.4.17
 
 - Use correct AJAX URL

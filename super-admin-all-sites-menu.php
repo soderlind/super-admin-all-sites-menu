@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.4.17
+ * Version:     1.4.18
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -35,13 +35,6 @@ const CACHE_EXPIRATION = DAY_IN_SECONDS; // Time to cache the site list.
  * Super Admin All Sites Menu
  */
 class SuperAdminAllSitesMenu {
-
-	/**
-	 * Plugin version.
-	 *
-	 * @var string
-	 */
-	private $version = '1.4.17';
 
 	/**
 	 * AJAX load increments.
@@ -283,7 +276,7 @@ class SuperAdminAllSitesMenu {
 			);
 		}
 
-		// Add an observable container, used by the IntersectionObserver in include/modules/observe.js.
+		// Add an observable container, used by the IntersectionObserver in src/modules/observe.js.
 		$timestamp = $this->get_timestamp();
 		$wp_admin_bar->add_menu(
 			[
@@ -301,7 +294,7 @@ class SuperAdminAllSitesMenu {
 	}
 
 		/**
-		 * Ajax action, triggered by loadSites() in include/modules/ajax.js.
+		 * Ajax action, triggered by loadSites() in src/modules/ajax.js.
 		 *
 		 * @return void
 		 */
@@ -374,13 +367,22 @@ class SuperAdminAllSitesMenu {
 		 */
 	public function action_enqueue_scripts( string $hook_suffix ) : void {
 
-		wp_register_style( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/all-sites-menu.css', [], $this->version );
+		$deps_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+
+		$deps    = [];
+		$version = wp_rand();
+		if ( file_exists( $deps_file ) ) {
+			$file    = require $deps_file;
+			$deps    = $file['dependencies'];
+			$version = $file['version'];
+		}
+		wp_register_style( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'css/all-sites-menu.css', $deps, $version );
 		wp_enqueue_style( 'super-admin-sites-menu' );
 
-		wp_register_script( 'dexie', plugin_dir_url( __FILE__ ) . 'lib/dexie.min.js', [], $this->version, true );
+		wp_register_script( 'dexie', plugin_dir_url( __FILE__ ) . 'lib/dexie.min.js', $deps, $version, true );
 		wp_enqueue_script( 'dexie' );
 
-		wp_register_script( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'include/all-sites-menu.js', [ 'admin-bar', 'dexie', 'jquery' ], $this->version, true );
+		wp_register_script( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'build/index.js', [ 'admin-bar', 'dexie', 'jquery' ], $version, true );
 		wp_enqueue_script( 'super-admin-sites-menu' );
 		$data = wp_json_encode(
 			[
