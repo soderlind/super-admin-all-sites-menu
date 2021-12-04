@@ -1,0 +1,70 @@
+/*
+ * CSS from the Multisite menu patch. https://qiita.com/zephyr7501/items/dd0967fddabd888b28c4
+ */
+
+@media screen and (min-width: 783px) {
+	#wp-admin-bar-my-sites>.ab-sub-wrapper {
+		overflow-y: auto;
+		margin-top: 32px;
+		/* height: calc(100vh - 32px); */
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+	#wp-admin-bar-my-sites>.ab-sub-wrapper::-webkit-scrollbar {
+		display: none;
+	}
+	#wp-admin-bar-my-sites>.ab-sub-wrapper #wp-admin-bar-network-admin-default {
+		position: fixed;
+		background: #32373c;
+	}
+	#wp-admin-bar-my-sites>.ab-sub-wrapper ul#wp-admin-bar-my-sites-list {
+		background-color: #464b50;
+		/* padding-bottom: 32px !important; */
+	}
+	#wp-admin-bar-my-sites>.ab-sub-wrapper ul#wp-admin-bar-my-sites-list li.menupop {
+		position: relative;
+	}
+	#wp-admin-bar-my-sites>.ab-sub-wrapper ul#wp-admin-bar-my-sites-list li.menupop div.ab-sub-wrapper ul.ab-submenu {
+		position: fixed;
+		/* padding: 2em; */
+		/* left: 50%; */
+		/* transform: translate(-50%, -50%); */
+		background-color: #464b50;
+	}
+	#wp-admin-bar-my-sites>.ab-sub-wrapper.site_single {
+		height: auto;
+	}
+	#wp-admin-bar-my-sites>.ab-sub-wrapper.site_single ul#wp-admin-bar-my-sites-list {
+		padding-bottom: 6px !important;
+	}
+}
+
+/*
+ * Search CSS from https://github.com/trepmal/my-sites-search
+ */
+
+/* #wp-admin-bar-all-sites-search.hide-if-no-js {
+	display: none;
+} */
+
+#wp-admin-bar-all-sites-search label[for="all-sites-search-text"] {
+	clip: rect(1px, 1px, 1px, 1px);
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+}
+
+#wp-admin-bar-all-sites-search {
+	height: 38px;
+}
+
+#wp-admin-bar-all-sites-search .ab-item {
+	height: 34px;
+}
+
+#wp-admin-bar-all-sites-search input {
+	padding: 0 2px;
+	width: 95%;
+	width: calc( 100% - 4px);
+}
