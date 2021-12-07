@@ -38,6 +38,7 @@ echo "Setting up WordPress at $SITE_HOST"
 wp db reset --yes
 if [[ $IS_MULTISITE -eq 1 ]]; then
 	wp core multisite-install --url="$SITE_HOST" --title="$(getTitleFromSlug) Development" --admin_user="admin" --admin_email="admin@example.com" --admin_password="password" --skip-email
+	wp core update --url="$SITE_HOST"
 
 	# Add multisite .htaccess to the root directory.
 	cp wp-content/${PROJECT_TYPE}s/${SLUG}/.devcontainer/.htaccess .htaccess
