@@ -11,4 +11,4 @@ README.md export-ignore
 composer.json export-ignore
 package-lock.json export-ignore
 package.json export-ignore
-webpack.config.js export-ignore
+Gruntfile.js export-ignore
