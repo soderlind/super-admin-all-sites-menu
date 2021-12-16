@@ -2,17 +2,17 @@
 # This file is distributed under the same license as the Super Admin All Sites Menu plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Super Admin All Sites Menu 1.4.20\n"
+"Project-Id-Version: Super Admin All Sites Menu 1.4.23\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/super-admin-all-sites-menu\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-12-16T10:31:59+00:00\n"
+"POT-Creation-Date: 2021-12-16T22:03:19+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
-"X-Domain: super-admin-sites-menu\n"
+"X-Domain: super-admin-all-sites-menu\n"
 
 #. Plugin Name of the plugin
 msgid "Super Admin All Sites Menu"
@@ -48,4 +48,36 @@ msgstr ""
 
 #: super-admin-all-sites-menu.php:285
 msgid "Loading.."
+msgstr ""
+
+#: src/modules/menu.js:23
+msgid "Dashboard"
+msgstr ""
+
+#: src/modules/menu.js:25
+msgid "New Post"
+msgstr ""
+
+#: src/modules/menu.js:30
+msgid "New Page"
+msgstr ""
+
+#: src/modules/menu.js:35
+msgid "Manage Comments"
+msgstr ""
+
+#: src/modules/menu.js:40
+msgid "Users"
+msgstr ""
+
+#: src/modules/menu.js:45
+msgid "Plugins"
+msgstr ""
+
+#: src/modules/menu.js:50
+msgid "Settings"
+msgstr ""
+
+#: src/modules/menu.js:55
+msgid "Visit"
 msgstr ""
