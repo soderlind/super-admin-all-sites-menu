@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.25
+
+- Housekeeping
+
 ### 1.4.24
 
 - Use @wordpress/i18n to translate JavaScript.
