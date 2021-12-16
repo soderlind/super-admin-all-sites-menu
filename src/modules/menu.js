@@ -10,6 +10,7 @@
 import { __ } from "@wordpress/i18n";
 
 export function siteMenu(site) {
+  let title = __("All Sites", "super-admin-sites-menu");
   return `
 				<li id="wp-admin-bar-${site.id}" class="menupop">
 				<a class="ab-item" aria-haspopup="true" href="${site.admin}/"><span class="wp-admin-bar-arrow" aria-hidden="true"></span>
