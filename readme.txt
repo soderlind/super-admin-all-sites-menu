@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.4.18
+Stable tag: 1.4.19
 Requires at least: 5.0  
 Tested up to: 5.8  
 Requires PHP: 7.3  
@@ -99,6 +99,10 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.4.19 =
+
+* Import @wordpress/i18n
 
 = 1.4.18 =
 

@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.19
+
+- Import @wordpress/i18n
+
 ### 1.4.18
 
 - Replace webpack with wp-scripts
