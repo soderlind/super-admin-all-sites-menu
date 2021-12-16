@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.20
+
+- Don't set dependencies for style.
+
 ### 1.4.19
 
 - Import @wordpress/i18n
