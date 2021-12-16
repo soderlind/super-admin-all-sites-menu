@@ -12,11 +12,11 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.4.22
+ * Version:     1.4.23
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
- * Text Domain: super-admin-sites-menu
+ * Text Domain: super-admin-all-sites-menu
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
@@ -95,7 +95,7 @@ class SuperAdminAllSitesMenu {
 	 * @return void
 	 */
 	public function init() : void {
-		load_plugin_textdomain( 'super-admin-sites-menu', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+		load_plugin_textdomain( 'super-admin-all-sites-menu', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 		if ( \is_super_admin() ) {
 			add_action( 'add_admin_bar_menus', [ $this, 'action_add_admin_bar_menus' ] );
 			add_action( 'admin_bar_menu', [ $this, 'super_admin_all_sites_menu' ], 25 );
@@ -169,7 +169,7 @@ class SuperAdminAllSitesMenu {
 		$wp_admin_bar->add_menu(
 			[
 				'id'    => 'my-sites',
-				'title' => __( 'All Sites', 'super-admin-sites-menu' ),
+				'title' => __( 'All Sites', 'super-admin-all-sites-menu' ),
 				'href'  => $my_sites_url,
 			]
 		);
@@ -266,8 +266,8 @@ class SuperAdminAllSitesMenu {
 					'id'     => 'all-sites-search',
 					'title'  => sprintf(
 						'<label for="all-sites-search-text">%s</label><input type="text" id="all-sites-search-text" placeholder="%s" />',
-						esc_html__( 'Filter My Sites', 'super-admin-sites-menu' ),
-						esc_attr__( 'Search Sites', 'super-admin-sites-menu' )
+						esc_html__( 'Filter My Sites', 'super-admin-all-sites-menu' ),
+						esc_attr__( 'Search Sites', 'super-admin-all-sites-menu' )
 					),
 					'meta'   => [
 						'class' => 'hide-if-no-js',
@@ -282,7 +282,7 @@ class SuperAdminAllSitesMenu {
 			[
 				'id'     => 'load-more',
 				'parent' => 'my-sites-list',
-				'title'  => __( 'Loading..', 'super-admin-sites-menu' ),
+				'title'  => __( 'Loading..', 'super-admin-all-sites-menu' ),
 				'meta'   => [
 					'html'     => sprintf( '<span id="load-more-increment" data-increment="0" data-timestamp="%s"></span>', $timestamp ),
 					'class'    => 'load-more hide-if-no-js',
@@ -376,14 +376,14 @@ class SuperAdminAllSitesMenu {
 			$deps    = $file['dependencies'];
 			$version = $file['version'];
 		}
-		wp_register_style( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'css/all-sites-menu.css', [], $version );
-		wp_enqueue_style( 'super-admin-sites-menu' );
+		wp_register_style( 'super-admin-all-sites-menu', plugin_dir_url( __FILE__ ) . 'css/all-sites-menu.css', [], $version );
+		wp_enqueue_style( 'super-admin-all-sites-menu' );
 
 		wp_register_script( 'dexie', plugin_dir_url( __FILE__ ) . 'lib/dexie.min.js', $deps, $version, true );
 		wp_enqueue_script( 'dexie' );
 
-		wp_register_script( 'super-admin-sites-menu', plugin_dir_url( __FILE__ ) . 'build/index.js', [ 'admin-bar', 'dexie', 'jquery' ], $version, true );
-		wp_enqueue_script( 'super-admin-sites-menu' );
+		wp_register_script( 'super-admin-all-sites-menu', plugin_dir_url( __FILE__ ) . 'build/index.js', [ 'admin-bar', 'dexie', 'jquery' ], $version, true );
+		wp_enqueue_script( 'super-admin-all-sites-menu' );
 		$data = wp_json_encode(
 			[
 				'nonce'          => wp_create_nonce( 'all_sites_menu_nonce' ),
@@ -404,8 +404,8 @@ class SuperAdminAllSitesMenu {
 			]
 		);
 
-		wp_add_inline_script( 'super-admin-sites-menu', "const pluginAllSitesMenu = ${data};", 'before' );
-		wp_set_script_translations( 'super-admin-sites-menu', 'super-admin-sites-menu' );
+		wp_add_inline_script( 'super-admin-all-sites-menu', "const pluginAllSitesMenu = ${data};", 'before' );
+		wp_set_script_translations( 'super-admin-all-sites-menu', 'super-admin-all-sites-menu' );
 	}
 
 		/**

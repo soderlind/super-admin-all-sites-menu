@@ -1,5 +1,13 @@
 # Changelog
 
+### 1.4.23
+
+- Fix typo in textdomain.
+
+### 1.4.22
+
+- Housekeeping
+
 ### 1.4.21
 
 - Update translation file (.pot)
