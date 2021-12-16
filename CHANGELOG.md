@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.21
+
+- Update translation file (.pot)
+
 ### 1.4.20
 
 - Don't set dependencies for style.

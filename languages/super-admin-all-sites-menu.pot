@@ -2,31 +2,50 @@
 # This file is distributed under the same license as the Super Admin All Sites Menu plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Super Admin All Sites Menu 1.2.4\n"
+"Project-Id-Version: Super Admin All Sites Menu 1.4.20\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/super-admin-all-sites-menu\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-08-31T08:57:56+00:00\n"
+"POT-Creation-Date: 2021-12-16T10:31:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: super-admin-sites-menu\n"
 
+#. Plugin Name of the plugin
+msgid "Super Admin All Sites Menu"
+msgstr ""
 
-#: super-admin-all-sites-menu.php:110
+#. Plugin URI of the plugin
+msgid "https://github.com/soderlind/super-admin-all-sites-menu"
+msgstr ""
+
+#. Description of the plugin
+msgid "For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu."
+msgstr ""
+
+#. Author of the plugin
+msgid "Per Soderlind"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://soderlind.no"
+msgstr ""
+
+#: super-admin-all-sites-menu.php:172
 msgid "All Sites"
 msgstr ""
 
-#: super-admin-all-sites-menu.php:208
+#: super-admin-all-sites-menu.php:269
 msgid "Filter My Sites"
 msgstr ""
 
-#: super-admin-all-sites-menu.php:209
+#: super-admin-all-sites-menu.php:270
 msgid "Search Sites"
 msgstr ""
 
-#: super-admin-all-sites-menu.php:224
+#: super-admin-all-sites-menu.php:285
 msgid "Loading.."
 msgstr ""
