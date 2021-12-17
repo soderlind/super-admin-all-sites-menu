@@ -1,6 +1,6 @@
 {
   "name": "super-admin-all-sites-menu",
-  "version": "1.4.25",
+  "version": "1.4.26",
   "description": "For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
     "grunt-version": "^2.0.0"
   },
   "dependencies": {
-    "@wordpress/i18n": "^4.2.4"
+    "@wordpress/i18n": "^4.2.4",
+    "dexie": "^3.2.0"
   }
 }
