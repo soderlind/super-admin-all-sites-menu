@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.26
+
+- Bundle Dexie using wp-scripts
+
 ### 1.4.25
 
 - Housekeeping
