@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.4.26
+ * Version:     1.4.27
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -107,7 +107,7 @@ class SuperAdminAllSitesMenu {
 		add_action( 'wp_update_site', [ $this, 'update_local_storage' ] );
 		add_action( 'wp_delete_site', [ $this, 'update_local_storage' ] );
 
-		add_action( 'update_option_blogname', [ $this, 'action_update_option_option' ], 10, 3 );
+		add_action( 'update_option_blogname', [ $this, 'action_update_option_blogname' ], 10, 3 );
 
 		add_action( 'activated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 1 );
 		add_action( 'deactivated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 1 );
@@ -185,7 +185,7 @@ class SuperAdminAllSitesMenu {
 			[
 				'parent' => 'my-sites-super-admin',
 				'id'     => 'network-admin',
-				'title'  => __( 'Network Admin' ),
+				'title'  => __( 'Network Admin', 'super-admin-all-sites-menu' ),
 				'href'   => \network_admin_url(),
 			]
 		);
@@ -194,7 +194,7 @@ class SuperAdminAllSitesMenu {
 			[
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-d',
-				'title'  => __( 'Dashboard' ),
+				'title'  => __( 'Dashboard', 'super-admin-all-sites-menu' ),
 				'href'   => \network_admin_url(),
 			]
 		);
@@ -202,7 +202,7 @@ class SuperAdminAllSitesMenu {
 			[
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-s',
-				'title'  => __( 'Sites' ),
+				'title'  => __( 'Sites', 'super-admin-all-sites-menu' ),
 				'href'   => \network_admin_url( '/sites.php' ),
 			]
 		);
@@ -210,7 +210,7 @@ class SuperAdminAllSitesMenu {
 			[
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-n',
-				'title'  => __( 'Add New Site' ),
+				'title'  => __( 'Add New Site', 'super-admin-all-sites-menu' ),
 				'href'   => \network_admin_url( '/site-new.php' ),
 			]
 		);
@@ -218,7 +218,7 @@ class SuperAdminAllSitesMenu {
 			[
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-u',
-				'title'  => __( 'Users' ),
+				'title'  => __( 'Users', 'super-admin-all-sites-menu' ),
 				'href'   => \network_admin_url( '/users.php' ),
 			]
 		);
@@ -226,7 +226,7 @@ class SuperAdminAllSitesMenu {
 			[
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-t',
-				'title'  => __( 'Themes' ),
+				'title'  => __( 'Themes', 'super-admin-all-sites-menu' ),
 				'href'   => \network_admin_url( '/themes.php' ),
 			]
 		);
@@ -234,7 +234,7 @@ class SuperAdminAllSitesMenu {
 			[
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-p',
-				'title'  => __( 'Plugins' ),
+				'title'  => __( 'Plugins', 'super-admin-all-sites-menu' ),
 				'href'   => \network_admin_url( '/plugins.php' ),
 			]
 		);
@@ -242,7 +242,7 @@ class SuperAdminAllSitesMenu {
 			[
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-o',
-				'title'  => __( 'Settings' ),
+				'title'  => __( 'Settings', 'super-admin-all-sites-menu' ),
 				'href'   => \network_admin_url( '/settings.php' ),
 			]
 		);
@@ -425,7 +425,7 @@ class SuperAdminAllSitesMenu {
 		 * @param string $option    Option name.
 		 * @return void
 		 */
-	public function action_update_option_option( $old_value, $value, string $option ) : void {
+	public function action_update_option_blogname( $old_value, $value, string $option ) : void {
 		if ( $old_value !== $value ) {
 			$this->refresh_local_storage();
 		}
