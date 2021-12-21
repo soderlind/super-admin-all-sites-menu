@@ -1,5 +1,10 @@
 # Changelog
 
+### 1.4.27
+
+- Add missing textdomain to translations.
+- Update uninstall.php
+
 ### 1.4.26
 
 - Bundle Dexie using wp-scripts
