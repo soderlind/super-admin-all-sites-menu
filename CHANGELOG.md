@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.4.28
+
+- Housekeeping
+
 ### 1.4.27
 
 - Add missing textdomain to translations.

@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.4.27
+ * Version:     1.4.28
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -27,9 +27,14 @@ namespace Soderlind\Multisite;
 if ( ! defined( 'ABSPATH' ) ) {
 	wp_die();
 }
+/**
+ * Default values for the plugin.
+ */
 const LOADINCREMENTS   = 100; // Number of sites to load at a time.
 const SEARCHTHRESHOLD  = 20; // Number of sites before showing the search box.
 const CACHE_EXPIRATION = DAY_IN_SECONDS; // Time to cache the site list.
+const ORDERBY          = 'name'; // Order by name.
+const PLUGINS          = [ 'restricted-site-access/restricted_site_access.php' ]; //Plugins triggering update local storages.
 
 /**
  * Super Admin All Sites Menu
@@ -41,23 +46,21 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var [type]
 	 */
-	private $load_increments = LOADINCREMENTS;
+	private $load_increments;
 
 	/**
 	 * Plugins triggering update local storages.
 	 *
 	 * @var array
 	 */
-	private $plugins = [
-		'restricted-site-access/restricted_site_access.php',
-	];
+	private $plugins;
 
 	/**
 	 * Sort menu by site name.
 	 *
 	 * @var string
 	 */
-	private $order_by = 'name';
+	private $order_by;
 
 
 	/**
@@ -72,14 +75,14 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var [type]
 	 */
-	private $search_threshold = SEARCHTHRESHOLD;
+	private $search_threshold;
 
 	/**
 	 * The cache expiration time.
 	 *
 	 * @var integer
 	 */
-	private $cache_expiration = CACHE_EXPIRATION;
+	private $cache_expiration ;
 	/**
 	 * Constructor.
 	 */
@@ -113,35 +116,35 @@ class SuperAdminAllSitesMenu {
 		add_action( 'deactivated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 1 );
 
 		$this->number_of_sites = $this->get_number_of_sites();
-		$this->do_filters();
+		$this->set_properties();
 	}
 
 		/**
-		 * Update private properties from hooks.
+		 * Set properties.
 		 *
 		 * @return void
 		 */
-	public function do_filters() : void {
-		$this->plugins = \apply_filters( 'all_sites_menu_plugin_trigger', $this->plugins );
+	public function set_properties() : void {
+		$this->plugins = \apply_filters( 'all_sites_menu_plugin_trigger', PLUGINS );
 		if ( ! is_array( $this->plugins ) ) {
-			$this->plugins = [ 'restricted-site-access/restricted_site_access.php' ];
+			$this->plugins = PLUGINS;
 		}
 
-		$this->order_by = \apply_filters( 'all_sites_menu_order_by', $this->order_by );
+		$this->order_by = \apply_filters( 'all_sites_menu_order_by', ORDERBY );
 		if ( ! in_array( $this->order_by, [ 'name', 'url', 'id' ], true ) ) {
-			$this->order_by = 'name';
+			$this->order_by = ORDERBY;
 		}
 
-		$this->load_increments = \apply_filters( 'all_sites_menu_load_increments', $this->load_increments );
+		$this->load_increments = \apply_filters( 'all_sites_menu_load_increments', LOADINCREMENTS );
 		if ( ! is_numeric( $this->load_increments ) || $this->load_increments < 1 ) {
 			$this->load_increments = LOADINCREMENTS;
 		}
 
-		$this->search_threshold = \apply_filters( 'all_sites_menu_search_threshold', $this->search_threshold );
+		$this->search_threshold = \apply_filters( 'all_sites_menu_search_threshold', SEARCHTHRESHOLD );
 		if ( ! is_numeric( $this->search_threshold ) || $this->search_threshold < 1 ) {
 			$this->search_threshold = SEARCHTHRESHOLD;
 		}
-		$this->cache_expiration = \apply_filters( 'all_sites_menu_force_refresh_expiration', $this->cache_expiration );
+		$this->cache_expiration = \apply_filters( 'all_sites_menu_force_refresh_expiration', CACHE_EXPIRATION );
 		if ( ! is_numeric( $this->search_threshold ) || $this->cache_expiration < 0 ) {
 			$this->cache_expiration = CACHE_EXPIRATION;
 		}

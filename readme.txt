@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.4.27
+Stable tag: 1.4.28
 Requires at least: 5.0  
 Tested up to: 5.8  
 Requires PHP: 7.3  
@@ -100,6 +100,10 @@ You can use the following filters to override the defaults:
 
 == Changelog ==
 
+= 1.4.28 = 
+
+* Housekeeping
+
 = 1.4.27 =
 
 * Add missing textdomain to translations.
@@ -139,7 +143,7 @@ You can use the following filters to override the defaults:
 
 = 1.4.18 =
 
-* Replace webpack with wp-scripts
+* Replace build script from webpack to wp-scripts (@wordpress/scripts)
 
 = 1.4.17 = 
 
