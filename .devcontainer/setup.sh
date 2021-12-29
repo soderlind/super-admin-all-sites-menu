@@ -3,10 +3,10 @@
 # Inspired by https://github.com/helen/wcus-2021/tree/trunk/.devcontainer
 #
 
-SLUG=super-admin-all-sites-menu
-PROJECT_TYPE=plugin # or theme
-WPARG=--network
-IS_MULTISITE=1
+# Load environment variables from .devcontainer/.env
+set -o allexport
+source "${BASH_SOURCE%/*}/.env"
+set +o allexport
 
 if [[ ! -z "$CODESPACE_NAME" ]]; then
 	SITE_HOST="https://${CODESPACE_NAME}-8080.githubpreview.dev"
