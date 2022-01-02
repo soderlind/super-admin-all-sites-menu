@@ -30,12 +30,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Default values for the plugin.
  */
+const APP_NAME         = 'super-admin-all-sites-menu';
 const LOADINCREMENTS   = 100; // Number of sites to load at a time.
 const SEARCHTHRESHOLD  = 20; // Number of sites before showing the search box.
 const CACHE_EXPIRATION = DAY_IN_SECONDS; // Time to cache the site list.
 const ORDERBY          = 'name'; // Order by name.
-const PLUGINS          = [ 'restricted-site-access/restricted_site_access.php' ]; //Plugins triggering update local storages.
-
+const PLUGINS          = [ 'restricted-site-access/restricted_site_access.php' ]; // Plugins triggering update local storages.
+const REST_NAMESPACE   = APP_NAME . '/v1'; // REST API namespace.
+const REST_BASE        = 'sites'; // REST API route.
+const REST_ENDPOINT    = REST_NAMESPACE . '/' . REST_BASE; // REST API endpoint.
 /**
  * Super Admin All Sites Menu
  */
@@ -82,14 +85,138 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @var integer
 	 */
-	private $cache_expiration ;
+	private $cache_expiration;
 	/**
 	 * Constructor.
 	 */
 	public function __construct() {
+		$this->set_properties();
+		add_filter( 'wp_is_application_passwords_available', '__return_true' );
+		/**
+		 * Filters whether Application Passwords is available for a specific user.
+		 *
+		 * @param bool     $available True if available, false otherwise.
+		 * @param \WP_User $user      The user to check.
+		 * @return bool True if available, false otherwise.
+		 */
+		// add_filter(
+		// 'wp_is_application_passwords_available_for_user',
+		// function( bool $available, \WP_User $user ) : bool {
+		// $available = user_can( $user, 'manage_options' );
+		// return $available;
+		// },
+		// 10,
+		// 2
+		// );
 		add_action( 'admin_bar_init', [ $this, 'init' ] );
-		add_action( 'wp_ajax_all_sites_menu_action', [ $this, 'all_sites_menu_action' ] );
+		// add_action( 'wp_ajax_all_sites_menu_action', [ $this, 'all_sites_menu_action' ] );
+		add_action( 'rest_api_init', [ $this, 'action_rest_api_init' ] );
 		register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
+	}
+
+	/**
+	 * Fires when preparing to serve a REST API request.
+	 *
+	 * @param \WP_REST_Server $wp_rest_server Server object.
+	 */
+	public function action_rest_api_init( \WP_REST_Server $wp_rest_server ) : void {
+		register_rest_route(
+			REST_NAMESPACE,
+			'/' . REST_BASE,
+			[
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'get_sites' ],
+				// 'permission_callback' => [ $this, 'get_sites_permissions_check' ],
+				'permission_callback' => '__return_true',
+			]
+		);
+	}
+
+	/**
+	 * Get the permissions check.
+	 *
+	 * @param \WP_REST_Request $request The request.
+	 * @return bool|\WP_Error
+	 */
+	public function get_permissions_check( \WP_REST_Request $request ) : bool {
+		// return current_user_can( 'manage_network' );
+		return current_user_can( 'publish_posts' );
+	}
+
+	/**
+	 * Get sites.
+	 *
+	 * @param \WP_REST_Request $request The request.
+	 * @return array
+	 */
+	public function get_sites( \WP_REST_Request $request ) : array {
+
+		$params = $request->get_params();
+		// ray( $params );
+		header( 'Content-type: application/json' );
+		// if ( check_ajax_referer( 'wp_rest', 'nonce', false ) ) {
+		// if ( wp_verify_nonce( $params['nonce'], 'wp_nonce' ) ) {
+
+		$increment = ( isset( $params['increment'] ) ) ? filter_var( wp_unslash( $params['increment'] ), FILTER_VALIDATE_INT, [ 'default' => 0 ] ) : 0;
+
+		$sites     = \get_sites(
+			[
+				'orderby'  => 'path',
+				'number'   => $this->load_increments,
+				'offset'   => $increment,
+				'deleted'  => '0',
+				'mature'   => '0',
+				'archived' => '0',
+				'spam'     => '0',
+			]
+		);
+		$menu      = [];
+		$timestamp = $this->get_timestamp();
+		foreach ( $sites as $site ) {
+
+			$blogid   = $site->blog_id;
+			$blogname = $site->__get( 'blogname' );
+			$menu_id  = 'blog-' . $blogid;
+			$blavatar = '<div class="blavatar"></div>';
+			$siteurl  = $site->__get( 'siteurl' );
+			$adminurl = $siteurl . '/wp-admin';
+
+			if ( ! $blogname ) {
+				$blogname = preg_replace( '#^(https?://)?(www.)?#', '', $siteurl );
+			}
+
+			// The $site->public value is set to 2, by the Restricted Site Access plugin, when a site has restricted access.
+			if ( 2 === (int) $site->public ) {
+				$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
+			}
+			$menu[] = [
+				'parent'    => 'my-sites-list',
+				'id'        => $menu_id,
+				'name'      => strtoupper( $blogname ), // Index in local storage.
+				'title'     => $blavatar . $blogname,
+				'admin'     => $adminurl,
+				'url'       => $siteurl,
+				'timestamp' => $timestamp,
+			];
+		}
+
+		if ( [] !== $menu ) {
+			$response['response'] = 'success';
+			$response['data']     = $menu;
+		} else {
+			$response['response'] = 'unobserve';
+			$response['data']     = '';
+		}
+		// } else {
+		// $response['response'] = 'failed';
+		// $response['message']  = 'invalid nonse';
+		// }
+		return $response;
+		// return wp_json_encode( $response );
+		// wp_die();
+
+		// $sites  = $this->get_sites( $params );
+		// return $sites;
 	}
 
 	/**
@@ -116,14 +243,13 @@ class SuperAdminAllSitesMenu {
 		add_action( 'deactivated_plugin', [ $this, 'plugin_update_local_storage' ], 10, 1 );
 
 		$this->number_of_sites = $this->get_number_of_sites();
-		$this->set_properties();
 	}
 
-		/**
-		 * Set properties.
-		 *
-		 * @return void
-		 */
+	/**
+	 * Set properties.
+	 *
+	 * @return void
+	 */
 	public function set_properties() : void {
 		$this->plugins = \apply_filters( 'all_sites_menu_plugin_trigger', PLUGINS );
 		if ( ! is_array( $this->plugins ) ) {
@@ -150,23 +276,23 @@ class SuperAdminAllSitesMenu {
 		}
 	}
 
-		/**
-		 * Remove the default WP Admin Bar My Sites menu.
-		 *
-		 * @return void
-		 */
+	/**
+	 * Remove the default WP Admin Bar My Sites menu.
+	 *
+	 * @return void
+	 */
 	public function action_add_admin_bar_menus() : void {
 		remove_action( 'admin_bar_menu', 'wp_admin_bar_my_sites_menu', 20 );
 	}
 
-		/**
-		 * Add the "All Sites/[Site Name]" menu and all submenus, listing all subsites.
-		 *
-		 * Essentially the same as the WP native one but doesn't use switch_to_blog();
-		 *
-		 * @param \WP_Admin_Bar $wp_admin_bar The admin bar object.
-		 * @return void
-		 */
+	/**
+	 * Add the "All Sites/[Site Name]" menu and all submenus, listing all subsites.
+	 *
+	 * Essentially the same as the WP native one but doesn't use switch_to_blog();
+	 *
+	 * @param \WP_Admin_Bar $wp_admin_bar The admin bar object.
+	 * @return void
+	 */
 	public function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
 		$my_sites_url = \admin_url( '/my-sites.php' );
 		$wp_admin_bar->add_menu(
@@ -287,7 +413,7 @@ class SuperAdminAllSitesMenu {
 				'parent' => 'my-sites-list',
 				'title'  => __( 'Loading..', 'super-admin-all-sites-menu' ),
 				'meta'   => [
-					'html'     => sprintf( '<span id="load-more-increment" data-increment="0" data-timestamp="%s"></span>', $timestamp ),
+					'html'     => sprintf( '<span id="load-more-timestamp" data-timestamp="%s"></span>', $timestamp ),
 					'class'    => 'load-more hide-if-no-js',
 					'tabindex' => -1,
 				],
@@ -296,78 +422,49 @@ class SuperAdminAllSitesMenu {
 
 	}
 
-		/**
-		 * Ajax action, triggered by loadSites() in src/modules/ajax.js.
-		 *
-		 * @return void
-		 */
-	public function all_sites_menu_action() {
-		header( 'Content-type: application/json' );
-		if ( check_ajax_referer( 'all_sites_menu_nonce', 'nonce', false ) ) {
-			$increment = ( isset( $_POST['increment'] ) ) ? filter_var( wp_unslash( $_POST['increment'] ), FILTER_VALIDATE_INT, [ 'default' => 0 ] ) : 0;
+	private function get_application_password() : array {
 
-			$sites     = \get_sites(
-				[
-					'orderby'  => 'path',
-					'number'   => $this->load_increments,
-					'offset'   => $increment,
-					'deleted'  => '0',
-					'mature'   => '0',
-					'archived' => '0',
-					'spam'     => '0',
-				]
-			);
-			$menu      = [];
-			$timestamp = $this->get_timestamp();
-			foreach ( $sites as $site ) {
+		$user       = wp_get_current_user();
+		$user_id    = $user->ID;
+		$user_login = $user->user_login;
 
-				$blogid   = $site->blog_id;
-				$blogname = $site->__get( 'blogname' );
-				$menu_id  = 'blog-' . $blogid;
-				$blavatar = '<div class="blavatar"></div>';
-				$siteurl  = $site->__get( 'siteurl' );
-				$adminurl = $siteurl . '/wp-admin';
+		$app_exists = \WP_Application_Passwords::application_name_exists_for_user( $user_id, APP_NAME );
 
-				if ( ! $blogname ) {
-					$blogname = preg_replace( '#^(https?://)?(www.)?#', '', $siteurl );
-				}
-
-				// The $site->public value is set to 2, by the Restricted Site Access plugin, when a site has restricted access.
-				if ( 2 === (int) $site->public ) {
-					$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
-				}
-				$menu[] = [
-					'parent'    => 'my-sites-list',
-					'id'        => $menu_id,
-					'name'      => strtoupper( $blogname ), // Index in local storage.
-					'title'     => $blavatar . $blogname,
-					'admin'     => $adminurl,
-					'url'       => $siteurl,
-					'timestamp' => $timestamp,
-				];
-			}
-
-			if ( [] !== $menu ) {
-				$response['response'] = 'success';
-				$response['data']     = $menu;
-			} else {
-				$response['response'] = 'unobserve';
-				$response['data']     = '';
-			}
+		if ( ! $app_exists ) {
+			$passwords = \WP_Application_Passwords::create_new_application_password( $user_id, [ 'name' => APP_NAME ] );
 		} else {
-			$response['response'] = 'failed';
-			$response['message']  = 'invalid nonse';
+			$passwords = \WP_Application_Passwords::get_user_application_passwords( $user_id );
 		}
-		echo wp_json_encode( $response );
-		wp_die();
+
+		if ( ! $passwords ) {
+			return [];
+		}
+
+		ray( $passwords );
+
+		$app_pass = '';
+		foreach ( $passwords as $password ) {
+			if ( isset( $password['name'] ) && APP_NAME === $password['name'] ) {
+				$app_pass = $password['password'];
+			}
+		}
+
+		if ( ! $app_pass ) {
+			return [];
+		}
+
+		return [
+			'username' => $user_login,
+			'password' => $app_pass,
+		];
 	}
 
-		/**
-		 * Enqueue scripts for all admin pages.
-		 *
-		 * @param string $hook_suffix The current admin page.
-		 * @return void
-		 */
+	/**
+	 * Enqueue scripts for all admin pages.
+	 *
+	 * @param string $hook_suffix The current admin page.
+	 * @return void
+	 */
 	public function action_enqueue_scripts( string $hook_suffix ) : void {
 
 		$deps_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
@@ -384,13 +481,16 @@ class SuperAdminAllSitesMenu {
 
 		wp_register_script( 'super-admin-all-sites-menu', plugin_dir_url( __FILE__ ) . 'build/index.js', $jsdeps, $version, true );
 		wp_enqueue_script( 'super-admin-all-sites-menu' );
+
 		$data = wp_json_encode(
 			[
-				'nonce'          => wp_create_nonce( 'all_sites_menu_nonce' ),
-				'ajaxurl'        => '/wp-admin/admin-ajax.php',
+				'nonce'          => wp_create_nonce( 'wp_rest' ),
+				'restURL'        => rest_url() . REST_ENDPOINT,
 				'loadincrements' => $this->load_increments,
 				'orderBy'        => $this->order_by,
 				'displaySearch'  => ( $this->number_of_sites > $this->search_threshold ) ? true : false,
+				'timestamp'      => $this->get_timestamp(),
+				'auth'           => wp_json_encode( $this->get_application_password() ),
 			]
 		);
 
@@ -398,65 +498,65 @@ class SuperAdminAllSitesMenu {
 		wp_set_script_translations( 'super-admin-all-sites-menu', 'super-admin-all-sites-menu' );
 	}
 
-		/**
-		 * Fires after a site has been added to or deleted from the database.
-		 *
-		 * @param \WP_Site $site Site object.
-		 * @return void
-		 */
+	/**
+	 * Fires after a site has been added to or deleted from the database.
+	 *
+	 * @param \WP_Site $site Site object.
+	 * @return void
+	 */
 	public function update_local_storage( \WP_Site $site ) : void {
 		$this->refresh_local_storage();
 	}
 
-		/**
-		 * Fires after a plugin is activated/deactivated.
-		 *
-		 * @param string $plugin       Path to the plugin file relative to the plugins directory.
-		 * @return void                           or just the current site. Multisite only. Default false.
-		 */
+	/**
+	 * Fires after a plugin is activated/deactivated.
+	 *
+	 * @param string $plugin       Path to the plugin file relative to the plugins directory.
+	 * @return void                           or just the current site. Multisite only. Default false.
+	 */
 	public function plugin_update_local_storage( string $plugin ) : void {
 		if ( in_array( $plugin, $this->plugins, true ) ) {
 			$this->refresh_local_storage();
 		}
 	}
 
-		/**
-		 * Fires after the a blog is renamed.
-		 *
-		 * @param mixed  $old_value The old option value.
-		 * @param mixed  $value     The new option value.
-		 * @param string $option    Option name.
-		 * @return void
-		 */
+	/**
+	 * Fires after the a blog is renamed.
+	 *
+	 * @param mixed  $old_value The old option value.
+	 * @param mixed  $value     The new option value.
+	 * @param string $option    Option name.
+	 * @return void
+	 */
 	public function action_update_option_blogname( $old_value, $value, string $option ) : void {
 		if ( $old_value !== $value ) {
 			$this->refresh_local_storage();
 		}
 	}
 
-		/**
-		 * When options allsitemenurefresh is true, refresh the local storage.
-		 *
-		 * @return void
-		 */
+	/**
+	 * When options allsitemenurefresh is true, refresh the local storage.
+	 *
+	 * @return void
+	 */
 	public function refresh_local_storage() : void {
 		$this->remove_timestamp();
 	}
 
-		/**
-		 * Remove site option when plugin is deactivated.
-		 *
-		 * @return void
-		 */
+	/**
+	 * Remove site option when plugin is deactivated.
+	 *
+	 * @return void
+	 */
 	public function deactivate() : void {
 		$this->remove_timestamp();
 	}
 
-		/**
-		 * Get number of sites.
-		 *
-		 * @return integer
-		 */
+	/**
+	 * Get number of sites.
+	 *
+	 * @return integer
+	 */
 	private function get_number_of_sites() : int {
 		$network_id = get_current_network_id();
 
@@ -471,11 +571,11 @@ class SuperAdminAllSitesMenu {
 		return $q->found_sites;
 	}
 
-		/**
-		 * Get the timestamp.
-		 *
-		 * @return string
-		 */
+	/**
+	 * Get the timestamp.
+	 *
+	 * @return string
+	 */
 	private function get_timestamp() : string {
 		$timestamp = get_site_transient( 'allsitemenutimestamp' );
 		if ( ! $timestamp ) {
