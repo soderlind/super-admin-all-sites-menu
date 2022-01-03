@@ -8,7 +8,7 @@
 
 import { addSearch } from './modules/search.js';
 import { IndexedDB } from './modules/db.js';
-import { loadSites } from './modules/ajax.js';
+import { loadSites } from './modules/rest.js';
 import { observeContainer, observeMenuHeight } from './modules/observe.js';
 import { refreshAdminbar } from './modules/refresh.js';
 import { siteMenu } from './modules/menu.js';
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const el = {
 		load: document.querySelector('#wp-admin-bar-load-more'),
 		menu: document.querySelector('#wp-admin-bar-my-sites-list'),
-		increment: document.querySelector('#load-more-increment'),
+		timestamp: document.querySelector('#load-more-timestamp'),
 	};
 
 	if (pluginAllSitesMenu.displaySearch === true) {
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		'id,name,url,timestamp', // version 2, add timestamp. More on versioning at https://dexie.org/docs/Tutorial/Design#database-versioning
 	]);
 
-	populateDB(db, el);
+	populateDB(db);
 	observeMenuHeight(el.menu);
 
 	const observedLoadMore = observeContainer(el.load, async () => {
@@ -58,19 +58,17 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {IndexedDB} db
  * @param {object} el
  */
-async function populateDB(db, el) {
+async function populateDB(db) {
 	const data = await db.getFirstRow();
 	if (
 		typeof data !== 'undefined' &&
 		typeof data.timestamp !== 'undefined' &&
-		el.increment.dataset.timestamp > data.timestamp
+		pluginAllSitesMenu.timestamp > data.timestamp
 	) {
 		await db.delete();
 	}
 
 	if ((await db.count()) === 0) {
-		el.increment.dataset.increment = 0;
-		el.increment.style.display = '';
-		loadSites(db);
+		loadSites(db, 0);
 	}
 }

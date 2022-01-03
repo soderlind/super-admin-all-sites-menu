@@ -1,6 +1,6 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.4.28
-Requires at least: 5.0  
+Stable tag: 1.5.0
+Requires at least: 5.6  
 Tested up to: 5.8  
 Requires PHP: 7.3  
 License: GPL v2 or later  
@@ -99,6 +99,10 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.5.0 =
+
+* Use REST instead of AJAX.
 
 = 1.4.28 = 
 
