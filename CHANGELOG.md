@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.5.0
+
+- Use REST instead of AJAX.
+
 ### 1.4.28
 
 - Housekeeping

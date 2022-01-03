@@ -5,31 +5,28 @@
  * @export
  * @param {IndexedDB} db
  */
-export async function loadSites(db, increment) {
+export async function loadSites(db, offset) {
   const url = pluginAllSitesMenu.restURL;
   const data = JSON.stringify({
-    increment: increment,
-    // _wpnonce: pluginAllSitesMenu.nonce,
+    offset: offset,
   });
-  console.log(url);
-  console.log(data);
+
   try {
     const response = await fetch(url, {
-      headers: {
+      method: "POST",
+      headers: new Headers({
         "X-WP-Nonce": pluginAllSitesMenu.nonce,
         "content-type": "application/json",
-      },
-      method: "POST",
+      }),
       credentials: "same-origin",
       body: data,
     });
 
     const res = await response.json();
-    console.log(res);
     if (res.response === "success") {
-      increment = increment + pluginAllSitesMenu.loadincrements;
+      offset = offset + pluginAllSitesMenu.loadincrements;
       db.save(res.data);
-      await loadSites(db, increment); // load more.
+      await loadSites(db, offset); // load more.
     }
   } catch (err) {
     console.error(err);

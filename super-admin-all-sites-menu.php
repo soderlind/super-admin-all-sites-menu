@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.4.28
+ * Version:     1.5.0
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -30,13 +30,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Default values for the plugin.
  */
-const APP_NAME         = 'super-admin-all-sites-menu';
 const LOADINCREMENTS   = 100; // Number of sites to load at a time.
 const SEARCHTHRESHOLD  = 20; // Number of sites before showing the search box.
 const CACHE_EXPIRATION = DAY_IN_SECONDS; // Time to cache the site list.
 const ORDERBY          = 'name'; // Order by name.
 const PLUGINS          = [ 'restricted-site-access/restricted_site_access.php' ]; // Plugins triggering update local storages.
-const REST_NAMESPACE   = APP_NAME . '/v1'; // REST API namespace.
+const REST_NAMESPACE   = 'super-admin-all-sites-menu/v1'; // REST API namespace.
 const REST_BASE        = 'sites'; // REST API route.
 const REST_ENDPOINT    = REST_NAMESPACE . '/' . REST_BASE; // REST API endpoint.
 /**
@@ -91,132 +90,9 @@ class SuperAdminAllSitesMenu {
 	 */
 	public function __construct() {
 		$this->set_properties();
-		add_filter( 'wp_is_application_passwords_available', '__return_true' );
-		/**
-		 * Filters whether Application Passwords is available for a specific user.
-		 *
-		 * @param bool     $available True if available, false otherwise.
-		 * @param \WP_User $user      The user to check.
-		 * @return bool True if available, false otherwise.
-		 */
-		// add_filter(
-		// 'wp_is_application_passwords_available_for_user',
-		// function( bool $available, \WP_User $user ) : bool {
-		// $available = user_can( $user, 'manage_options' );
-		// return $available;
-		// },
-		// 10,
-		// 2
-		// );
 		add_action( 'admin_bar_init', [ $this, 'init' ] );
-		// add_action( 'wp_ajax_all_sites_menu_action', [ $this, 'all_sites_menu_action' ] );
 		add_action( 'rest_api_init', [ $this, 'action_rest_api_init' ] );
 		register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
-	}
-
-	/**
-	 * Fires when preparing to serve a REST API request.
-	 *
-	 * @param \WP_REST_Server $wp_rest_server Server object.
-	 */
-	public function action_rest_api_init( \WP_REST_Server $wp_rest_server ) : void {
-		register_rest_route(
-			REST_NAMESPACE,
-			'/' . REST_BASE,
-			[
-				'methods'             => \WP_REST_Server::CREATABLE,
-				'callback'            => [ $this, 'get_sites' ],
-				// 'permission_callback' => [ $this, 'get_sites_permissions_check' ],
-				'permission_callback' => '__return_true',
-			]
-		);
-	}
-
-	/**
-	 * Get the permissions check.
-	 *
-	 * @param \WP_REST_Request $request The request.
-	 * @return bool|\WP_Error
-	 */
-	public function get_permissions_check( \WP_REST_Request $request ) : bool {
-		// return current_user_can( 'manage_network' );
-		return current_user_can( 'publish_posts' );
-	}
-
-	/**
-	 * Get sites.
-	 *
-	 * @param \WP_REST_Request $request The request.
-	 * @return array
-	 */
-	public function get_sites( \WP_REST_Request $request ) : array {
-
-		$params = $request->get_params();
-		// ray( $params );
-		header( 'Content-type: application/json' );
-		// if ( check_ajax_referer( 'wp_rest', 'nonce', false ) ) {
-		// if ( wp_verify_nonce( $params['nonce'], 'wp_nonce' ) ) {
-
-		$increment = ( isset( $params['increment'] ) ) ? filter_var( wp_unslash( $params['increment'] ), FILTER_VALIDATE_INT, [ 'default' => 0 ] ) : 0;
-
-		$sites     = \get_sites(
-			[
-				'orderby'  => 'path',
-				'number'   => $this->load_increments,
-				'offset'   => $increment,
-				'deleted'  => '0',
-				'mature'   => '0',
-				'archived' => '0',
-				'spam'     => '0',
-			]
-		);
-		$menu      = [];
-		$timestamp = $this->get_timestamp();
-		foreach ( $sites as $site ) {
-
-			$blogid   = $site->blog_id;
-			$blogname = $site->__get( 'blogname' );
-			$menu_id  = 'blog-' . $blogid;
-			$blavatar = '<div class="blavatar"></div>';
-			$siteurl  = $site->__get( 'siteurl' );
-			$adminurl = $siteurl . '/wp-admin';
-
-			if ( ! $blogname ) {
-				$blogname = preg_replace( '#^(https?://)?(www.)?#', '', $siteurl );
-			}
-
-			// The $site->public value is set to 2, by the Restricted Site Access plugin, when a site has restricted access.
-			if ( 2 === (int) $site->public ) {
-				$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
-			}
-			$menu[] = [
-				'parent'    => 'my-sites-list',
-				'id'        => $menu_id,
-				'name'      => strtoupper( $blogname ), // Index in local storage.
-				'title'     => $blavatar . $blogname,
-				'admin'     => $adminurl,
-				'url'       => $siteurl,
-				'timestamp' => $timestamp,
-			];
-		}
-
-		if ( [] !== $menu ) {
-			$response['response'] = 'success';
-			$response['data']     = $menu;
-		} else {
-			$response['response'] = 'unobserve';
-			$response['data']     = '';
-		}
-		// } else {
-		// $response['response'] = 'failed';
-		// $response['message']  = 'invalid nonse';
-		// }
-		return $response;
-		// return wp_json_encode( $response );
-		// wp_die();
-
-		// $sites  = $this->get_sites( $params );
-		// return $sites;
 	}
 
 	/**
@@ -422,41 +298,102 @@ class SuperAdminAllSitesMenu {
 
 	}
 
-	private function get_application_password() : array {
+	/**
+	 * Register REST route.
+	 *
+	 * @param \WP_REST_Server $wp_rest_server Server object.
+	 */
+	public function action_rest_api_init( \WP_REST_Server $wp_rest_server ) : void {
+		register_rest_route(
+			REST_NAMESPACE,
+			'/' . REST_BASE,
+			[
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'get_sites' ],
+				'permission_callback' => [ $this, 'get_sites_permissions_check' ],
+				'args'                => [
+					'offset' => [
+						'validate_callback' => function( $param, $request, $key ) {
+							return is_numeric( $param );
+						},
+					],
+				],
+			]
+		);
+	}
 
-		$user       = wp_get_current_user();
-		$user_id    = $user->ID;
-		$user_login = $user->user_login;
+	/**
+	 * Do the permissions check.
+	 *
+	 * @param \WP_REST_Request $request The request.
+	 * @return bool|\WP_Error
+	 */
+	public function get_sites_permissions_check( \WP_REST_Request $request ) : bool {
+		return current_user_can( 'manage_network' );
+	}
 
-		$app_exists = \WP_Application_Passwords::application_name_exists_for_user( $user_id, APP_NAME );
+	/**
+	 * Get sites.
+	 *
+	 * @param \WP_REST_Request $request The request.
+	 * @return array
+	 */
+	public function get_sites( \WP_REST_Request $request ) : array {
 
-		if ( ! $app_exists ) {
-			$passwords = \WP_Application_Passwords::create_new_application_password( $user_id, [ 'name' => APP_NAME ] );
-		} else {
-			$passwords = \WP_Application_Passwords::get_user_application_passwords( $user_id );
-		}
+		$params = $request->get_params();
+		header( 'Content-type: application/json' );
+		$offset = ( isset( $params['offset'] ) ) ? filter_var( wp_unslash( $params['offset'] ), FILTER_VALIDATE_INT, [ 'default' => 0 ] ) : 0;
 
-		if ( ! $passwords ) {
-			return [];
-		}
+		$sites     = \get_sites(
+			[
+				'orderby'  => 'path',
+				'number'   => $this->load_increments,
+				'offset'   => $offset,
+				'deleted'  => '0',
+				'mature'   => '0',
+				'archived' => '0',
+				'spam'     => '0',
+			]
+		);
+		$menu      = [];
+		$timestamp = $this->get_timestamp();
+		foreach ( $sites as $site ) {
 
-		ray( $passwords );
+			$blogid   = $site->blog_id;
+			$blogname = $site->__get( 'blogname' );
+			$menu_id  = 'blog-' . $blogid;
+			$blavatar = '<div class="blavatar"></div>';
+			$siteurl  = $site->__get( 'siteurl' );
+			$adminurl = $siteurl . '/wp-admin';
 
-		$app_pass = '';
-		foreach ( $passwords as $password ) {
-			if ( isset( $password['name'] ) && APP_NAME === $password['name'] ) {
-				$app_pass = $password['password'];
+			if ( ! $blogname ) {
+				$blogname = preg_replace( '#^(https?://)?(www.)?#', '', $siteurl );
 			}
+
+			// The $site->public value is set to 2, by the Restricted Site Access plugin, when a site has restricted access.
+			if ( 2 === (int) $site->public ) {
+				$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
+			}
+			$menu[] = [
+				'parent'    => 'my-sites-list',
+				'id'        => $menu_id,
+				'name'      => strtoupper( $blogname ), // Index in local storage.
+				'title'     => $blavatar . $blogname,
+				'admin'     => $adminurl,
+				'url'       => $siteurl,
+				'timestamp' => $timestamp,
+			];
 		}
 
-		if ( ! $app_pass ) {
-			return [];
+		if ( [] !== $menu ) {
+			$response['response'] = 'success';
+			$response['data']     = $menu;
+		} else {
+			$response['response'] = 'unobserve';
+			$response['data']     = '';
 		}
 
-		return [
-			'username' => $user_login,
-			'password' => $app_pass,
-		];
+		return $response;
 	}
 
 	/**
@@ -490,7 +427,6 @@ class SuperAdminAllSitesMenu {
 				'orderBy'        => $this->order_by,
 				'displaySearch'  => ( $this->number_of_sites > $this->search_threshold ) ? true : false,
 				'timestamp'      => $this->get_timestamp(),
-				'auth'           => wp_json_encode( $this->get_application_password() ),
 			]
 		);
 
