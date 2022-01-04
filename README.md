@@ -13,7 +13,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
   - you change a blog name.
   - IndexedDB is out of sync with site changes.
   - [Restricted Site Access](https://github.com/10up/restricted-site-access) is activated or deactivated.
-- When subsite menu data is updated, AJAX is used and it's done in increments (100 sites per increment).
+- When subsite menu data is updated, REST is used and it's done in increments (100 sites per increment).
 - List all subsites. WP Admin Bar My Sites only list sites you're a local admin on.
 - Mark sites that has [restricted site access](https://github.com/10up/restricted-site-access) with a red icon.
 - Sites menu is sorted alphabetically.
@@ -61,7 +61,7 @@ You can use the following filters to override the defaults:
     } );
     ```
 - `all_sites_menu_load_increments`
-  - AJAX load increments. Default value is 100.
+  - REST load increments. Default value is 100.
   ```php
   add_filter( 'all_sites_menu_load_increments', function( int $increments ) : int {
   	return 300;
