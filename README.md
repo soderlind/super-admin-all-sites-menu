@@ -106,6 +106,8 @@ Test the plugin on a WordPress Multisite with 100 sites, locally, using [VS Code
    - Username: `admin`
    - Password: `password`
 
+> Like to add a development container to your WordPress project? Take a look at https://github.com/soderlind/vscode-remote-try-wp
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md)
