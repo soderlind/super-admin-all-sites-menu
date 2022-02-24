@@ -106,6 +106,28 @@ Test the plugin on a WordPress Multisite with 100 sites, locally, using [VS Code
    - Username: `admin`
    - Password: `password`
 
+## Flow
+
+```mermaid
+sequenceDiagram
+	  Actor User
+    participant Menu
+    participant IndexedDB
+    participant WordPress
+		User->>Menu: Open the menu
+    Menu->>IndexedDB: Check if IndexedDB in sync
+		IndexedDB->>Menu: Update sites menu
+		Note over Menu,IndexedDB: If in sync.
+    IndexedDB->>WordPress: Request sites
+		Note over IndexedDB,WordPress: If not in sync.
+		WordPress->>IndexedDB: Get sites
+		IndexedDB->>IndexedDB: Update IndexedDB
+    IndexedDB->>Menu: Update sites menu
+		Menu->>User: Read Menu
+
+
+```
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md)
