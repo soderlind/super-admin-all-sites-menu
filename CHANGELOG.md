@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.6.0
+
+- Use `@wordpress/api-fetch` to fetch subsite data.
+
 ### 1.5.0
 
 - Use REST instead of AJAX.
