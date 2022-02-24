@@ -5,24 +5,20 @@
  * @export
  * @param {IndexedDB} db
  */
-export async function loadSites(db, offset) {
-  const url = pluginAllSitesMenu.restURL;
-  const data = JSON.stringify({
-    offset: offset,
-  });
 
+import apiFetch from "@wordpress/api-fetch";
+export async function loadSites(db, offset) {
   try {
-    const response = await fetch(url, {
+    // Set the nonce for the request.
+    await apiFetch.use(
+      apiFetch.createNonceMiddleware(pluginAllSitesMenu.nonce)
+    );
+    const res = await apiFetch({
+      url: pluginAllSitesMenu.restURL,
       method: "POST",
-      headers: new Headers({
-        "X-WP-Nonce": pluginAllSitesMenu.nonce,
-        "content-type": "application/json",
-      }),
-      credentials: "same-origin",
-      body: data,
+      data: { offset: offset },
     });
 
-    const res = await response.json();
     if (res.response === "success") {
       offset = offset + pluginAllSitesMenu.loadincrements;
       db.save(res.data);
