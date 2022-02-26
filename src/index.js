@@ -15,7 +15,7 @@ import { siteMenu } from './modules/menu.js';
 
 const dbVersionNumber = 2;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 	const $wpadminbar = document.getElementById('wpadminbar');
 	if (!$wpadminbar) {
 		return;
@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		'id,name,url,timestamp', // version 2, add timestamp. More on versioning at https://dexie.org/docs/Tutorial/Design#database-versioning
 	]);
 
-	populateDB(db);
 	observeMenuHeight(el.menu);
+	await populateDB(db);
 
 	const observedLoadMore = observeContainer(el.load, async () => {
 		const sites = await db.read(pluginAllSitesMenu.orderBy);

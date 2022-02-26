@@ -6,25 +6,24 @@
  * @param {IndexedDB} db
  */
 
-import apiFetch from "@wordpress/api-fetch";
+import apiFetch from '@wordpress/api-fetch';
 export async function loadSites(db, offset) {
-  try {
-    // Set the nonce for the request.
-    await apiFetch.use(
-      apiFetch.createNonceMiddleware(pluginAllSitesMenu.nonce)
-    );
-    const res = await apiFetch({
-      url: pluginAllSitesMenu.restURL,
-      method: "POST",
-      data: { offset: offset },
-    });
-
-    if (res.response === "success") {
-      offset = offset + pluginAllSitesMenu.loadincrements;
-      db.save(res.data);
-      await loadSites(db, offset); // load more.
-    }
-  } catch (err) {
-    console.error(err);
-  }
+	try {
+		// Set the nonce for the request.
+		await apiFetch.use(
+			apiFetch.createNonceMiddleware(pluginAllSitesMenu.nonce)
+		);
+		const res = await apiFetch({
+			url: pluginAllSitesMenu.restURL,
+			method: 'POST',
+			data: { offset: offset },
+		});
+		if (res.response === 'success') {
+			offset = offset + pluginAllSitesMenu.loadincrements;
+			db.save(res.data);
+			await loadSites(db, offset); // load more.
+		}
+	} catch (err) {
+		console.error(err);
+	}
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.6.1
+
+- Await for the promise `populateDB()` to resolve before continuing.
+
 ### 1.6.0
 
 - Use `@wordpress/api-fetch` to fetch subsite data.
