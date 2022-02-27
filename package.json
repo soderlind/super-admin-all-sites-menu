@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "wp-scripts build",
+    "build": "npm run format -- && wp-scripts build",
     "format": "wp-scripts format ./src"
   },
   "repository": {
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/soderlind/super-admin-all-sites-menu.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Per Søderlind",
   "license": "GPLv2",
   "bugs": {
     "url": "https://github.com/soderlind/super-admin-all-sites-menu/issues"
