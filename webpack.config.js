@@ -3,6 +3,7 @@
 const defaultConfig = require("@wordpress/scripts/config/webpack.config");
 const packageJSON = require("./package.json");
 const webpack = require("webpack");
+const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
   ...defaultConfig,
   module: {
@@ -11,15 +12,21 @@ module.exports = {
   },
   optimization: {
     ...defaultConfig.optimization,
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+      }),
+    ],
   },
   plugins: [
     ...defaultConfig.plugins,
-    new webpack.BannerPlugin(
-      `${packageJSON.name}
+    new webpack.BannerPlugin({
+      exclude: "index.asset.php",
+      banner: `${packageJSON.name}
 version: ${packageJSON.version}
 address: ${packageJSON.homepage}
 author:  ${packageJSON.author}
-license: ${packageJSON.license}`
-    ),
+license: ${packageJSON.license}`,
+    }),
   ],
 };

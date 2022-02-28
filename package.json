@@ -22,7 +22,8 @@
   "devDependencies": {
     "@wordpress/scripts": "^22.0.1",
     "grunt": "^1.4.1",
-    "grunt-version": "^3.0.0"
+    "grunt-version": "^3.0.0",
+    "terser-webpack-plugin": "^5.3.1"
   },
   "dependencies": {
     "@wordpress/api-fetch": "^6.0.1",
