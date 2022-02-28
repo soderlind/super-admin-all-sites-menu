@@ -21,7 +21,7 @@ module.exports = {
   plugins: [
     ...defaultConfig.plugins,
     new webpack.BannerPlugin({
-      exclude: "index.asset.php",
+      exclude: /\.php$/,
       banner: `${packageJSON.name}
 version: ${packageJSON.version}
 address: ${packageJSON.homepage}
