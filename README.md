@@ -27,6 +27,8 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
     - 'Plugins'
     - 'Settings'
 
+>Inspired by [WP REST API vs admin-ajax.php vs Must-Use Plugin: Handling AJAX Requests in WordPress](https://deliciousbrains.com/comparing-wordpress-rest-api-performance-admin-ajax-php/), I wrote [a must-use plugin](https://gist.github.com/soderlind/0de1272f1be1b3c79d43dd2c51dbddca) that makes the plugin go from fast to faster. Save it in `mu-plugins`. 
+
 ## Use
 
 <img src=".wordpress-org/screenshot-1.gif">
