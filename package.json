@@ -20,14 +20,14 @@
   },
   "homepage": "https://github.com/soderlind/super-admin-all-sites-menu#readme",
   "devDependencies": {
-    "@wordpress/scripts": "^22.0.1",
-    "grunt": "^1.4.1",
+    "@wordpress/scripts": "^23.1.0",
+    "grunt": "^1.5.3",
     "grunt-version": "^3.0.0",
     "terser-webpack-plugin": "^5.3.1"
   },
   "dependencies": {
-    "@wordpress/api-fetch": "^6.0.1",
-    "@wordpress/i18n": "^4.3.1",
-    "dexie": "^3.2.1"
+    "@wordpress/api-fetch": "^6.6.0",
+    "@wordpress/i18n": "^4.9.0",
+    "dexie": "^3.2.2"
   }
 }
