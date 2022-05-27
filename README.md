@@ -114,7 +114,7 @@ Test the plugin on a WordPress Multisite with 100 sites, locally, using [VS Code
 
 1. Click the Code drop-down menu and select the `Create codespace on main`.
 1. Wait until VS Code runs in the browser
-1. In VS Code, Select `PORTS` add click on the `Local Address` URL. 
+1. In VS Code, Select `PORTS` and click on the `Local Address` URL. 
    <img src=".wordpress-org/codespace-demo-url.png">
 1. Append `/wp-admin` to the Local Address URL
    - Username: `admin`
