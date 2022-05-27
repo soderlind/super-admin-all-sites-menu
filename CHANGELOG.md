@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.6.2
+
+- Tested with WordPress 6.0
+
 ### 1.6.1
 
 - Await for the promise `populateDB()` to resolve before continuing.
