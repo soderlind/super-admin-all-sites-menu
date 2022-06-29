@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.6.4
+
+- Fix bug in handling the REST API.
+
 ### 1.6.2
 
 - Tested with WordPress 6.0
