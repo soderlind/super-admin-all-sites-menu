@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.6.2
+ * Version:     1.6.4
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -89,20 +89,25 @@ class SuperAdminAllSitesMenu {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_filter( 'do_parse_request', '__return_false' );
-
-		$this->set_properties();
-		add_action( 'admin_bar_init', [ $this, 'init' ] );
-		add_action( 'rest_api_init', [ $this, 'action_rest_api_init' ] );
-		register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
+		return $this;
 	}
 
 	/**
-	 * Init values.
+	 * Initialize the plugin.
+	 */
+	public function init() {
+		add_action( 'admin_bar_init', [ $this, 'action_admin_bar_init' ] );
+		add_action( 'rest_api_init', [ $this, 'action_rest_api_init' ] );
+		register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
+		$this->set_properties();
+	}
+
+	/**
+	 * Init admin bar values.
 	 *
 	 * @return void
 	 */
-	public function init() : void {
+	public function action_admin_bar_init() : void {
 		load_plugin_textdomain( 'super-admin-all-sites-menu', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 		if ( \is_super_admin() ) {
 			add_action( 'add_admin_bar_menus', [ $this, 'action_add_admin_bar_menus' ] );
@@ -306,7 +311,7 @@ class SuperAdminAllSitesMenu {
 	 * @param \WP_REST_Server $wp_rest_server Server object.
 	 */
 	public function action_rest_api_init( \WP_REST_Server $wp_rest_server ) : void {
-		register_rest_route(
+		$is_route_created = register_rest_route(
 			REST_NAMESPACE,
 			'/' . REST_BASE,
 			[
@@ -322,6 +327,7 @@ class SuperAdminAllSitesMenu {
 				],
 			]
 		);
+
 	}
 
 	/**
@@ -359,7 +365,7 @@ class SuperAdminAllSitesMenu {
 		);
 		$menu      = [];
 		$timestamp = $this->get_timestamp();
-		foreach ( $sites as $site ) {
+		foreach ( (array) $sites as $site ) {
 
 			$blogid   = $site->blog_id;
 			$blogname = $site->__get( 'blogname' );
@@ -534,7 +540,7 @@ class SuperAdminAllSitesMenu {
 
 }
 
-
 if ( \is_multisite() ) {
-	$super_admin_sites_menu = new SuperAdminAllSitesMenu();
+	$super_admin_menu = new SuperAdminAllSitesMenu();
+	$super_admin_menu->init();
 }
