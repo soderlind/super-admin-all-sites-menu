@@ -11,14 +11,14 @@
  * @export
  */
 export function refreshAdminbar() {
-	const sitemenu = document.getElementById('wp-admin-bar-my-sites-list');
-	if (sitemenu) {
+	const sitemenu = document.getElementById( 'wp-admin-bar-my-sites-list' );
+	if ( sitemenu ) {
 		sitemenu.addEventListener(
 			'mouseenter',
-			(e) => {
+			( e ) => {
 				e.stopPropagation();
-				if (e.target.classList.contains('menupop')) {
-					addClass(e.target, 'hover');
+				if ( e.target.classList.contains( 'menupop' ) ) {
+					addClass( e.target, 'hover' );
 				}
 			},
 			{ capture: true }
@@ -26,10 +26,10 @@ export function refreshAdminbar() {
 
 		sitemenu.addEventListener(
 			'mouseleave',
-			(e) => {
+			( e ) => {
 				e.stopPropagation();
-				if (e.target.classList.contains('menupop')) {
-					removeClass(e.target, 'hover');
+				if ( e.target.classList.contains( 'menupop' ) ) {
+					removeClass( e.target, 'hover' );
 				}
 			},
 			{ capture: true }
@@ -37,11 +37,11 @@ export function refreshAdminbar() {
 
 		sitemenu.addEventListener(
 			'keydown',
-			(e) => {
-				if (e.key === 'Tab') {
+			( e ) => {
+				if ( e.key === 'Tab' ) {
 					e.preventDefault();
-					if (e.target.classList.contains('menupop')) {
-						toggleClass(e.target, 'hover');
+					if ( e.target.classList.contains( 'menupop' ) ) {
+						toggleClass( e.target, 'hover' );
 					}
 				}
 			},
@@ -58,15 +58,15 @@ export function refreshAdminbar() {
  * @param {HTMLElement} element The HTML element.
  * @param {string}      className The class name.
  */
-function addClass(element, className) {
-	if (!element) {
+function addClass( element, className ) {
+	if ( ! element ) {
 		return;
 	}
 
-	if (element.classList && element.classList.add) {
-		element.classList.add(className);
-	} else if (!hasClass(element, className)) {
-		if (element.className) {
+	if ( element.classList && element.classList.add ) {
+		element.classList.add( className );
+	} else if ( ! hasClass( element, className ) ) {
+		if ( element.className ) {
 			element.className += ' ';
 		}
 
@@ -80,10 +80,10 @@ function addClass(element, className) {
 
 	let rect = element.getBoundingClientRect();
 	let top = rect.top;
-	let subMenu = element.querySelector('.ab-submenu');
-	subMenu.style.top = `${top - 6}px`;
+	let subMenu = element.querySelector( '.ab-submenu' );
+	subMenu.style.top = `${ top - 6 }px`;
 
-	if (subMenu.getBoundingClientRect().bottom > window.innerHeight) {
+	if ( subMenu.getBoundingClientRect().bottom > window.innerHeight ) {
 		subMenu.style.top = 'auto';
 		subMenu.style.bottom = '0';
 	}
@@ -97,24 +97,24 @@ function addClass(element, className) {
  * @param {HTMLElement} element The HTML element.
  * @param {string}      className The class name.
  */
-function removeClass(element, className) {
+function removeClass( element, className ) {
 	let testName;
 	let classes;
-	if (!element && !hasClass(element, className)) {
+	if ( ! element && ! hasClass( element, className ) ) {
 		return;
 	}
 
-	if (element.classList && element.classList.remove) {
-		element.classList.remove(className);
+	if ( element.classList && element.classList.remove ) {
+		element.classList.remove( className );
 	} else {
-		testName = ` ${className} `;
-		classes = ` ${element.className} `;
+		testName = ` ${ className } `;
+		classes = ` ${ element.className } `;
 
-		while (classes.indexOf(testName) > -1) {
-			classes = classes.replace(testName, '');
+		while ( classes.indexOf( testName ) > -1 ) {
+			classes = classes.replace( testName, '' );
 		}
 
-		element.className = classes.replace(/^[\s]+|[\s]+$/g, '');
+		element.className = classes.replace( /^[\s]+|[\s]+$/g, '' );
 	}
 }
 
@@ -125,29 +125,29 @@ function removeClass(element, className) {
  *
  * @param {Event} event The keydown event.
  */
-function toggleHoverIfEnter(event) {
+function toggleHoverIfEnter( event ) {
 	let wrapper;
 
-	if (event.which !== 13) {
+	if ( event.which !== 13 ) {
 		return;
 	}
 
-	if (!getClosest(event.target, '.ab-sub-wrapper')) {
+	if ( ! getClosest( event.target, '.ab-sub-wrapper' ) ) {
 		return;
 	}
 
-	wrapper = getClosest(event.target, '.menupop');
+	wrapper = getClosest( event.target, '.menupop' );
 
-	if (!wrapper) {
+	if ( ! wrapper ) {
 		return;
 	}
 
 	event.preventDefault();
 
-	if (hasClass(wrapper, 'hover')) {
-		removeClass(wrapper, 'hover');
+	if ( hasClass( wrapper, 'hover' ) ) {
+		removeClass( wrapper, 'hover' );
 	} else {
-		addClass(wrapper, 'hover');
+		addClass( wrapper, 'hover' );
 	}
 }
 
@@ -160,18 +160,18 @@ function toggleHoverIfEnter(event) {
  * @param {string}      className The class name.
  * @return {boolean} Whether the element has the className.
  */
-function hasClass(element, className) {
+function hasClass( element, className ) {
 	let classNames;
 
-	if (!element) {
+	if ( ! element ) {
 		return false;
 	}
 
-	if (element.classList && element.classList.contains) {
-		return element.classList.contains(className);
-	} else if (element.className) {
-		classNames = element.className.split(' ');
-		return classNames.indexOf(className) > -1;
+	if ( element.classList && element.classList.contains ) {
+		return element.classList.contains( className );
+	} else if ( element.className ) {
+		classNames = element.className.split( ' ' );
+		return classNames.indexOf( className ) > -1;
 	}
 
 	return false;
@@ -185,8 +185,8 @@ function hasClass(element, className) {
  * @param {HTMLElement} el Element to get parent.
  * @param {string} selector CSS selector to match.
  */
-function getClosest(el, selector) {
-	if (!window.Element.prototype.matches) {
+function getClosest( el, selector ) {
+	if ( ! window.Element.prototype.matches ) {
 		// Polyfill from https://developer.mozilla.org/en-US/docs/Web/API/Element/matches.
 		window.Element.prototype.matches =
 			window.Element.prototype.matchesSelector ||
@@ -194,18 +194,20 @@ function getClosest(el, selector) {
 			window.Element.prototype.msMatchesSelector ||
 			window.Element.prototype.oMatchesSelector ||
 			window.Element.prototype.webkitMatchesSelector ||
-			function (s) {
-				let matches = (document || ownerDocument).querySelectorAll(s);
+			function ( s ) {
+				let matches = ( document || ownerDocument ).querySelectorAll(
+					s
+				);
 				let i = matches.length;
-				while (--i >= 0 && matches.item(i) !== this) {}
+				while ( --i >= 0 && matches.item( i ) !== this ) {}
 
 				return i > -1;
 			};
 	}
 
 	// Get the closest matching elent.
-	for (; el && el !== document; el = el.parentNode) {
-		if (el.matches(selector)) {
+	for ( ; el && el !== document; el = el.parentNode ) {
+		if ( el.matches( selector ) ) {
 			return el;
 		}
 	}
