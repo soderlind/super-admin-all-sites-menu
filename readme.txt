@@ -1,7 +1,7 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.6.4
+Stable tag: 1.6.5
 Requires at least: 5.6  
-Tested up to: 6.0  
+Tested up to: 6.3  
 Requires PHP: 7.3  
 License: GPL v2 or later  
 Tags: superadmin, multisite, management  
@@ -99,6 +99,10 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.6.5 =
+
+- Tested with WordPress 6.3
 
 = 1.6.4 =
 
