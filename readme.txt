@@ -100,6 +100,10 @@ You can use the following filters to override the defaults:
 
 == Changelog ==
 
+= 1.6.6 =
+
+- Tested with WordPress 6.4
+
 = 1.6.5 =
 
 - Tested with WordPress 6.3
