@@ -1,11 +1,12 @@
 {
   "name": "super-admin-all-sites-menu",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run format -- && wp-scripts build",
+    "bump": "wp-update-project-version -s package.json -p readme.txt composer.json super-admin-all-sites-menu.php",
     "format": "wp-scripts format ./src"
   },
   "repository": {
@@ -21,13 +22,12 @@
   "homepage": "https://github.com/soderlind/super-admin-all-sites-menu#readme",
   "devDependencies": {
     "@wordpress/scripts": "^23.3.0",
-    "grunt": "^1.5.3",
-    "grunt-version": "^3.0.0",
-    "terser-webpack-plugin": "^5.3.3"
+    "terser-webpack-plugin": "^5.3.9"
   },
   "dependencies": {
-    "@wordpress/api-fetch": "^6.8.0",
-    "@wordpress/i18n": "^4.11.0",
-    "dexie": "^3.2.2"
+    "@soderlind/wp-project-version-sync": "^2.0.2",
+    "@wordpress/api-fetch": "^6.41.0",
+    "@wordpress/i18n": "^4.44.0",
+    "dexie": "^3.2.4"
   }
 }

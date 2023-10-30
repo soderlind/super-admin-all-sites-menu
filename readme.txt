@@ -1,7 +1,7 @@
 === Super Admin All Sites Menu ===
 Stable tag: 1.6.5
 Requires at least: 5.6  
-Tested up to: 6.3  
+Tested up to: 6.4  
 Requires PHP: 7.3  
 License: GPL v2 or later  
 Tags: superadmin, multisite, management  
