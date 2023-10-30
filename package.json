@@ -22,12 +22,12 @@
   "homepage": "https://github.com/soderlind/super-admin-all-sites-menu#readme",
   "devDependencies": {
     "@wordpress/scripts": "^23.3.0",
-    "terser-webpack-plugin": "^5.3.3"
+    "terser-webpack-plugin": "^5.3.9"
   },
   "dependencies": {
     "@soderlind/wp-project-version-sync": "^2.0.2",
-    "@wordpress/api-fetch": "^6.8.0",
-    "@wordpress/i18n": "^4.11.0",
-    "dexie": "^3.2.2"
+    "@wordpress/api-fetch": "^6.41.0",
+    "@wordpress/i18n": "^4.44.0",
+    "dexie": "^3.2.4"
   }
 }
