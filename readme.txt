@@ -100,6 +100,10 @@ You can use the following filters to override the defaults:
 
 == Changelog ==
 
+= 1.6.7 =
+
+- Update dependencies
+
 = 1.6.6 =
 
 - Tested with WordPress 6.4
