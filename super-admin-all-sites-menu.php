@@ -438,7 +438,7 @@ class SuperAdminAllSitesMenu {
 			]
 		);
 
-		wp_add_inline_script( 'super-admin-all-sites-menu', "const pluginAllSitesMenu = ${data};", 'before' );
+		wp_add_inline_script( 'super-admin-all-sites-menu', "const pluginAllSitesMenu = {$data};", 'before' );
 		wp_set_script_translations( 'super-admin-all-sites-menu', 'super-admin-all-sites-menu' );
 	}
 
