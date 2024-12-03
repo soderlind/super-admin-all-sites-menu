@@ -27,7 +27,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
     - 'Plugins'
     - 'Settings'
 
->Inspired by [WP REST API vs admin-ajax.php vs Must-Use Plugin: Handling AJAX Requests in WordPress](https://deliciousbrains.com/comparing-wordpress-rest-api-performance-admin-ajax-php/), I wrote [a must-use plugin](https://gist.github.com/soderlind/0de1272f1be1b3c79d43dd2c51dbddca) that makes the plugin go from fast to faster (ca 60% faster). Save [the file](https://gist.githubusercontent.com/soderlind/0de1272f1be1b3c79d43dd2c51dbddca/raw/2a5797f9d9ed5f0fb9e7e2a912870a8d9c51cfb3/mu-super-admin-all-sites-menu.php) in `mu-plugins`. 
+> Inspired by [WP REST API vs admin-ajax.php vs Must-Use Plugin: Handling AJAX Requests in WordPress](https://deliciousbrains.com/comparing-wordpress-rest-api-performance-admin-ajax-php/), I wrote [a must-use plugin](https://gist.github.com/soderlind/0de1272f1be1b3c79d43dd2c51dbddca) that makes the plugin go from fast to faster (ca 60% faster). Save [the file](https://gist.githubusercontent.com/soderlind/0de1272f1be1b3c79d43dd2c51dbddca/raw/2a5797f9d9ed5f0fb9e7e2a912870a8d9c51cfb3/mu-super-admin-all-sites-menu.php) in `mu-plugins`.
 
 ## Use
 
@@ -97,30 +97,7 @@ You can use the following filters to override the defaults:
 
 ## Demo
 
-### Localy, in VS Code
-
-Test the plugin on a WordPress Multisite with 100 sites, locally, using [VS Code dev containers](https://code.visualstudio.com/docs/remote/containers).
-
-0. You must [have docker installed](https://code.visualstudio.com/docs/remote/containers#_system-requirements).
-1. In VS Code, install the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension.
-1. Clone Super Admin All Sites Menu: `git clone https://github.com/soderlind/super-admin-all-sites-menu`
-1. In `super-admin-all-sites-menu`, open VS Code: `code .`
-1. When VS Code opens, click on **Reopen container**
-1. Wait until the container is ready, then open http://localhost:8080/wp-admin/
-   - Username: `admin`
-   - Password: `password`
-
-### In GitHub Codespaces
-
-1. Click the Code drop-down menu and select the `Create codespace on main`.
-1. Wait until VS Code runs in the browser
-1. In VS Code, Select `PORTS` and click on the `Local Address` URL. 
-   <img src=".wordpress-org/codespace-demo-url.png">
-1. Append `/wp-admin` to the Local Address URL
-   - Username: `admin`
-   - Password: `password`
-
-
+A demo is available in WordPress Playground, [Super Admin All Sites Menu]()
 
 ## Flow
 
