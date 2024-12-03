@@ -23,15 +23,7 @@
 		},
 		{
 			"step": "wp-cli",
-			"command": "wp site create --slug='site-01' --title='Test Site 01'"
-		},
-		{
-			"step": "wp-cli",
-			"command": "wp site create --slug='site-02' --title='Test Site 02'"
-		},
-		{
-			"step": "wp-cli",
-			"command": "wp site create --slug='site-03' --title='Test Site 03'"
+			"command": "wp site create --slug=site01"
 		}
 	]
 }
