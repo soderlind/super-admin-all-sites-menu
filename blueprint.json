@@ -18,6 +18,10 @@
 		},
 		{
 			"step": "enableMultisite"
+		},
+		{
+			"step": "wp-cli",
+			"command": "wp site create --slug='site-01' --title='Test Site 01'"
 		}
 	]
 }
