@@ -6,8 +6,11 @@
 		"wp": "latest"
 	},
 	"features": {
-		"networking": true
+		"networking": true,
 	},
+	"extraLibraries": [
+		"wp-cli"
+	],
 	"steps": [
 		{
 			"step": "login",
