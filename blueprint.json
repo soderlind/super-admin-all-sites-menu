@@ -23,7 +23,7 @@
 			"step": "installPlugin",
 			"pluginData": {
 				"resource": "url",
-				"url": "https://github-proxy.com/proxy/?repo=soderlind/super-admin-all-sites-menu"
+				"url": "https://github.com/soderlind/super-admin-all-sites-menu/archive/refs/heads/main.zip"
 			}
 		}
 	]
