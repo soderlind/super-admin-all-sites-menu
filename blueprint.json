@@ -1,11 +1,15 @@
 {
 	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/wp-admin/",
 	"features": {
 		"networking": true
 	},
 	"plugins": [
 		"https://github-proxy.com/proxy/?repo=soderlind/super-admin-all-sites-menu"
 	],
+	"siteOptions": {
+		"blogname": "All Sites Menu"
+	},
 	"steps": [
 		{
 			"step": "enableMultisite"
@@ -213,6 +217,11 @@
 		{
 			"step": "login",
 			"username": "admin"
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/mu-plugins/allsitesmenu-notice.php",
+			"data": "<?php add_action('admin_notices', function() {  echo '<div class=\"notice notice-info is-dismissible\"><p>Check All Sites in admin bar.</p></div>'; });"
 		}
 	]
 }
