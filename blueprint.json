@@ -5,6 +5,9 @@
 		"php": "8.2",
 		"wp": "latest"
 	},
+	"features": {
+		"networking": true
+	},
 	"extraLibraries": [
 		"wp-cli"
 	],
