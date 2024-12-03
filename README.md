@@ -97,7 +97,7 @@ You can use the following filters to override the defaults:
 
 ## Demo
 
-A demo is available in WordPress Playground, [Super Admin All Sites Menu](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/soderlind/super-admin-all-sites-menu/refs/heads/main/blueprint.json). Adds 50 subsites, so it's a bit slow.
+A demo is available in [WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/soderlind/super-admin-all-sites-menu/refs/heads/main/blueprint.json). Adds 50 subsites, so it's a bit slow.
 
 ## Flow
 
