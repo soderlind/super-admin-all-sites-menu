@@ -221,7 +221,7 @@
 		{
 			"step": "writeFile",
 			"path": "/wordpress/wp-content/mu-plugins/allsitesmenu-notice.php",
-			"data": "<?php add_action('admin_notices', function() {  echo '<div class=\"notice notice-info is-dismissible\"><p>Check All Sites in admin bar.</p></div>'; });"
+			"data": "<?php add_action('admin_notices', function() {  echo '<div class=\"notice notice-info is-dismissible\"><p>Check All Sites in the admin bar.</p></div>'; });"
 		}
 	]
 }
