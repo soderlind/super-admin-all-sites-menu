@@ -1,5 +1,13 @@
 # Changelog
 
+### 1.6.8
+
+- Update dependencies
+
+### 1.6.7
+
+- Update dependencies
+
 ### 1.6.6
 
 - Tested with WordPress 6.4
