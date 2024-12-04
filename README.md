@@ -103,7 +103,7 @@ You can use the following filters to override the defaults:
 
 A demo is available in [WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/soderlind/super-admin-all-sites-menu/refs/heads/main/blueprint.json).
 
-- If you activate the Restricted Site Access plugin (included), you'll see a red icon next to the site name.
+- If you activate the Restricted Site Access plugin (included), you'll see a red icon next to the site name. ATM, this only work on the main site.
 
 ## Flow
 
