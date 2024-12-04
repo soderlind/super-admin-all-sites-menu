@@ -16,6 +16,9 @@
 			"pluginData": {
 				"resource": "wordpress.org/plugins",
 				"slug": "restricted-site-access"
+			},
+			"options": {
+				"activate": false
 			}
 		},
 		{
