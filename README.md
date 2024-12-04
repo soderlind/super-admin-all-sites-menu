@@ -1,6 +1,8 @@
 # Super Admin All Sites Menu
 
-> Also available at https://wordpress.org/plugins/super-admin-all-sites-menu/ NOTE: I don't have access to wordpress.org anymore, so as of release 1.6.8, you can only [get updates from GitHub](https://github.com/soderlind/super-admin-all-sites-menu/archive/refs/heads/main.zip))
+> Also available at https://wordpress.org/plugins/super-admin-all-sites-menu/
+>
+> NOTE: I don't have access to wordpress.org anymore, so as of release 1.6.8, you can only [get updates from GitHub](https://github.com/soderlind/super-admin-all-sites-menu/archive/refs/heads/main.zip)
 
 [Use](#use) | [Prerequisite](#prerequisite) | [Install](#install) | [Filters](#filters) | [Demo](#demo) | [Changelog](CHANGELOG.md)
 
@@ -46,7 +48,9 @@ Menu data are stored locally in IndexedDB.
 
 ## Install
 
-> Also available at https://wordpress.org/plugins/super-admin-all-sites-menu/ (NOTE: I don't have access to wordpress.org anymore, so as of release 1.6.8, you can only [get updates from GitHub](https://github.com/soderlind/super-admin-all-sites-menu/archive/refs/heads/main.zip))
+> Also available at https://wordpress.org/plugins/super-admin-all-sites-menu/
+>
+> NOTE: I don't have access to wordpress.org anymore, so as of release 1.6.8, you can only [get updates from GitHub](https://github.com/soderlind/super-admin-all-sites-menu/archive/refs/heads/main.zip)
 
 - [Download the plugin](https://github.com/soderlind/super-admin-all-sites-menu/archive/refs/heads/main.zip)
 - [Upload and network activate the plugin](https://wordpress.org/support/article/managing-plugins/#manual-upload-via-wordpress-admin)
