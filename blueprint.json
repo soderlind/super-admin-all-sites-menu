@@ -22,10 +22,6 @@
 			}
 		},
 		{
-			"step": "login",
-			"username": "admin"
-		},
-		{
 			"step": "enableMultisite"
 		},
 		{
@@ -47,6 +43,10 @@
 		{
 			"step": "wp-cli",
 			"command": "wp site create --slug=site05"
+		},
+		{
+			"step": "login",
+			"username": "admin"
 		},
 		{
 			"step": "writeFile",
