@@ -101,7 +101,7 @@ You can use the following filters to override the defaults:
 
 ## Demo
 
-A demo is available in [WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/soderlind/super-admin-all-sites-menu/refs/heads/main/blueprint.json).
+A demo is available in [WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/soderlind/super-admin-all-sites-menu/refs/heads/main/blueprint.json). It's a bit slow loading, 50 sub sites are added.
 
 - If you activate the Restricted Site Access plugin (included), you'll see a red icon next to the site name. ATM, this only work on the main site due to [issues with WordPress Playground](https://github.com/WordPress/wordpress-playground/issues/2054).
 
