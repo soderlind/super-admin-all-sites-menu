@@ -19,7 +19,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
   - [Restricted Site Access](https://github.com/10up/restricted-site-access) is activated or deactivated.
 - When subsite menu data is updated, REST is used and it's done in increments (100 sites per increment).
 - List all subsites. WP Admin Bar My Sites only list sites you're a local admin on.
-- Mark sites that [has restricted site access activated](https://github.com/soderlind/super-admin-all-sites-menu/blob/main/super-admin-all-sites-menu.php#L381-L384) with a red icon.
+- Mark sites that [has Restricted Site Access activated](https://github.com/soderlind/super-admin-all-sites-menu/blob/main/super-admin-all-sites-menu.php#L381-L384) with a red icon.
 - Sites menu is sorted alphabetically.
 - Search filter.
 - Add more menu choices:
