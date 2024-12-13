@@ -38,6 +38,14 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 * WordPress Multisite
 * A modern browser, IE 11 isn't supported.
 
+= Demo
+
+A demo is available in [WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/soderlind/super-admin-all-sites-menu/refs/heads/main/.wordpress-org/blueprints/blueprint.json). It's a bit slow loading, 50 subsites are added.
+
+- If you disable Super Admin All Sites Menu in the Main Site plugins menu, you'll see the WP Admin Bar My Sites menu doesn't allow you to scroll and see all sites. This is a 14-year-old (!) [bug on WordPress](https://core.trac.wordpress.org/ticket/15317).
+
+- If you activate the Restricted Site Access plugin (included), you'll see a red icon next to the site name. ATM, this only works on the main site due to [issues with WordPress Playground](https://github.com/WordPress/wordpress-playground/issues/2054).
+
 = Filters =
 
 You can use the following filters to override the defaults:
