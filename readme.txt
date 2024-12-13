@@ -38,7 +38,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 * WordPress Multisite
 * A modern browser, IE 11 isn't supported.
 
-= Demo
+= Demo =
 
 A demo is available in [WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/soderlind/super-admin-all-sites-menu/refs/heads/main/.wordpress-org/blueprints/blueprint.json). It's a bit slow loading, 50 subsites are added.
 
