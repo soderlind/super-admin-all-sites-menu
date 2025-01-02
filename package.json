@@ -26,7 +26,7 @@
 	},
 	"dependencies": {
 		"@soderlind/wp-project-version-sync": "^2.0.2",
-		"@wordpress/api-fetch": "^7.13.0",
+		"@wordpress/api-fetch": "^7.14.0",
 		"@wordpress/i18n": "^5.13.0",
 		"cross-spawn": "^7.0.6",
 		"dexie": "^4.0.10"
