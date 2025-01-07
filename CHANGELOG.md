@@ -1,5 +1,16 @@
 # Changelog
 
+### 1.7.0
+
+- Major code refactoring and improvements:
+  - Added comprehensive JSDoc documentation
+  - Improved error handling throughout the codebase
+  - Enhanced IndexedDB implementation with private class fields
+  - Added debouncing to search functionality
+  - Improved intersection observer implementations
+  - Better type checking and null safety
+  - Modernized class structure and module organization
+
 ### 1.6.9
 
 - Update dependencies

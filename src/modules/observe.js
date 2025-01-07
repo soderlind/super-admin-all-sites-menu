@@ -1,74 +1,69 @@
 /**
- * Observe the load more text and load the sites.
+ * Creates and configures an IntersectionObserver for container elements
  *
- * @author Per Søderlind
- * @export
- * @param {el} observedContainer
- * @param {function} callback
- * @returns {IntersectionObserver}
+ * @param {HTMLElement} observedContainer - Element to observe
+ * @param {Function} callback - Function to execute when intersection occurs
+ * @returns {IntersectionObserver|null} Configured observer or null if setup fails
+ * @throws {Error} When invalid parameters are provided
  */
 export function observeContainer( observedContainer, callback ) {
-	const observer = new IntersectionObserver( ( entries ) => {
-		entries.forEach(
-			( entry ) => {
-				const { isIntersecting } = entry;
-				if ( isIntersecting ) {
-					callback();
-				}
-			},
-			{
-				root: observedContainer,
-			}
+	if (
+		! observedContainer ||
+		! callback ||
+		! ( 'IntersectionObserver' in window )
+	) {
+		console.error(
+			'Invalid parameters or IntersectionObserver not supported'
 		);
-	} );
+		return null;
+	}
+
+	const observer = new IntersectionObserver(
+		( entries ) => {
+			entries.forEach( ( entry ) => entry.isIntersecting && callback() );
+		},
+		{ threshold: 0.1 }
+	);
 
 	observer.observe( observedContainer );
-
 	return observer;
 }
 
 /**
- * Change the wrapper height.
+ * Observes menu wrapper height and adjusts based on viewport
+ * Uses IntersectionObserver to dynamically adjust menu height
  *
- * @see https://stackoverflow.com/a/66428317
- *
- * @author Per Søderlind
- * @export
- * @param {el} observedWrapper
+ * @param {HTMLElement} observedWrapper - Menu wrapper element to observe
+ * @returns {IntersectionObserver|undefined} Configured observer or undefined if setup fails
  */
 export function observeMenuHeight( observedWrapper ) {
-	const wrapperObserver = new IntersectionObserver(
-		( entries ) => {
-			entries.forEach( ( entry ) => {
-				const bcr = entry.boundingClientRect;
-				const isBottomVisible =
-					bcr.bottom < window.innerHeight && bcr.bottom;
+	if ( ! observedWrapper ) return;
 
-				//Set the site menu wrapper height.
-				const mx = window.matchMedia( '(min-width: 783px)' );
-				if ( mx.matches ) {
-					const wrapper = document.querySelector(
-						'#wp-admin-bar-my-sites>.ab-sub-wrapper'
-					);
+	const MEDIA_QUERY = '(min-width: 783px)';
+	const THRESHOLD_STEPS = Array.from( { length: 11 }, ( _, i ) => i / 10 );
 
-					if ( isBottomVisible ) {
-						wrapper.style.height = '';
-						wrapper.querySelector(
-							'ul#wp-admin-bar-my-sites-list'
-						).style.paddingBottom = '0';
-					} else {
-						wrapper.style.height = 'calc(100vh - 32px)';
-						wrapper.querySelector(
-							'ul#wp-admin-bar-my-sites-list'
-						).style.paddingBottom = '32px';
-					}
-				}
-			} );
-		},
-		{
-			threshold: [ 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1 ],
-		}
+	const updateMenuHeight = ( entry ) => {
+		const mediaQuery = window.matchMedia( MEDIA_QUERY );
+		if ( ! mediaQuery.matches ) return;
+
+		const wrapper = document.querySelector(
+			'#wp-admin-bar-my-sites>.ab-sub-wrapper'
+		);
+		const list = wrapper?.querySelector( 'ul#wp-admin-bar-my-sites-list' );
+		if ( ! wrapper || ! list ) return;
+
+		const isBottomVisible =
+			entry.boundingClientRect.bottom < window.innerHeight;
+
+		wrapper.style.height = isBottomVisible ? '' : 'calc(100vh - 32px)';
+		list.style.paddingBottom = isBottomVisible ? '0' : '32px';
+	};
+
+	const observer = new IntersectionObserver(
+		( entries ) => entries.forEach( updateMenuHeight ),
+		{ threshold: THRESHOLD_STEPS }
 	);
 
-	wrapperObserver.observe( observedWrapper );
+	observer.observe( observedWrapper );
+	return observer;
 }
