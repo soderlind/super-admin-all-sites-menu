@@ -8,6 +8,9 @@ jobs:
     name: New tag
     runs-on: ubuntu-latest
     steps:
+    - name: Install Subversion
+      run: sudo apt-get update && sudo apt-get install -y subversion
+    - name: Checkout code
     - uses: actions/checkout@4
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@stable
