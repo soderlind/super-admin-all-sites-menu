@@ -1,164 +1,87 @@
-/**
- * Dexie.js wrapper.
- *
- * @see https://dexie.org/
- *
- * @author Per Søderlind
- * @class IndexedDB
- */
 import { Dexie } from 'dexie';
 
 class IndexedDB {
-	/**
-	 * Creates an instance of IndexedDB.
-	 *
-	 * @author Per Søderlind
-	 * @param {string} name Database name
-	 * @param {string} table Table name
-	 * @param {string[]} keys Indexed keys. If changing, oldest first.
-	 */
+	#db;
+	#name;
+	#table;
+	#keys;
+
 	constructor( name, table, keys ) {
-		this.name = name;
-		// this.version = version;
-		this.table = table;
-		this.keys = keys;
+		this.#name = name;
+		this.#table = table;
+		this.#keys = keys;
+		this.#db = this.#initDatabase();
 	}
 
-	/**
-	 * Get local storage database.
-	 *
-	 * @author Per Søderlind
-	 * @returns {Dexie} Database
-	 */
-	database() {
-		const db = new Dexie( this.name );
-		let version = 1;
-		for ( let keys of this.keys ) {
-			db.version( version ).stores( {
-				[ this.table ]: keys,
+	#initDatabase() {
+		const db = new Dexie( this.#name );
+		this.#keys.forEach( ( keys, index ) => {
+			db.version( index + 1 ).stores( {
+				[ this.#table ]: keys,
 			} );
-			version++;
-		}
+		} );
 		return db;
 	}
-	/**
-	 * Save to local storage.
-	 *
-	 * @author Per Søderlind
-	 * @param {array} data
-	 */
+
 	async save( data ) {
-		const db = this.database();
-		await db[ this.table ]
-			.bulkPut( data )
-			.then( () => {
-				db.close();
-			} )
-			.catch( ( err ) => {
-				console.error( 'Error in db.save', err );
-				throw err; // Re-throw the error!
-			} );
+		try {
+			await this.#db[ this.#table ].bulkPut( data );
+		} catch ( err ) {
+			console.error( 'IndexedDB save error:', err );
+			throw err;
+		}
 	}
 
-	/**
-	 * Read from local storage.
-	 *
-	 * @author Per Søderlind
-	 */
 	async read( orderby = 'name' ) {
-		const db = this.database();
-
-		const data = await db[ this.table ]
-			.orderBy( orderby )
-			.toArray()
-			.then( ( data ) => {
-				db.close();
-				return data;
-			} )
-			.catch( ( err ) => {
-				console.error( 'Error in db.read', errerr );
-				throw err; // Re-throw the error!
-			} );
-		return data;
+		try {
+			const data = await this.#db[ this.#table ]
+				.orderBy( orderby )
+				.toArray();
+			return data;
+		} catch ( err ) {
+			console.error( 'IndexedDB read error:', err );
+			throw err;
+		}
 	}
 
 	async getFirstRow() {
-		const db = this.database();
-
-		const data = await db[ this.table ]
-			.orderBy( ':id' )
-			.first()
-			.then( ( data ) => {
-				db.close();
-				return data;
-			} )
-			.catch( ( err ) => {
-				console.error( 'Error in db.getFirstRow', err );
-				throw err; // Re-throw the error!
-			} );
-		return data;
+		try {
+			const data = await this.#db[ this.#table ].orderBy( ':id' ).first();
+			return data;
+		} catch ( err ) {
+			console.error( 'IndexedDB getFirstRow error:', err );
+			throw err;
+		}
 	}
 
-	/**
-	 * Delete local storage.
-	 *
-	 * @author Per Søderlind
-	 */
 	async delete() {
-		const db = new Dexie( this.name );
-
-		await db
-			.delete()
-			.then( () => {
-				db.close();
-			} )
-			.catch( ( err ) => {
-				console.warn( 'Error in db.delete', err );
-				throw err; // Re-throw the error!
-			} );
+		try {
+			await this.#db.delete();
+			this.#db = this.#initDatabase();
+		} catch ( err ) {
+			console.error( 'IndexedDB delete error:', err );
+			throw err;
+		}
 	}
 
-	/**
-	 * Get number of records in local storage.
-	 *
-	 * @author Per Søderlind
-	 * @returns {*}
-	 */
 	async count() {
-		const db = this.database();
-
-		const count = await db[ this.table ]
-			.count()
-			.then( ( data ) => {
-				db.close();
-				return data;
-			} )
-			.catch( ( err ) => {
-				console.error( 'Error in db.count', err );
-				throw err; // Re-throw the error!
-			} );
-		return count;
+		try {
+			const count = await this.#db[ this.#table ].count();
+			return count;
+		} catch ( err ) {
+			console.error( 'IndexedDB count error:', err );
+			throw err;
+		}
 	}
 
-	/**
-	 * Get local storage version number.
-	 *
-	 * @author Per Søderlind
-	 * @returns {*}
-	 */
 	async getVersion() {
-		const version = await new Dexie( this.name )
-			.open()
-			.then( ( db ) => {
-				const v = db.verno;
-				db.close();
-				return v;
-			} )
-			.catch( ( err ) => {
-				console.error( 'Error in db.getVersion', err );
-				throw err; // Re-throw the error!
-			} );
-		return version;
+		try {
+			const version = await this.#db.open().then( ( db ) => db.verno );
+			return version;
+		} catch ( err ) {
+			console.error( 'IndexedDB getVersion error:', err );
+			throw err;
+		}
 	}
 }
 
