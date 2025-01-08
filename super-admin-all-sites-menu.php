@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.7.2
+ * Version:     1.7.3
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Default values for the plugin.
  */
 const LOADINCREMENTS   = 100; // Number of sites to load at a time.
-const SEARCHTHRESHOLD  = 20; // Number of sites before showing the search box.
+const SEARCHTHRESHOLD  = 2; // Number of sites before showing the search box.
 const CACHE_EXPIRATION = DAY_IN_SECONDS; // Time to cache the site list.
 const ORDERBY          = 'name'; // Order by name.
 const PLUGINS          = [ 'restricted-site-access/restricted_site_access.php' ]; // Plugins triggering update local storages.
