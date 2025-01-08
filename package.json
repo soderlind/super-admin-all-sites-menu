@@ -1,6 +1,6 @@
 {
 	"name": "super-admin-all-sites-menu",
-	"version": "1.7.3",
+	"version": "1.8.0",
 	"description": "For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.",
 	"main": "index.js",
 	"scripts": {
