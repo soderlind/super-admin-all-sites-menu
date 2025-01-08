@@ -1,5 +1,14 @@
 # Changelog
 
+### 1.7.3
+
+- Fixed search functionality:
+  - Improved search performance with better indexing
+  - Added mutation observer to handle dynamically loaded sites
+  - Fixed event handling for search input
+  - Added improved error handling for search elements
+  - Better handling of empty search inputs
+
 ### 1.7.2
 
 - Bump version to trigger a deploy to WordPress.org
