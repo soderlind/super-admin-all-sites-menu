@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.7.1
+ * Version:     1.7.2
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -21,7 +21,7 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-declare( strict_types = 1 );
+declare(strict_types=1);
 namespace Soderlind\Multisite;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -107,7 +107,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @return void
 	 */
-	public function action_admin_bar_init() : void {
+	public function action_admin_bar_init(): void {
 		load_plugin_textdomain( 'super-admin-all-sites-menu', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 		if ( \is_super_admin() ) {
 			add_action( 'add_admin_bar_menus', [ $this, 'action_add_admin_bar_menus' ] );
@@ -133,7 +133,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @return void
 	 */
-	public function set_properties() : void {
+	public function set_properties(): void {
 		$this->plugins = \apply_filters( 'all_sites_menu_plugin_trigger', PLUGINS );
 		if ( ! is_array( $this->plugins ) ) {
 			$this->plugins = PLUGINS;
@@ -164,7 +164,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @return void
 	 */
-	public function action_add_admin_bar_menus() : void {
+	public function action_add_admin_bar_menus(): void {
 		remove_action( 'admin_bar_menu', 'wp_admin_bar_my_sites_menu', 20 );
 	}
 
@@ -176,10 +176,10 @@ class SuperAdminAllSitesMenu {
 	 * @param \WP_Admin_Bar $wp_admin_bar The admin bar object.
 	 * @return void
 	 */
-	public function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ) : void {
+	public function super_admin_all_sites_menu( \WP_Admin_Bar $wp_admin_bar ): void {
 		$my_sites_url = \admin_url( '/my-sites.php' );
 		$wp_admin_bar->add_menu(
-			[
+			[ 
 				'id'    => 'my-sites',
 				'title' => __( 'All Sites', 'super-admin-all-sites-menu' ),
 				'href'  => $my_sites_url,
@@ -187,14 +187,14 @@ class SuperAdminAllSitesMenu {
 		);
 
 		$wp_admin_bar->add_group(
-			[
+			[ 
 				'parent' => 'my-sites',
 				'id'     => 'my-sites-super-admin',
 			]
 		);
 
 		$wp_admin_bar->add_menu(
-			[
+			[ 
 				'parent' => 'my-sites-super-admin',
 				'id'     => 'network-admin',
 				'title'  => __( 'Network Admin', 'super-admin-all-sites-menu' ),
@@ -203,7 +203,7 @@ class SuperAdminAllSitesMenu {
 		);
 
 		$wp_admin_bar->add_menu(
-			[
+			[ 
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-d',
 				'title'  => __( 'Dashboard', 'super-admin-all-sites-menu' ),
@@ -211,7 +211,7 @@ class SuperAdminAllSitesMenu {
 			]
 		);
 		$wp_admin_bar->add_menu(
-			[
+			[ 
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-s',
 				'title'  => __( 'Sites', 'super-admin-all-sites-menu' ),
@@ -219,7 +219,7 @@ class SuperAdminAllSitesMenu {
 			]
 		);
 		$wp_admin_bar->add_menu(
-			[
+			[ 
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-n',
 				'title'  => __( 'Add New Site', 'super-admin-all-sites-menu' ),
@@ -227,7 +227,7 @@ class SuperAdminAllSitesMenu {
 			]
 		);
 		$wp_admin_bar->add_menu(
-			[
+			[ 
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-u',
 				'title'  => __( 'Users', 'super-admin-all-sites-menu' ),
@@ -235,7 +235,7 @@ class SuperAdminAllSitesMenu {
 			]
 		);
 		$wp_admin_bar->add_menu(
-			[
+			[ 
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-t',
 				'title'  => __( 'Themes', 'super-admin-all-sites-menu' ),
@@ -243,7 +243,7 @@ class SuperAdminAllSitesMenu {
 			]
 		);
 		$wp_admin_bar->add_menu(
-			[
+			[ 
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-p',
 				'title'  => __( 'Plugins', 'super-admin-all-sites-menu' ),
@@ -251,7 +251,7 @@ class SuperAdminAllSitesMenu {
 			]
 		);
 		$wp_admin_bar->add_menu(
-			[
+			[ 
 				'parent' => 'network-admin',
 				'id'     => 'network-admin-o',
 				'title'  => __( 'Settings', 'super-admin-all-sites-menu' ),
@@ -261,10 +261,10 @@ class SuperAdminAllSitesMenu {
 
 		// Add site links.
 		$wp_admin_bar->add_group(
-			[
+			[ 
 				'parent' => 'my-sites',
 				'id'     => 'my-sites-list',
-				'meta'   => [
+				'meta'   => [ 
 					'class' => 'ab-sub-secondary my-sites-container',
 				],
 			]
@@ -273,7 +273,7 @@ class SuperAdminAllSitesMenu {
 		if ( $this->number_of_sites > $this->search_threshold ) {
 			// Add search field.
 			$wp_admin_bar->add_menu(
-				[
+				[ 
 					'parent' => 'my-sites-list',
 					'id'     => 'all-sites-search',
 					'title'  => sprintf(
@@ -281,7 +281,7 @@ class SuperAdminAllSitesMenu {
 						esc_html__( 'Filter My Sites', 'super-admin-all-sites-menu' ),
 						esc_attr__( 'Search Sites', 'super-admin-all-sites-menu' )
 					),
-					'meta'   => [
+					'meta'   => [ 
 						'class' => 'hide-if-no-js',
 					],
 				]
@@ -291,11 +291,11 @@ class SuperAdminAllSitesMenu {
 		// Add an observable container, used by the IntersectionObserver in src/modules/observe.js.
 		$timestamp = $this->get_timestamp();
 		$wp_admin_bar->add_menu(
-			[
+			[ 
 				'id'     => 'load-more',
 				'parent' => 'my-sites-list',
 				'title'  => __( 'Loading..', 'super-admin-all-sites-menu' ),
-				'meta'   => [
+				'meta'   => [ 
 					'html'     => sprintf( '<span id="load-more-timestamp" data-timestamp="%s"></span>', $timestamp ),
 					'class'    => 'load-more hide-if-no-js',
 					'tabindex' => -1,
@@ -310,17 +310,17 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @param \WP_REST_Server $wp_rest_server Server object.
 	 */
-	public function action_rest_api_init( \WP_REST_Server $wp_rest_server ) : void {
+	public function action_rest_api_init( \WP_REST_Server $wp_rest_server ): void {
 		$is_route_created = register_rest_route(
 			REST_NAMESPACE,
 			'/' . REST_BASE,
-			[
+			[ 
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'get_sites' ],
 				'permission_callback' => [ $this, 'get_sites_permissions_check' ],
-				'args'                => [
-					'offset' => [
-						'validate_callback' => function( $param, $request, $key ) {
+				'args'                => [ 
+					'offset' => [ 
+						'validate_callback' => function ($param, $request, $key) {
 							return is_numeric( $param );
 						},
 					],
@@ -336,7 +336,7 @@ class SuperAdminAllSitesMenu {
 	 * @param \WP_REST_Request $request The request.
 	 * @return bool|\WP_Error
 	 */
-	public function get_sites_permissions_check( \WP_REST_Request $request ) : bool {
+	public function get_sites_permissions_check( \WP_REST_Request $request ): bool {
 		return current_user_can( 'manage_network' );
 	}
 
@@ -346,14 +346,14 @@ class SuperAdminAllSitesMenu {
 	 * @param \WP_REST_Request $request The request.
 	 * @return array
 	 */
-	public function get_sites( \WP_REST_Request $request ) : array {
+	public function get_sites( \WP_REST_Request $request ): array {
 
 		$params = $request->get_params();
 		header( 'Content-type: application/json' );
-		$offset = ( isset( $params['offset'] ) ) ? filter_var( wp_unslash( $params['offset'] ), FILTER_VALIDATE_INT, [ 'default' => 0 ] ) : 0;
+		$offset = ( isset( $params[ 'offset' ] ) ) ? filter_var( wp_unslash( $params[ 'offset' ] ), FILTER_VALIDATE_INT, [ 'default' => 0 ] ) : 0;
 
 		$sites     = \get_sites(
-			[
+			[ 
 				'orderby'  => 'path',
 				'number'   => $this->load_increments,
 				'offset'   => $offset,
@@ -382,7 +382,7 @@ class SuperAdminAllSitesMenu {
 			if ( 2 === (int) $site->public ) {
 				$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
 			}
-			$menu[] = [
+			$menu[] = [ 
 				'parent'    => 'my-sites-list',
 				'id'        => $menu_id,
 				'name'      => strtoupper( $blogname ), // Index in local storage.
@@ -394,11 +394,11 @@ class SuperAdminAllSitesMenu {
 		}
 
 		if ( [] !== $menu ) {
-			$response['response'] = 'success';
-			$response['data']     = $menu;
+			$response[ 'response' ] = 'success';
+			$response[ 'data' ]     = $menu;
 		} else {
-			$response['response'] = 'unobserve';
-			$response['data']     = '';
+			$response[ 'response' ] = 'unobserve';
+			$response[ 'data' ]     = '';
 		}
 
 		return $response;
@@ -410,7 +410,7 @@ class SuperAdminAllSitesMenu {
 	 * @param string $hook_suffix The current admin page.
 	 * @return void
 	 */
-	public function action_enqueue_scripts( string $hook_suffix ) : void {
+	public function action_enqueue_scripts( string $hook_suffix ): void {
 
 		$deps_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
 
@@ -418,8 +418,8 @@ class SuperAdminAllSitesMenu {
 		$version = wp_rand();
 		if ( file_exists( $deps_file ) ) {
 			$file    = require $deps_file;
-			$jsdeps  = array_merge( $jsdeps, $file['dependencies'] );
-			$version = $file['version'];
+			$jsdeps  = array_merge( $jsdeps, $file[ 'dependencies' ] );
+			$version = $file[ 'version' ];
 		}
 		wp_register_style( 'super-admin-all-sites-menu', plugin_dir_url( __FILE__ ) . 'css/all-sites-menu.css', [], $version );
 		wp_enqueue_style( 'super-admin-all-sites-menu' );
@@ -428,7 +428,7 @@ class SuperAdminAllSitesMenu {
 		wp_enqueue_script( 'super-admin-all-sites-menu' );
 
 		$data = wp_json_encode(
-			[
+			[ 
 				'nonce'          => wp_create_nonce( 'wp_rest' ),
 				'restURL'        => rest_url() . REST_ENDPOINT,
 				'loadincrements' => $this->load_increments,
@@ -448,7 +448,7 @@ class SuperAdminAllSitesMenu {
 	 * @param \WP_Site $site Site object.
 	 * @return void
 	 */
-	public function update_local_storage( \WP_Site $site ) : void {
+	public function update_local_storage( \WP_Site $site ): void {
 		$this->refresh_local_storage();
 	}
 
@@ -458,7 +458,7 @@ class SuperAdminAllSitesMenu {
 	 * @param string $plugin       Path to the plugin file relative to the plugins directory.
 	 * @return void                           or just the current site. Multisite only. Default false.
 	 */
-	public function plugin_update_local_storage( string $plugin ) : void {
+	public function plugin_update_local_storage( string $plugin ): void {
 		if ( in_array( $plugin, $this->plugins, true ) ) {
 			$this->refresh_local_storage();
 		}
@@ -472,7 +472,7 @@ class SuperAdminAllSitesMenu {
 	 * @param string $option    Option name.
 	 * @return void
 	 */
-	public function action_update_option_blogname( $old_value, $value, string $option ) : void {
+	public function action_update_option_blogname( $old_value, $value, string $option ): void {
 		if ( $old_value !== $value ) {
 			$this->refresh_local_storage();
 		}
@@ -483,7 +483,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @return void
 	 */
-	public function refresh_local_storage() : void {
+	public function refresh_local_storage(): void {
 		$this->remove_timestamp();
 	}
 
@@ -492,7 +492,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @return void
 	 */
-	public function deactivate() : void {
+	public function deactivate(): void {
 		$this->remove_timestamp();
 	}
 
@@ -501,10 +501,10 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @return integer
 	 */
-	private function get_number_of_sites() : int {
+	private function get_number_of_sites(): int {
 		$network_id = get_current_network_id();
 
-		$args = [
+		$args = [ 
 			'network_id'    => $network_id,
 			'number'        => 1,
 			'fields'        => 'ids',
@@ -520,7 +520,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @return string
 	 */
-	private function get_timestamp() : string {
+	private function get_timestamp(): string {
 		$timestamp = get_site_transient( 'allsitemenutimestamp' );
 		if ( ! $timestamp ) {
 			$timestamp = (string) time();
@@ -534,7 +534,7 @@ class SuperAdminAllSitesMenu {
 	 *
 	 * @return void
 	 */
-	private function remove_timestamp() : void {
+	private function remove_timestamp(): void {
 		delete_site_transient( 'allsitemenutimestamp' );
 	}
 
