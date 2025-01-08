@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.7.2
+
+- Bump version to trigger a deploy to WordPress.org
+
 ### 1.7.1
 
 - Force deploy to WordPress.org

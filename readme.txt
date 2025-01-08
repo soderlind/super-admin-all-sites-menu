@@ -108,9 +108,13 @@ You can use the following filters to override the defaults:
 
 == Changelog ==
 
+= 1.7.2 =
+
+- Bump version to trigger a deploy to WordPress.org
+
 = 1.7.1 =
 
-- Force deploy
+- Bump version to trigger a deploy to WordPress.org
 
 = 1.7.0 =
 
