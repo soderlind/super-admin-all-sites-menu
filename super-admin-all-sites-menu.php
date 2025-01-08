@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.7.3
+ * Version:     1.8.0
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -27,79 +27,56 @@ namespace Soderlind\Multisite;
 if ( ! defined( 'ABSPATH' ) ) {
 	wp_die();
 }
+
+// Configuration constants
+final class Config {
+	public const LOAD_INCREMENTS  = 100;
+	public const SEARCH_THRESHOLD = 20;
+	public const CACHE_EXPIRATION = DAY_IN_SECONDS;
+	public const ORDER_BY         = 'name';
+	public const PLUGINS          = [ 'restricted-site-access/restricted_site_access.php' ];
+	public const REST_NAMESPACE   = 'super-admin-all-sites-menu/v1';
+	public const REST_BASE        = 'sites';
+	public const REST_ENDPOINT    = self::REST_NAMESPACE . '/' . self::REST_BASE;
+}
+
 /**
- * Default values for the plugin.
+ * Super Admin All Sites Menu main class
  */
-const LOADINCREMENTS   = 100; // Number of sites to load at a time.
-const SEARCHTHRESHOLD  = 2; // Number of sites before showing the search box.
-const CACHE_EXPIRATION = DAY_IN_SECONDS; // Time to cache the site list.
-const ORDERBY          = 'name'; // Order by name.
-const PLUGINS          = [ 'restricted-site-access/restricted_site_access.php' ]; // Plugins triggering update local storages.
-const REST_NAMESPACE   = 'super-admin-all-sites-menu/v1'; // REST API namespace.
-const REST_BASE        = 'sites'; // REST API route.
-const REST_ENDPOINT    = REST_NAMESPACE . '/' . REST_BASE; // REST API endpoint.
-/**
- * Super Admin All Sites Menu
- */
-class SuperAdminAllSitesMenu {
+final class SuperAdminAllSitesMenu {
+	private int $number_of_sites = 0;
 
-	/**
-	 * AJAX load increments.
-	 *
-	 * @var [type]
-	 */
-	private $load_increments;
+	public function __construct(
+		private int $load_increments = Config::LOAD_INCREMENTS,
+		private array $plugins = Config::PLUGINS,
+		private string $order_by = Config::ORDER_BY,
+		private int $search_threshold = Config::SEARCH_THRESHOLD,
+		private int $cache_expiration = Config::CACHE_EXPIRATION
+	) {}
 
-	/**
-	 * Plugins triggering update local storages.
-	 *
-	 * @var array
-	 */
-	private $plugins;
+	public function init(): void {
+		if ( ! is_multisite() ) {
+			return;
+		}
 
-	/**
-	 * Sort menu by site name.
-	 *
-	 * @var string
-	 */
-	private $order_by;
-
-
-	/**
-	 * Store number of sites.
-	 *
-	 * @var integer
-	 */
-	private $number_of_sites = 0;
-
-	/**
-	 * Set the search threshold.
-	 *
-	 * @var [type]
-	 */
-	private $search_threshold;
-
-	/**
-	 * The cache expiration time.
-	 *
-	 * @var integer
-	 */
-	private $cache_expiration;
-	/**
-	 * Constructor.
-	 */
-	public function __construct() {
-		return $this;
+		$this->set_properties();
+		$this->register_hooks();
 	}
 
-	/**
-	 * Initialize the plugin.
-	 */
-	public function init() {
+	private function register_hooks(): void {
 		add_action( 'admin_bar_init', [ $this, 'action_admin_bar_init' ] );
 		add_action( 'rest_api_init', [ $this, 'action_rest_api_init' ] );
 		register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
-		$this->set_properties();
+
+		// Site changes
+		add_action( 'wp_insert_site', [ $this, 'update_local_storage' ] );
+		add_action( 'wp_update_site', [ $this, 'update_local_storage' ] );
+		add_action( 'wp_delete_site', [ $this, 'update_local_storage' ] );
+		add_action( 'update_option_blogname', [ $this, 'action_update_option_blogname' ], 10, 3 );
+
+		// Plugin activation/deactivation
+		add_action( 'activated_plugin', [ $this, 'plugin_update_local_storage' ] );
+		add_action( 'deactivated_plugin', [ $this, 'plugin_update_local_storage' ] );
 	}
 
 	/**
@@ -134,28 +111,28 @@ class SuperAdminAllSitesMenu {
 	 * @return void
 	 */
 	public function set_properties(): void {
-		$this->plugins = \apply_filters( 'all_sites_menu_plugin_trigger', PLUGINS );
+		$this->plugins = \apply_filters( 'all_sites_menu_plugin_trigger', Config::PLUGINS );
 		if ( ! is_array( $this->plugins ) ) {
-			$this->plugins = PLUGINS;
+			$this->plugins = Config::PLUGINS;
 		}
 
-		$this->order_by = \apply_filters( 'all_sites_menu_order_by', ORDERBY );
+		$this->order_by = \apply_filters( 'all_sites_menu_order_by', Config::ORDER_BY );
 		if ( ! in_array( $this->order_by, [ 'name', 'url', 'id' ], true ) ) {
-			$this->order_by = ORDERBY;
+			$this->order_by = Config::ORDER_BY;
 		}
 
-		$this->load_increments = \apply_filters( 'all_sites_menu_load_increments', LOADINCREMENTS );
+		$this->load_increments = \apply_filters( 'all_sites_menu_load_increments', Config::LOAD_INCREMENTS );
 		if ( ! is_numeric( $this->load_increments ) || $this->load_increments < 1 ) {
-			$this->load_increments = LOADINCREMENTS;
+			$this->load_increments = Config::LOAD_INCREMENTS;
 		}
 
-		$this->search_threshold = \apply_filters( 'all_sites_menu_search_threshold', SEARCHTHRESHOLD );
+		$this->search_threshold = \apply_filters( 'all_sites_menu_search_threshold', Config::SEARCH_THRESHOLD );
 		if ( ! is_numeric( $this->search_threshold ) || $this->search_threshold < 1 ) {
-			$this->search_threshold = SEARCHTHRESHOLD;
+			$this->search_threshold = Config::SEARCH_THRESHOLD;
 		}
-		$this->cache_expiration = \apply_filters( 'all_sites_menu_force_refresh_expiration', CACHE_EXPIRATION );
+		$this->cache_expiration = \apply_filters( 'all_sites_menu_force_refresh_expiration', Config::CACHE_EXPIRATION );
 		if ( ! is_numeric( $this->search_threshold ) || $this->cache_expiration < 0 ) {
-			$this->cache_expiration = CACHE_EXPIRATION;
+			$this->cache_expiration = Config::CACHE_EXPIRATION;
 		}
 	}
 
@@ -312,8 +289,8 @@ class SuperAdminAllSitesMenu {
 	 */
 	public function action_rest_api_init( \WP_REST_Server $wp_rest_server ): void {
 		$is_route_created = register_rest_route(
-			REST_NAMESPACE,
-			'/' . REST_BASE,
+			Config::REST_NAMESPACE,
+			'/' . Config::REST_BASE,
 			[ 
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'get_sites' ],
@@ -430,7 +407,7 @@ class SuperAdminAllSitesMenu {
 		$data = wp_json_encode(
 			[ 
 				'nonce'          => wp_create_nonce( 'wp_rest' ),
-				'restURL'        => rest_url() . REST_ENDPOINT,
+				'restURL'        => rest_url() . Config::REST_ENDPOINT,
 				'loadincrements' => $this->load_increments,
 				'orderBy'        => $this->order_by,
 				'displaySearch'  => ( $this->number_of_sites > $this->search_threshold ) ? true : false,
@@ -540,7 +517,5 @@ class SuperAdminAllSitesMenu {
 
 }
 
-if ( \is_multisite() ) {
-	$super_admin_menu = new SuperAdminAllSitesMenu();
-	$super_admin_menu->init();
-}
+// Initialize plugin
+( new SuperAdminAllSitesMenu() )->init();

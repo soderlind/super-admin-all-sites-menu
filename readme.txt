@@ -1,8 +1,8 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.7.3
+Stable tag: 1.8.0
 Requires at least: 5.6  
 Tested up to: 6.7  
-Requires PHP: 7.3  
+Requires PHP: 8.0  
 License: GPL v2 or later  
 Tags: superadmin, multisite, management  
 Contributors: PerS  
@@ -107,6 +107,15 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.8.0 =
+
+REQUIRE PHP 8.0 OR HIGHER
+
+* Code modernization: Refactored to use PHP 8.0+ features
+* Enhancement: Improved type safety and error handling
+* Performance: Better code organization with Config class
+* Enhancement: Increased default search threshold to 20 sites
 
 = 1.7.3 =
 * Fixed search functionality:
