@@ -1,5 +1,9 @@
 # Changelog
 
+### 1.7.1
+
+- Force deploy to WordPress.org
+
 ### 1.7.0
 
 - Major code refactoring and improvements:

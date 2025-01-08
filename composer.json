@@ -1,7 +1,7 @@
 {
   "name": "soderlind/super-admin-all-sites-menu",
   "description": "For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "keywords": [
     "wordpress",
     "multisite",
