@@ -1,15 +1,21 @@
 # Changelog
 
-### 1.8.0 
+### 1.8.1
+
+- Remove duplicate code.
+
+### 1.8.0
 
 > REQUIRE PHP 8.0 OR HIGHER
 
 #### Added
+
 - New Config class to manage plugin constants
 - Constructor property promotion for better code organization
 - Strict type declarations throughout the codebase
 
 #### Changed
+
 - Increased default search threshold from 2 to 20 sites
 - Refactored main class to use modern PHP 8.0+ features
 - Improved error handling and null checks
@@ -17,6 +23,7 @@
 - Simplified plugin initialization
 
 #### Developer Notes
+
 - The Config class now centralizes all plugin constants
 - Removed redundant property declarations in favor of constructor property promotion
 - Added strict typing for better code reliability
@@ -281,5 +288,3 @@
 ### 1.0.x
 
 - Initial release.
-
-
