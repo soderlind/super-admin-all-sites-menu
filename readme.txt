@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 Requires at least: 5.6  
 Tested up to: 6.7  
 Requires PHP: 8.0  
@@ -107,6 +107,14 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+
+= 1.8.2 =
+* Abort early if the user does not have the required permissions
+* Security: Added endpoint verification for REST API requests
+* Bug fix: Added rest endpoint permission check
+* Code improvement: Added strict types declaration
+* Code improvement: Added return type declarations
 
 = 1.8.1 =
 
