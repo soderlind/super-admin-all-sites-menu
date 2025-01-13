@@ -66,6 +66,10 @@ final class SuperAdminAllSitesMenu {
 			return;
 		}
 
+		// Only for REST API requests to the correct endpoint.
+		if ( wp_is_rest_endpoint() && false === strpos( get_rest_url(), Config::REST_ENDPOINT ) ) {
+			return;
+		}
 
 		$this->set_properties();
 		$this->register_hooks();

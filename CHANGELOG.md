@@ -1,8 +1,11 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
 ### 1.8.2
 
 - Abort early if the user does not have the required permissions
+- Security: Added endpoint verification for REST API requests
 - Bug fix: Added rest endpoint permission check
 - Code improvement: Added strict types declaration
 - Code improvement: Added return type declarations
