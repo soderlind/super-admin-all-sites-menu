@@ -1,5 +1,12 @@
 # Changelog
 
+### 1.8.2
+
+- Abort early if the user does not have the required permissions
+- Bug fix: Added rest endpoint permission check
+- Code improvement: Added strict types declaration
+- Code improvement: Added return type declarations
+
 ### 1.8.1
 
 - Remove duplicate code.
