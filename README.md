@@ -2,7 +2,7 @@
 
 > Also available at https://wordpress.org/plugins/super-admin-all-sites-menu/
 
-[Use](#use) | [Prerequisite](#prerequisite) | [Install](#install) | [Filters](#filters) | [Demo](#demo) | [Changelog](CHANGELOG.md)
+[Use](#use) | [Prerequisite](#prerequisite) | [Install](#install) | [Filters](#filters) | [Demo](#demo) | [Behind the scenes](#behind-the-scenes) | [Changelog](CHANGELOG.md)
 
 For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
@@ -111,7 +111,7 @@ A demo is available in [WordPress Playground](https://playground.wordpress.net/?
 
 - If you activate the Restricted Site Access plugin (included), you'll see a red icon next to the site name. ATM, this only works on the main site due to [issues with WordPress Playground](https://github.com/WordPress/wordpress-playground/issues/2054).
 
-## Behide the scenes
+## Behind the scenes
 
 Let me break down the dataflow related to the timestamp in the super-admin-all-sites-menu plugin:
 
