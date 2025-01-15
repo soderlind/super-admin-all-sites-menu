@@ -116,22 +116,31 @@ A demo is available in [WordPress Playground](https://playground.wordpress.net/?
 Let me break down the dataflow related to the timestamp in the super-admin-all-sites-menu plugin:
 
 1. **Initial Timestamp Creation**:
+
    - In super-admin-all-sites-menu.php, a timestamp is generated when the plugin initializes
    - This is exposed via the `get_timestamp()` method of the main plugin class
+
 2. **PHP to JavaScript Transfer**:
+
    - The timestamp is passed to JavaScript via `wp_add_inline_script()` in super-admin-all-sites-menu.php around line 409:
+
    ```php
    wp_add_inline_script( 'super-admin-all-sites-menu', "const pluginAllSitesMenu = {$data};", 'before' );
    ```
+
    - Where `$data` includes the timestamp:
+
    ```php
    $data = wp_json_encode([
    'timestamp' => $this->get_timestamp(),
    // other data...
    ]);
    ```
+
 3. **JavaScript Storage Check**:
+
    - In index.js, the `populateDB()` function compares timestamps:
+
    ```javascript
    if (
    	typeof data !== 'undefined' &&
@@ -141,8 +150,11 @@ Let me break down the dataflow related to the timestamp in the super-admin-all-s
    	await db.delete();
    }
    ```
+
 4. **Database Population**:
+
    - If the IndexedDB is empty or was deleted due to timestamp mismatch:
+
    ```javascript
    if ((await db.count()) === 0) {
    	loadSites(db, {
@@ -151,7 +163,9 @@ Let me break down the dataflow related to the timestamp in the super-admin-all-s
    	});
    }
    ```
+
 5. **Timestamp Update Triggers**:
+
    - The timestamp is updated when:
      - A site is added/deleted from the network
      - A plugin that affects the menu is activated/deactivated
