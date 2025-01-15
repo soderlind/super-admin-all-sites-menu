@@ -121,7 +121,7 @@ Let me break down the dataflow related to the timestamp in the super-admin-all-s
 2. PHP to JavaScript Transfer:
    - The timestamp is passed to JavaScript via `wp_add_inline_script()` in super-admin-all-sites-menu.php around line 409:
    ```php
-   wp_add_inline_script( 'super-admin-all-sites-menu', 'var allSitesMenuTimestamp = ' . $this->get_timestamp() . ';', 'before' );
+   wp_add_inline_script( 'super-admin-all-sites-menu', "const pluginAllSitesMenu = {$data};", 'before' );
    ```
    - Where `$data` includes the timestamp:
    ```php
