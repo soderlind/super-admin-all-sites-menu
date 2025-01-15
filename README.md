@@ -111,27 +111,59 @@ A demo is available in [WordPress Playground](https://playground.wordpress.net/?
 
 - If you activate the Restricted Site Access plugin (included), you'll see a red icon next to the site name. ATM, this only works on the main site due to [issues with WordPress Playground](https://github.com/WordPress/wordpress-playground/issues/2054).
 
-## Flow
+## Behide the scenes
 
-```mermaid
-sequenceDiagram
-	  Actor User
-    participant Menu
-    participant IndexedDB
-    participant WordPress
-		User->>Menu: Open the menu
-    Menu->>IndexedDB: Check if IndexedDB in sync
-		IndexedDB->>Menu: Update sites menu
-		Note over Menu,IndexedDB: If in sync.
-    IndexedDB->>WordPress: Request sites
-		Note over IndexedDB,WordPress: If not in sync.
-		WordPress->>IndexedDB: Get sites
-		IndexedDB->>IndexedDB: Update IndexedDB
-    IndexedDB->>Menu: Update sites menu
-		Menu->>User: Read Menu
+Let me break down the dataflow related to the timestamp in the super-admin-all-sites-menu plugin:
 
+1. Initial Timestamp Creation:
+   - In super-admin-all-sites-menu.php, a timestamp is generated when the plugin initializes
+   - This is exposed via the `get_timestamp()` method of the main plugin class
+2. PHP to JavaScript Transfer:
+   - The timestamp is passed to JavaScript via `wp_add_inline_script()` in super-admin-all-sites-menu.php around line 409:
+   ```php
+   wp_add_inline_script( 'super-admin-all-sites-menu', 'var allSitesMenuTimestamp = ' . $this->get_timestamp() . ';', 'before' );
+   ```
+   - Where `$data` includes the timestamp:
+   ```php
+   $data = wp_json_encode([
+   'timestamp' => $this->get_timestamp(),
+   // other data...
+   ]);
+   ```
+3. JavaScript Storage Check:
+   - In index.js, the `populateDB()` function compares timestamps:
+   ```javascript
+   if (
+   	typeof data !== 'undefined' &&
+   	typeof data.timestamp !== 'undefined' &&
+   	pluginAllSitesMenu.timestamp > data.timestamp
+   ) {
+   	await db.delete();
+   }
+   ```
+4. Database Population:
+   - If the IndexedDB is empty or was deleted due to timestamp mismatch:
+   ```javascript
+   if ((await db.count()) === 0) {
+   	loadSites(db, {
+   		offset: 0,
+   		delayMs: 200,
+   	});
+   }
+   ```
+5. Timestamp Update Triggers:
+   - The timestamp is updated when:
+     - A site is added/deleted from the network
+     - A plugin that affects the menu is activated/deactivated
+     - A blog name is changed
+     - The Restricted Site Access plugin status changes
 
-```
+This creates a caching mechanism where:
+
+- The PHP timestamp acts as a "version" of the site data
+- The JS code compares this against the stored timestamp
+- Mismatches trigger a refresh of the cached data
+- Matches allow using the existing cached data
 
 ## Changelog
 
