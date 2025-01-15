@@ -132,7 +132,7 @@ Let me break down the dataflow related to the timestamp in the super-admin-all-s
 
    ```php
    $data = wp_json_encode([
-   'timestamp' => $this->get_timestamp(),
+   	'timestamp' => $this->get_timestamp(),
    // other data...
    ]);
    ```
