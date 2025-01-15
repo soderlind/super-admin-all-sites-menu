@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+### 1.8.4
+
+- Update dependencies
+
 ### 1.8.3
 
 - Housekeeping
