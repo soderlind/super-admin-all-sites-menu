@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+### 1.8.3
+
+- Housekeeping
+
 ### 1.8.2
 
 - Abort early if the user does not have the required permissions
