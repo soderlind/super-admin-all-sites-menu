@@ -2,18 +2,29 @@ name: Deploy to WordPress.org
 on:
   push:
     tags:
-    - "*"
+      - '*'
 jobs:
   tag:
     name: New tag
     runs-on: ubuntu-latest
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
     steps:
-    - name: Install Subversion
-      run: sudo apt-get update && sudo apt-get install -y subversion
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: WordPress Plugin Deploy
-      uses: 10up/action-wordpress-plugin-deploy@stable
-      env:
-        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+      - name: Install Subversion
+        run: sudo apt-get update && sudo apt-get install -y subversion
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        id: deploy
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+        with:
+          generate-zip: true
+      - name: Generate build provenance attestation
+        uses: johnbillion/action-wordpress-plugin-attestation@0.7.0
+        with:
+          zip-path: ${{ steps.deploy.outputs.zip-path }}

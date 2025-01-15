@@ -54,6 +54,11 @@ final class SuperAdminAllSitesMenu {
 		private int $cache_expiration = Config::CACHE_EXPIRATION
 	) {}
 
+	/**
+	 * Initialize the plugin.
+	 *
+	 * @return void
+	 */
 	public function init(): void {
 
 		// Only for super admins and REST API requests.
@@ -75,6 +80,11 @@ final class SuperAdminAllSitesMenu {
 		$this->register_hooks();
 	}
 
+	/**
+	 * Register hooks.
+	 *
+	 * @return void
+	 */
 	private function register_hooks(): void {
 		add_action( 'admin_bar_init', [ $this, 'action_admin_bar_init' ] );
 		add_action( 'rest_api_init', [ $this, 'action_rest_api_init' ] );
@@ -446,7 +456,7 @@ final class SuperAdminAllSitesMenu {
 	}
 
 	/**
-	 * Fires after the a blog is renamed.
+	 * Fires after a blog is renamed.
 	 *
 	 * @param mixed  $old_value The old option value.
 	 * @param mixed  $value     The new option value.
