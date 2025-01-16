@@ -113,6 +113,8 @@ A demo is available in [WordPress Playground](https://playground.wordpress.net/?
 
 ## Behind the scenes
 
+> Written by Claude 3.5 Sonnet
+
 Let me break down the dataflow related to the timestamp in the super-admin-all-sites-menu plugin:
 
 1. **Initial Timestamp Creation**:
