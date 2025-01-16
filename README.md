@@ -113,7 +113,7 @@ A demo is available in [WordPress Playground](https://playground.wordpress.net/?
 
 ## Behind the scenes
 
-> Written by Claude 3.5 Sonnet, prompt: `@workspace list the dataflow, step by step`
+> Written by Claude 3.5 Sonnet, prompt in GitHub Copilot: `@workspace list the dataflow, step by step`
 
 Let me break down the dataflow related to the timestamp in the super-admin-all-sites-menu plugin:
 
