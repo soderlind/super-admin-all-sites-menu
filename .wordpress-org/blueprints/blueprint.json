@@ -4,13 +4,20 @@
 	"features": {
 		"networking": true
 	},
-	"plugins": [
-		"https://github-proxy.com/proxy/?repo=soderlind/super-admin-all-sites-menu"
-	],
 	"siteOptions": {
 		"blogname": "Main Site"
 	},
 	"steps": [
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "restricted-site-access"
+			},
+			"options": {
+				"activate": false
+			}
+		},
 		{
 			"step": "enableMultisite"
 		},
