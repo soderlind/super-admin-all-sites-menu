@@ -6,7 +6,13 @@ jobs:
   trunk:
     name: Push to trunk
     runs-on: ubuntu-latest
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
     steps:
+      - name: Install Subversion
+        run: sudo apt-get update && sudo apt-get install -y subversion
       - uses: actions/checkout@master
       - name: WordPress.org plugin asset/readme update
         uses: 10up/action-wordpress-plugin-asset-update@stable
