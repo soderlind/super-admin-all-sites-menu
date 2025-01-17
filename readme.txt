@@ -40,7 +40,7 @@ For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
 
 = Demo =
 
-A demo is available in [WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/soderlind/super-admin-all-sites-menu/refs/heads/main/.wordpress-org/blueprints/blueprint.json). It's a bit slow loading, 50 subsites are added.
+A demo is available in [WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/soderlind/super-admin-all-sites-menu/refs/heads/main/blueprint.json). It's a bit slow loading, 50 subsites are added.
 
 - If you disable Super Admin All Sites Menu in the Main Site plugins menu, you'll see the WP Admin Bar My Sites menu doesn't allow you to scroll and see all sites. This is a 14-year-old (!) [bug on WordPress](https://core.trac.wordpress.org/ticket/15317).
 
