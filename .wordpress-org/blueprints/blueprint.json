@@ -9,6 +9,21 @@
 	},
 	"steps": [
 		{
+			"step": "login",
+			"username": "admin",
+			"password": "password"
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "super-admin-all-sites-menu"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
 			"step": "enableMultisite"
 		},
 		{
@@ -220,5 +235,10 @@
 			"path": "/wordpress/wp-content/mu-plugins/allsitesmenu-notice.php",
 			"data": "<?php add_action('admin_notices', function() {  echo '<div class=\"notice notice-info is-dismissible\"><p>Check All Sites in the admin bar.</p></div>'; });"
 		}
-	]
+	],
+	"preferredVersions": {
+		"php": "8.0",
+		"wp": "latest"
+	},
+	"login": true
 }
