@@ -6,7 +6,7 @@
 
 Replace the default **My Sites** menu in the WordPress Admin Bar with a fast, searchable **All Sites** menu — built for super admins managing large multisite networks.
 
-<img src=".wordpress-org/screenshot-1.gif" alt="Super Admin All Sites Menu demo" width="600">
+<img src=".wordpress-org/screenshot-1.gif" alt="Super Admin All Sites Menu demo" width="100%">
 
 ## Why?
 
