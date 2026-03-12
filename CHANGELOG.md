@@ -1,6 +1,27 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### 1.9.0
+
+#### Fixed
+
+- PHP: Fixed copy-paste bug in `set_properties()` — cache expiration validation was checking the wrong variable
+- PHP: Removed dead REST guard in `init()` that could never match
+- PHP: Removed redundant `header('Content-type: application/json')` in REST callback
+- JS: Fixed `toggleClass` ReferenceError in refresh.js — Tab key navigation into submenus was broken
+- JS: Fixed IntersectionObserver race condition that could duplicate menu HTML
+- JS: Added partial-load recovery — failed REST fetches now clear IndexedDB so next page load retries
+
+#### Security
+
+- JS: Added URL sanitisation and attribute escaping in menu template to prevent XSS from tampered IndexedDB data
+
+#### Changed
+
+- JS: Rewrote refresh.js — removed dead functions (`getClosest`, `hasClass`, IE polyfill), modernised to `classList` API
+- Moved `cross-spawn` and `@soderlind/wp-project-version-sync` from dependencies to devDependencies
+- Updated all npm packages to latest compatible versions
+- Tested up to WordPress 7.0
 
 ### 1.8.4
 

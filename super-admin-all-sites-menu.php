@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.8.5
+ * Version:     1.9.0
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -68,11 +68,6 @@ final class SuperAdminAllSitesMenu {
 
 		// Only for multisite.
 		if ( ! is_multisite() ) {
-			return;
-		}
-
-		// Only for REST API requests to the correct endpoint.
-		if ( wp_is_rest_endpoint() && false === strpos( get_rest_url(), Config::REST_ENDPOINT ) ) {
 			return;
 		}
 
@@ -145,7 +140,7 @@ final class SuperAdminAllSitesMenu {
 			$this->search_threshold = Config::SEARCH_THRESHOLD;
 		}
 		$this->cache_expiration = \apply_filters( 'all_sites_menu_force_refresh_expiration', Config::CACHE_EXPIRATION );
-		if ( ! is_numeric( $this->search_threshold ) || $this->cache_expiration < 0 ) {
+		if ( ! is_numeric( $this->cache_expiration ) || $this->cache_expiration < 0 ) {
 			$this->cache_expiration = Config::CACHE_EXPIRATION;
 		}
 	}
@@ -340,7 +335,6 @@ final class SuperAdminAllSitesMenu {
 	public function get_sites( \WP_REST_Request $request ): array {
 
 		$params = $request->get_params();
-		header( 'Content-type: application/json' );
 		$offset = ( isset( $params[ 'offset' ] ) ) ? filter_var( wp_unslash( $params[ 'offset' ] ), FILTER_VALIDATE_INT, [ 'default' => 0 ] ) : 0;
 
 		$sites     = \get_sites(

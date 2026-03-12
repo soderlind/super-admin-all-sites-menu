@@ -1,7 +1,7 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.8.5
+Stable tag: 1.9.0
 Requires at least: 5.6  
-Tested up to: 6.7  
+Tested up to: 7.0  
 Requires PHP: 8.0  
 License: GPL v2 or later  
 Tags: superadmin, multisite, management  
@@ -107,6 +107,19 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.9.0 =
+* Fixed: PHP copy-paste bug in set_properties() — cache expiration validation checked wrong variable
+* Fixed: Removed dead REST guard in init() that could never match
+* Fixed: Removed redundant header() in REST callback
+* Fixed: toggleClass ReferenceError in refresh.js — Tab key navigation into submenus was broken
+* Fixed: IntersectionObserver race condition that could duplicate menu HTML
+* Fixed: Added partial-load recovery — failed REST fetches now clear IndexedDB so next load retries
+* Security: Added URL sanitisation and attribute escaping in menu template to prevent XSS
+* Changed: Rewrote refresh.js — removed dead code, modernised to classList API
+* Changed: Moved build-only packages from dependencies to devDependencies
+* Changed: Updated all npm packages to latest compatible versions
+* Tested up to WordPress 7.0
 
 = 1.8.4 =
 * Update dependencies
