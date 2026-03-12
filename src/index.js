@@ -89,10 +89,15 @@ async function populateDB( db ) {
 	}
 
 	if ( ( await db.count() ) === 0 ) {
-		loadSites( db, {
-			offset: 0,
-			delayMs: 200,
-		} );
+		try {
+			await loadSites( db, {
+				offset: 0,
+				delayMs: 200,
+			} );
+		} catch {
+			// Clear partial data so next page load retries from scratch.
+			await db.delete();
+		}
 	}
 }
 
@@ -104,7 +109,13 @@ async function populateDB( db ) {
  * @returns {IntersectionObserver} The configured observer
  */
 function setupLoadMoreObserver( loadElement, db ) {
+	let loaded = false;
 	const observedLoadMore = observeContainer( loadElement, async () => {
+		if ( loaded ) {
+			return;
+		}
+		loaded = true;
+
 		const sites = await db.read( pluginAllSitesMenu.orderBy );
 		const sitesMenu = sites.reduce( ( acc, site ) => {
 			return acc + siteMenu( site );
