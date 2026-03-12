@@ -22,7 +22,7 @@
 	"homepage": "https://github.com/soderlind/super-admin-all-sites-menu#readme",
 	"devDependencies": {
 		"@soderlind/wp-project-version-sync": "^2.0.2",
-		"@wordpress/scripts": "^30.7.0",
+		"@wordpress/scripts": "^31.6.0",
 		"cross-spawn": "^7.0.6",
 		"terser-webpack-plugin": "^5.3.14"
 	},
