@@ -145,7 +145,7 @@ The PHP timestamp acts as a cache version. It is bumped whenever a site is added
 <details>
 <summary>IndexedDB storage</summary>
 
-<img src=".wordpress-org/screenshot-2.png" alt="IndexedDB view in DevTools" width="600">
+<img src=".wordpress-org/screenshot-2.png" alt="IndexedDB view in DevTools" width="100%">
 
 </details>
 
