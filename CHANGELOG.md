@@ -1,6 +1,13 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### 1.10.0
+
+#### Added
+
+- Search by URL: the search filter now matches site URLs in addition to site names (#45)
+- Updated search placeholder to "Search by name or URL" for discoverability
+
 ### 1.9.0
 
 #### Fixed

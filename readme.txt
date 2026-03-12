@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.9.0
+Stable tag: 1.10.0
 Requires at least: 5.6  
 Tested up to: 7.0  
 Requires PHP: 8.0  
@@ -107,6 +107,10 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.10.0 =
+* Added: Search by URL — the search filter now matches site URLs in addition to site names (#45)
+* Added: Updated search placeholder to "Search by name or URL"
 
 = 1.9.0 =
 * Fixed: PHP copy-paste bug in set_properties() — cache expiration validation checked wrong variable

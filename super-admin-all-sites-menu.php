@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.9.0
+ * Version:     1.10.0
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -265,7 +265,7 @@ final class SuperAdminAllSitesMenu {
 					'title'  => sprintf(
 						'<label for="all-sites-search-text">%s</label><input type="text" id="all-sites-search-text" placeholder="%s" />',
 						esc_html__( 'Filter My Sites', 'super-admin-all-sites-menu' ),
-						esc_attr__( 'Search Sites', 'super-admin-all-sites-menu' )
+						esc_attr__( 'Search by name or URL', 'super-admin-all-sites-menu' )
 					),
 					'meta'   => [
 						'class' => 'hide-if-no-js',

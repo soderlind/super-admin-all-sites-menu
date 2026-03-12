@@ -36,14 +36,22 @@ export function addSearch() {
 	const createSearchIndex = () => {
 		const menuItems =
 			sitesContainer.getElementsByClassName( 'menupop' ) || [];
-		return Array.from( menuItems ).map( ( li ) => ( {
-			element: li,
-			text:
+		return Array.from( menuItems ).map( ( li ) => {
+			const text =
 				li
 					.querySelector( '.ab-item' )
 					?.textContent?.toLowerCase()
-					.trim() || '',
-		} ) );
+					.trim() || '';
+			// Extract URL from the last submenu link ("Visit" link)
+			const visitLink = li.querySelector(
+				'.ab-submenu .ab-item:last-child'
+			);
+			const url = ( visitLink?.href || '' )
+				.replace( /^https?:\/\//, '' )
+				.replace( /\/+$/, '' )
+				.toLowerCase();
+			return { element: li, text, url };
+		} );
 	};
 
 	let searchIndex = createSearchIndex();
@@ -60,9 +68,10 @@ export function addSearch() {
 			return;
 		}
 
-		// Filter items
-		searchIndex.forEach( ( { element, text } ) => {
-			element.style.display = text.includes( filter ) ? '' : 'none';
+		// Filter items by name or URL
+		searchIndex.forEach( ( { element, text, url } ) => {
+			const match = text.includes( filter ) || url.includes( filter );
+			element.style.display = match ? '' : 'none';
 		} );
 	}, 150 );
 
