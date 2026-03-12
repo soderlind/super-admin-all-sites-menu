@@ -42,11 +42,8 @@ export function addSearch() {
 					.querySelector( '.ab-item' )
 					?.textContent?.toLowerCase()
 					.trim() || '';
-			// Extract URL from the last submenu link ("Visit" link)
-			const visitLink = li.querySelector(
-				'.ab-submenu .ab-item:last-child'
-			);
-			const url = ( visitLink?.href || '' )
+			// Read URL from data-url attribute set by siteMenu()
+			const url = ( li.dataset.url || '' )
 				.replace( /^https?:\/\//, '' )
 				.replace( /\/+$/, '' )
 				.toLowerCase();

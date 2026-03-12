@@ -12,7 +12,7 @@ function buildDOM( sites ) {
 			${ sites
 				.map(
 					( s ) => `
-				<li class="menupop">
+				<li class="menupop" data-url="${ s.url }">
 					<a class="ab-item" href="${ s.admin }">${ s.name }</a>
 					<div class="ab-sub-wrapper">
 						<ul class="ab-submenu">

@@ -96,6 +96,19 @@ You can use the following filters to override the defaults:
   		return 3600;
   	} );
   	`
+* `all_sites_menu_submenu_items`
+  * Customise the per-site submenu items (add, remove, or reorder). Each item: `['id' => string, 'title' => string, 'href' => string]`. Receives `$items`, `$blog_id`, `$admin_url`, `$site_url`.
+  	`
+  	// Add an "Edit Site" link pointing to the network admin site-info page.
+  	add_filter( 'all_sites_menu_submenu_items', function( array $items, int $blog_id, string $admin_url ) : array {
+  		$items[] = [
+  			'id'    => 'edit-site',
+  			'title' => 'Edit Site',
+  			'href'  => network_admin_url( 'site-info.php?id=' . $blog_id ),
+  		];
+  		return $items;
+  	}, 10, 3 );
+  	`
 
 = Development = 
 
@@ -109,8 +122,12 @@ You can use the following filters to override the defaults:
 == Changelog ==
 
 = 1.10.0 =
+* Added: Filterable per-site submenu items via `all_sites_menu_submenu_items` filter (#46)
+* Added: Numeric `blog_id` field in REST response for use in filters and custom JS (#46)
 * Added: Search by URL — the search filter now matches site URLs in addition to site names (#45)
 * Added: Updated search placeholder to "Search by name or URL"
+* Fixed: Admin bar item IDs now use correct `blog-N` string instead of `0` (#46)
+* Fixed: Search URL indexing decoupled from submenu order via `data-url` attribute (#46)
 
 = 1.9.0 =
 * Fixed: PHP copy-paste bug in set_properties() — cache expiration validation checked wrong variable
