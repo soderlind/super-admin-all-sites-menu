@@ -126,6 +126,7 @@ You can use the following filters to override the defaults:
 * Added: Numeric `blog_id` field in REST response for use in filters and custom JS (#46)
 * Added: Search by URL — the search filter now matches site URLs in addition to site names (#45)
 * Added: Updated search placeholder to "Search by name or URL"
+* Fixed: Sort by ID now uses numeric `blog_id` index for correct order instead of lexicographic string sort (#47)
 * Fixed: Admin bar item IDs now use correct `blog-N` string instead of `0` (#46)
 * Fixed: Search URL indexing decoupled from submenu order via `data-url` attribute (#46)
 

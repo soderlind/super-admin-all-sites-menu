@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### Fixed
 
+- Sort by ID now uses numeric `blog_id` index for correct order instead of lexicographic string sort (#47)
 - Admin bar item IDs now use the correct `blog-N` string instead of falling back to `0` (#46)
 - Search URL indexing decoupled from submenu order via `data-url` attribute (#46)
 

@@ -20,7 +20,11 @@ import { siteMenu } from './modules/menu.js';
 const SETTINGS = {
 	DB_NAME: 'allsites',
 	TABLE_NAME: 'sites',
-	DB_VERSIONS: [ 'id,name,url', 'id,name,url,timestamp' ],
+	DB_VERSIONS: [
+		'id,name,url',
+		'id,name,url,timestamp',
+		'id,name,url,timestamp,blog_id',
+	],
 };
 
 /**
@@ -116,7 +120,11 @@ function setupLoadMoreObserver( loadElement, db ) {
 		}
 		loaded = true;
 
-		const sites = await db.read( pluginAllSitesMenu.orderBy );
+		const orderBy =
+			pluginAllSitesMenu.orderBy === 'id'
+				? 'blog_id'
+				: pluginAllSitesMenu.orderBy;
+		const sites = await db.read( orderBy );
 		const sitesMenu = sites.reduce( ( acc, site ) => {
 			return acc + siteMenu( site );
 		}, '' );
