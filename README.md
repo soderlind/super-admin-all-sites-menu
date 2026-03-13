@@ -110,6 +110,40 @@ add_filter( 'all_sites_menu_force_refresh_expiration', function( int $seconds ):
 } );
 ```
 
+### `all_sites_menu_submenu_items`
+
+Customise the per-site submenu items. Add, remove, or reorder entries. Each item is an associative array with `id`, `title`, and `href` keys.
+
+**Parameters:**
+
+| Param | Type | Description |
+|---|---|---|
+| `$items` | `array` | Default submenu items (Dashboard, New Post, New Page, …, Visit). |
+| `$blog_id` | `int` | The numeric blog ID. |
+| `$admin_url` | `string` | The site admin URL, e.g. `https://example.com/wp-admin`. |
+| `$site_url` | `string` | The site frontend URL, e.g. `https://example.com`. |
+
+**Add an "Edit Site" link (network admin):**
+
+```php
+add_filter( 'all_sites_menu_submenu_items', function( array $items, int $blog_id, string $admin_url ): array {
+    $items[] = [
+        'id'    => 'edit-site',
+        'title' => 'Edit Site',
+        'href'  => network_admin_url( 'site-info.php?id=' . $blog_id ),
+    ];
+    return $items;
+}, 10, 3 );
+```
+
+**Remove "Manage Comments":**
+
+```php
+add_filter( 'all_sites_menu_submenu_items', function( array $items ): array {
+    return array_filter( $items, fn( $item ) => $item['id'] !== 'c' );
+} );
+```
+
 ## Demo
 
 Try it in [WordPress Playground](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/soderlind/super-admin-all-sites-menu/refs/heads/main/blueprint.json) (loads 50 subsites — may take a moment).

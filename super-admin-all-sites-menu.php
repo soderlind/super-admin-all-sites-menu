@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.9.0
+ * Version:     1.10.0
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -265,7 +265,7 @@ final class SuperAdminAllSitesMenu {
 					'title'  => sprintf(
 						'<label for="all-sites-search-text">%s</label><input type="text" id="all-sites-search-text" placeholder="%s" />',
 						esc_html__( 'Filter My Sites', 'super-admin-all-sites-menu' ),
-						esc_attr__( 'Search Sites', 'super-admin-all-sites-menu' )
+						esc_attr__( 'Search by name or URL', 'super-admin-all-sites-menu' )
 					),
 					'meta'   => [
 						'class' => 'hide-if-no-js',
@@ -367,13 +367,37 @@ final class SuperAdminAllSitesMenu {
 			if ( 2 === (int) $site->public ) {
 				$blavatar = '<div class="blavatar" style="color:#f00;"></div>';
 			}
+
+			$submenu = [
+				[ 'id' => 'd', 'title' => __( 'Dashboard', 'super-admin-all-sites-menu' ), 'href' => $adminurl ],
+				[ 'id' => 'n', 'title' => __( 'New Post', 'super-admin-all-sites-menu' ), 'href' => $adminurl . '/post-new.php' ],
+				[ 'id' => 'o', 'title' => __( 'New Page', 'super-admin-all-sites-menu' ), 'href' => $adminurl . '/post-new.php?post_type=page' ],
+				[ 'id' => 'c', 'title' => __( 'Manage Comments', 'super-admin-all-sites-menu' ), 'href' => $adminurl . '/edit-comments.php' ],
+				[ 'id' => 'u', 'title' => __( 'Users', 'super-admin-all-sites-menu' ), 'href' => $adminurl . '/users.php' ],
+				[ 'id' => 'p', 'title' => __( 'Plugins', 'super-admin-all-sites-menu' ), 'href' => $adminurl . '/plugins.php' ],
+				[ 'id' => 's', 'title' => __( 'Settings', 'super-admin-all-sites-menu' ), 'href' => $adminurl . '/options-general.php' ],
+				[ 'id' => 'v', 'title' => __( 'Visit', 'super-admin-all-sites-menu' ), 'href' => $siteurl . '/' ],
+			];
+
+			/**
+			 * Filter the submenu items for each site in the All Sites menu.
+			 *
+			 * @param array  $submenu   Array of submenu items. Each item: [ 'id' => string, 'title' => string, 'href' => string ].
+			 * @param int    $blog_id   The blog ID.
+			 * @param string $admin_url The site's admin URL (e.g. https://example.com/wp-admin).
+			 * @param string $site_url  The site's frontend URL (e.g. https://example.com).
+			 */
+			$submenu = \apply_filters( 'all_sites_menu_submenu_items', $submenu, (int) $blogid, $adminurl, $siteurl );
+
 			$menu[] = [
 				'parent'    => 'my-sites-list',
 				'id'        => $menu_id,
+				'blog_id'   => (int) $blogid,
 				'name'      => strtoupper( $blogname ), // Index in local storage.
 				'title'     => $blavatar . $blogname,
 				'admin'     => $adminurl,
 				'url'       => $siteurl,
+				'submenu'   => $submenu,
 				'timestamp' => $timestamp,
 			];
 		}

@@ -25,27 +25,36 @@ export function sanitizeUrl( url ) {
  *
  * @author Per Søderlind
  * @param {Object} site - The site object containing site details
- * @param {number} site.id - Unique identifier for the site
+ * @param {string} site.id - Unique identifier for the site (e.g. "blog-42")
  * @param {string} site.admin - Admin URL for the site
  * @param {string} site.title - Display title for the site
  * @param {string} site.url - Frontend URL for the site
+ * @param {Array}  [site.submenu] - Optional array of submenu items from the REST API
  * @returns {string} HTML string for the menu item
  */
 export function siteMenu( site ) {
-	const id = Number.isFinite( site.id ) ? site.id : 0;
+	const id = escapeAttr( String( site.id ) );
 	const admin = sanitizeUrl( site.admin );
 	const url = sanitizeUrl( site.url );
-	return `
-				<li id="wp-admin-bar-${ id }" class="menupop">
-				<a class="ab-item" aria-haspopup="true" href="${ admin }/"><span class="wp-admin-bar-arrow" aria-hidden="true"></span>
-					${ site.title }
-				</a>
-				<div class="ab-sub-wrapper">
-					<ul id="wp-admin-bar-${ id }-default" class="ab-submenu">
-						<li id="wp-admin-bar-${ id }-d"><a class="ab-item"	href="${ admin }">${ __(
-							'Dashboard',
-							'super-admin-all-sites-menu'
-						) }</a></li>
+
+	let submenuHtml;
+	if ( Array.isArray( site.submenu ) && site.submenu.length > 0 ) {
+		submenuHtml = site.submenu
+			.map(
+				( item ) =>
+					`<li id="wp-admin-bar-${ id }-${ escapeAttr(
+						String( item.id )
+					) }"><a class="ab-item" href="${ sanitizeUrl(
+						item.href
+					) }">${ escapeAttr( item.title ) }</a></li>`
+			)
+			.join( '\n\t\t\t\t\t\t' );
+	} else {
+		// Fallback for stale cache entries without submenu data
+		submenuHtml = `<li id="wp-admin-bar-${ id }-d"><a class="ab-item"	href="${ admin }">${ __(
+			'Dashboard',
+			'super-admin-all-sites-menu'
+		) }</a></li>
 						<li id="wp-admin-bar-${ id }-n"><a class="ab-item" href="${ admin }/post-new.php">${ __(
 							'New Post',
 							'super-admin-all-sites-menu'
@@ -73,7 +82,19 @@ export function siteMenu( site ) {
 						<li id="wp-admin-bar-${ id }-v"><a class="ab-item" href="${ url }/">${ __(
 							'Visit',
 							'super-admin-all-sites-menu'
-						) }</a></li>
+						) }</a></li>`;
+	}
+
+	return `
+				<li id="wp-admin-bar-${ id }" class="menupop" data-url="${ escapeAttr(
+					site.url || ''
+				) }">
+				<a class="ab-item" aria-haspopup="true" href="${ admin }/"><span class="wp-admin-bar-arrow" aria-hidden="true"></span>
+					${ site.title }
+				</a>
+				<div class="ab-sub-wrapper">
+					<ul id="wp-admin-bar-${ id }-default" class="ab-submenu">
+						${ submenuHtml }
 					</ul>
 				</div>
 			</li>

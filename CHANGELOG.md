@@ -1,6 +1,21 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### 1.10.0
+
+#### Added
+
+- Filterable per-site submenu items via new `all_sites_menu_submenu_items` PHP filter — add, remove, or reorder entries like "Edit Site" (#46)
+- Numeric `blog_id` field in REST response for use in filters and custom JS
+- Search by URL: the search filter now matches site URLs in addition to site names (#45)
+- Updated search placeholder to "Search by name or URL" for discoverability
+
+#### Fixed
+
+- Sort by ID now uses numeric `blog_id` index for correct order instead of lexicographic string sort (#47)
+- Admin bar item IDs now use the correct `blog-N` string instead of falling back to `0` (#46)
+- Search URL indexing decoupled from submenu order via `data-url` attribute (#46)
+
 ### 1.9.0
 
 #### Fixed
