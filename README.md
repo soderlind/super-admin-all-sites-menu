@@ -20,7 +20,7 @@ This plugin fixes all three. Site data is fetched once via the REST API, cached 
 
 ## Features
 
-- **No [`switch_to_blog()`](docs/switch-free.md)** — reads site properties directly, avoiding the performance hit.
+- **[Switch free](docs/switch-free.md), no `switch_to_blog()`** — reads site properties directly, avoiding the performance hit.
 - **IndexedDB caching** — menu data is stored locally and updated automatically when sites, blog names, or monitored plugins change.
 - **Incremental REST loading** — fetches sites in batches (default 100) so the admin bar isn't blocked.
 - **Lists every subsite**, not just sites you administer locally.
