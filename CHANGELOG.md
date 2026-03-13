@@ -1,6 +1,12 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### 1.11.0
+
+#### Performance
+
+- Replaced per-site `WP_Site::get_details()` calls with a single batch UNION ALL query to fetch `blogname` and `siteurl` options for all sites at once, eliminating hidden `switch_to_blog()` / `restore_current_blog()` overhead in the REST endpoint
+
 ### 1.10.1
 
 #### Updated

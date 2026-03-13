@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.10.1
+ * Version:     1.11.0
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -348,15 +348,20 @@ final class SuperAdminAllSitesMenu {
 				'spam'     => '0',
 			]
 		);
+
+		// Batch-fetch blogname + siteurl for all sites in one query,
+		// avoiding per-site switch_to_blog() calls from WP_Site::get_details().
+		$site_options = $this->batch_get_site_options( $sites );
+
 		$menu      = [];
 		$timestamp = $this->get_timestamp();
 		foreach ( (array) $sites as $site ) {
 
 			$blogid   = $site->blog_id;
-			$blogname = $site->__get( 'blogname' );
+			$blogname = $site_options[ $blogid ]['blogname'] ?? '';
 			$menu_id  = 'blog-' . $blogid;
 			$blavatar = '<div class="blavatar"></div>';
-			$siteurl  = $site->__get( 'siteurl' );
+			$siteurl  = $site_options[ $blogid ]['siteurl'] ?? $site->siteurl;
 			$adminurl = $siteurl . '/wp-admin';
 
 			if ( ! $blogname ) {
@@ -503,6 +508,45 @@ final class SuperAdminAllSitesMenu {
 	 */
 	public function deactivate(): void {
 		$this->remove_timestamp();
+	}
+
+	/**
+	 * Batch-fetch blogname and siteurl for multiple sites in a single SQL query.
+	 *
+	 * Uses $wpdb->get_blog_prefix() (a pure function with no side effects) to
+	 * build a UNION ALL query, avoiding the per-site switch_to_blog() calls
+	 * that WP_Site::get_details() triggers internally.
+	 *
+	 * @param array $sites Array of WP_Site objects.
+	 * @return array<int, array{blogname: string, siteurl: string}> Keyed by blog_id.
+	 */
+	private function batch_get_site_options( array $sites ): array {
+		if ( [] === $sites ) {
+			return [];
+		}
+
+		global $wpdb;
+
+		$union_parts = [];
+		foreach ( $sites as $site ) {
+			$prefix        = $wpdb->get_blog_prefix( (int) $site->blog_id );
+			$table         = $prefix . 'options';
+			$union_parts[] = $wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name is built from $wpdb->get_blog_prefix().
+				"SELECT %d AS blog_id, option_name, option_value FROM {$table} WHERE option_name IN ('blogname','siteurl')",
+				(int) $site->blog_id
+			);
+		}
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- each part is prepared above.
+		$rows = $wpdb->get_results( implode( ' UNION ALL ', $union_parts ) );
+
+		$options = [];
+		foreach ( $rows as $row ) {
+			$options[ (int) $row->blog_id ][ $row->option_name ] = $row->option_value;
+		}
+
+		return $options;
 	}
 
 	/**
