@@ -1,6 +1,18 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### 1.10.1
+
+#### Updated
+
+- @wordpress/scripts 30.7.0 → 31.6.0
+- dexie 4.0.11 → 4.2.0
+
+#### Security
+
+- Resolved Dependabot alerts #102, #104, #108, #109 (minimatch ReDoS, serialize-javascript RCE, @tootallnate/once)
+- Added npm overrides for transitive dependency vulnerabilities (0 audit findings)
+
 ### 1.10.0
 
 #### Added
