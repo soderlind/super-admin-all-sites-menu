@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.10.0
+Stable tag: 1.10.1
 Requires at least: 5.6  
 Tested up to: 7.0  
 Requires PHP: 8.0  
@@ -120,6 +120,12 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.10.1 =
+* Updated: @wordpress/scripts 30.7.0 → 31.6.0
+* Updated: dexie 4.0.11 → 4.2.0
+* Security: Resolved Dependabot alerts #102, #104, #108, #109 (minimatch ReDoS, serialize-javascript RCE, @tootallnate/once)
+* Changed: Added npm overrides for transitive dependency vulnerabilities (0 audit findings)
 
 = 1.10.0 =
 * Added: Filterable per-site submenu items via `all_sites_menu_submenu_items` filter (#46)
