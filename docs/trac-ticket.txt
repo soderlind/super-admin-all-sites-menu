@@ -1,0 +1,311 @@
+Eliminate switch_to_blog() from get_blog_option(), update_blog_option(), WP_Site::get_details(), and get_blog_post() using $wpdb->get_blog_prefix()
+
+----
+
+== Description ==
+
+`switch_to_blog()` mutates six globals and, on the fallback object-cache implementation, **wipes the entire object cache** via `wp_cache_init()` inside `wp_cache_switch_to_blog_fallback()`. Every `switch_to_blog()` / `restore_current_blog()` pair is two full global-state mutations.
+
+Several core functions use `switch_to_blog()` internally even though they only need to read or write a single row in a per-site table. This ticket proposes replacing those internal switches with direct queries using `$wpdb->get_blog_prefix( $blog_id )`, which is a **pure function** — no side-effects, no globals written.
+
+=== Globals mutated by switch_to_blog() ===
+
+||= Global mutated =||= What changes =||
+|| `$wpdb->blogid` / `$wpdb->prefix` || Table prefix rewritten (e.g. `wp_` → `wp_3_`) ||
+|| `$wpdb->options`, `$wpdb->posts`, … || All per-blog table properties rewritten ||
+|| `$GLOBALS['table_prefix']` || Mirrors the new prefix ||
+|| `$GLOBALS['blog_id']` || Set to new blog ID ||
+|| `$GLOBALS['_wp_switched_stack']` || Previous ID pushed ||
+|| `$GLOBALS['switched']` || Set to `true` ||
+|| `$wp_object_cache` || Full cache wipe on fallback ||
+
+=== Real-world impact ===
+
+Any plugin or core code that iterates over sites and accesses `blogname`, `siteurl`, or other per-site options triggers `switch_to_blog()` for each site — either directly via `get_blog_option()` or indirectly via `WP_Site::get_details()` (called by `WP_Site::__get()` for magic properties like `blogname` and `siteurl`).
+
+For a network with 100 sites, a single loop fetching `blogname` and `siteurl` causes **~200 global-state mutations** (100 switch + 100 restore).
+
+----
+
+== The Key Insight ==
+
+`wpdb::get_blog_prefix( $blog_id )` already exists as a public method, accepts an explicit blog ID, and returns the correct table prefix **without touching any global state**:
+
+{{{#!php
+// From class-wpdb.php — pure computation, no side-effects:
+public function get_blog_prefix( $blog_id = null ) {
+    if ( is_multisite() ) {
+        if ( null === $blog_id ) {
+            $blog_id = $this->blogid;
+        }
+        $blog_id = (int) $blog_id;
+        if ( defined( 'MULTISITE' ) && ( 0 === $blog_id || 1 === $blog_id ) ) {
+            return $this->base_prefix;
+        } else {
+            return $this->base_prefix . $blog_id . '_';
+        }
+    }
+    return $this->base_prefix;
+}
+}}}
+
+Core already uses this pattern for non-options tables (e.g. `ms-functions.php` line 2003 queries `{prefix}posts` directly). The only reason `{prefix}options` is never queried this way is that `get_option()` has no table parameter — not because direct queries are prohibited.
+
+----
+
+== Proposed Changes ==
+
+=== 1. New private helper: `_get_option_from_blog()` ===
+
+Add to `wp-includes/ms-blogs.php`. Reads a single option from any site's `wp_N_options` table without switching. Handles object-cache correctly (same `alloptions` / `notoptions` groups as `get_option()`).
+
+{{{#!php
+/**
+ * Retrieves an option value for a specific site without switching blog context.
+ *
+ * Uses the object cache (same 'options'/'notoptions' groups as get_option()),
+ * falling back to a direct DB query with the site's table prefix.
+ *
+ * @since 7.x.0
+ * @access private
+ *
+ * @param int    $blog_id  Site ID.
+ * @param string $option   Option name.
+ * @param mixed  $default  Default value if option not found.
+ * @return mixed Option value or $default.
+ */
+function _get_option_from_blog( int $blog_id, string $option, mixed $default = false ): mixed {
+    global $wpdb;
+
+    $blog_id = (int) $blog_id;
+
+    // Fast path: current blog — delegate to get_option().
+    if ( get_current_blog_id() === $blog_id ) {
+        return get_option( $option, $default );
+    }
+
+    // Check object cache.
+    $alloptions_cache = wp_cache_get( $blog_id, 'blog-alloptions' );
+    if ( is_array( $alloptions_cache ) && array_key_exists( $option, $alloptions_cache ) ) {
+        return $alloptions_cache[ $option ] ?? $default;
+    }
+
+    $notoptions = wp_cache_get( $blog_id, 'blog-notoptions' );
+    if ( is_array( $notoptions ) && isset( $notoptions[ $option ] ) ) {
+        return $default;
+    }
+
+    // Direct DB query using get_blog_prefix() — no switch.
+    $table = $wpdb->get_blog_prefix( $blog_id ) . 'options';
+    $row   = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT option_value FROM `{$table}` WHERE option_name = %s LIMIT 1",
+            $option
+        )
+    );
+
+    if ( null === $row ) {
+        $notoptions           = is_array( $notoptions ) ? $notoptions : [];
+        $notoptions[ $option ] = true;
+        wp_cache_set( $blog_id, $notoptions, 'blog-notoptions' );
+        return $default;
+    }
+
+    $value = maybe_unserialize( $row->option_value );
+
+    return apply_filters( "blog_option_{$option}", $value, $blog_id );
+}
+}}}
+
+=== 2. Refactor `get_blog_option()` ===
+
+Replace the `switch_to_blog()` / `get_option()` / `restore_current_blog()` sequence with a single call to the new helper.
+
+{{{#!php
+// BEFORE (ms-blogs.php):
+function get_blog_option( $id, $option, $default_value = false ) {
+    $id = (int) $id;
+    if ( empty( $id ) ) { $id = get_current_blog_id(); }
+
+    if ( get_current_blog_id() === $id ) {
+        return get_option( $option, $default_value );
+    }
+
+    switch_to_blog( $id );
+    $value = get_option( $option, $default_value );
+    restore_current_blog();
+
+    return apply_filters( "blog_option_{$option}", $value, $id );
+}
+
+// AFTER:
+function get_blog_option( $id, $option, $default_value = false ) {
+    $id = (int) $id;
+    if ( empty( $id ) ) { $id = get_current_blog_id(); }
+
+    return _get_option_from_blog( $id, $option, $default_value );
+}
+}}}
+
+=== 3. Refactor `update_blog_option()` ===
+
+Replace `switch_to_blog()` + `update_option()` + `restore_current_blog()` with a direct `$wpdb->update/insert` against `{prefix}options`.
+
+{{{#!php
+// AFTER:
+function update_blog_option( $id, $option, $value, $deprecated = null ) {
+    global $wpdb;
+    $id = (int) $id;
+
+    if ( null !== $deprecated ) {
+        _deprecated_argument( __FUNCTION__, '3.1.0' );
+    }
+
+    if ( get_current_blog_id() === $id ) {
+        return update_option( $option, $value );
+    }
+
+    $table      = $wpdb->get_blog_prefix( $id ) . 'options';
+    $serialized = maybe_serialize( $value );
+    $exists     = $wpdb->get_var(
+        $wpdb->prepare( "SELECT COUNT(*) FROM `{$table}` WHERE option_name = %s", $option )
+    );
+
+    if ( $exists ) {
+        $result = $wpdb->update(
+            $table,
+            [ 'option_value' => $serialized ],
+            [ 'option_name'  => $option ],
+            [ '%s' ],
+            [ '%s' ]
+        );
+    } else {
+        $result = $wpdb->insert(
+            $table,
+            [ 'option_name' => $option, 'option_value' => $serialized, 'autoload' => 'yes' ],
+            [ '%s', '%s', '%s' ]
+        );
+    }
+
+    // Bust per-blog option caches.
+    wp_cache_delete( $id, 'blog-alloptions' );
+    wp_cache_delete( $id, 'blog-notoptions' );
+
+    return false !== $result;
+}
+}}}
+
+Apply the same pattern to `add_blog_option()` and `delete_blog_option()`.
+
+=== 4. Refactor `WP_Site::get_details()` ===
+
+In `class-wp-site.php`, `get_details()` (private) fetches `blogname`, `siteurl`, `post_count`, and `home` via `switch_to_blog()`. Replace with four calls to `_get_option_from_blog()`:
+
+{{{#!php
+// AFTER:
+private function get_details() {
+    $details = wp_cache_get( $this->blog_id, 'site-details' );
+
+    if ( false === $details ) {
+        $id      = (int) $this->blog_id;
+        $details = new stdClass();
+        foreach ( get_object_vars( $this ) as $key => $value ) {
+            $details->$key = $value;
+        }
+        $details->blogname   = _get_option_from_blog( $id, 'blogname' );
+        $details->siteurl    = _get_option_from_blog( $id, 'siteurl' );
+        $details->post_count = _get_option_from_blog( $id, 'post_count', 0 );
+        $details->home       = _get_option_from_blog( $id, 'home' );
+
+        wp_cache_set( $this->blog_id, $details, 'site-details' );
+    }
+
+    $details = apply_filters_deprecated( 'blog_details', [ $details ], '4.7.0', 'site_details' );
+    $details = apply_filters( 'site_details', $details );
+
+    return $details;
+}
+}}}
+
+=== 5. Refactor `get_blog_post()` ===
+
+In `ms-functions.php`, replace `switch_to_blog()` + `get_post()` + `restore_current_blog()` with a direct query against `{prefix}posts`:
+
+{{{#!php
+// AFTER:
+function get_blog_post( $blog_id, $post_id ) {
+    global $wpdb;
+
+    $blog_id = (int) $blog_id;
+    $post_id = (int) $post_id;
+
+    if ( get_current_blog_id() === $blog_id ) {
+        return get_post( $post_id );
+    }
+
+    $table = $wpdb->get_blog_prefix( $blog_id ) . 'posts';
+    $post  = $wpdb->get_row(
+        $wpdb->prepare( "SELECT * FROM `{$table}` WHERE ID = %d LIMIT 1", $post_id )
+    );
+
+    if ( ! $post ) {
+        return null;
+    }
+
+    return sanitize_post( new WP_Post( $post ), 'raw' );
+}
+}}}
+
+----
+
+== Object-Cache Considerations ==
+
+The new `_get_option_from_blog()` helper must:
+
+ * Use the same cache group strategy as `get_option()` — `blog-alloptions` for autoloaded options, `blog-notoptions` for known-missing options.
+ * Bust caches on write — `add_blog_option`, `update_blog_option`, `delete_blog_option` must invalidate the same keys.
+ * Lazy-load `alloptions` — on first access for a given `$blog_id`, fetch all autoloaded options in one query and cache them in `blog-alloptions`, mirroring `wp_load_alloptions()`.
+
+----
+
+== Out of Scope ==
+
+These functions have deeper coupling to the switched context and are out of scope for an initial patch:
+
+||= Function =||= Reason =||
+|| `wp_initialize_site()` || Runs dozens of core operations on a new site's tables ||
+|| `wp_uninitialize_site()` || Drops tables, clears all site data ||
+|| Third-party plugin code || Cannot be fixed in core ||
+
+----
+
+== Files Changed ==
+
+||= File =||= Change =||
+|| `wp-includes/ms-blogs.php` || Add `_get_option_from_blog()` private helper ||
+|| `wp-includes/ms-blogs.php` || Refactor `get_blog_option()` to use helper ||
+|| `wp-includes/ms-blogs.php` || Refactor `update_blog_option()` — direct `$wpdb` query ||
+|| `wp-includes/ms-blogs.php` || Refactor `add_blog_option()` — direct `$wpdb->insert` ||
+|| `wp-includes/ms-blogs.php` || Refactor `delete_blog_option()` — direct `$wpdb->delete` ||
+|| `wp-includes/class-wp-site.php` || Refactor `WP_Site::get_details()` to use `_get_option_from_blog()` ||
+|| `wp-includes/ms-functions.php` || Refactor `get_blog_post()` — direct `$wpdb` query ||
+
+All changes exploit `$wpdb->get_blog_prefix( $blog_id )`, which is already public, purpose-built, and side-effect-free.
+
+----
+
+== Testing Notes ==
+
+ * Unit tests for `get_blog_option()`, `update_blog_option()`, `add_blog_option()`, `delete_blog_option()` — verify return values match current behaviour.
+ * Unit test for `WP_Site::__get('blogname')` / `WP_Site::__get('siteurl')` — verify values match after refactor.
+ * Verify object cache is populated and busted correctly (test with both fallback and persistent cache drop-ins).
+ * Verify `$GLOBALS['switched']` is **not** set to `true` after `get_blog_option()` (regression test for the switch removal).
+ * Performance benchmark: loop over N sites calling `get_blog_option( $id, 'blogname' )` — measure wall time before/after.
+
+----
+
+Component: Multisite[[BR]]
+Focuses: performance[[BR]]
+Type: enhancement[[BR]]
+Version: trunk[[BR]]
+Keywords: has-patch needs-testing
