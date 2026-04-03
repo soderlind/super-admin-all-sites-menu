@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.11.0
+Stable tag: 1.11.1
 Requires at least: 5.6  
 Tested up to: 7.0  
 Requires PHP: 8.0  
@@ -120,6 +120,12 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.11.1 =
+* Fixed search box styling inconsistency between admin and front-end pages
+* Fixed `action_enqueue_scripts` parameter type error on front-end
+* Updated dependencies: @wordpress/api-fetch, @wordpress/i18n (5→6), @wordpress/scripts, dexie
+* Security: Resolved all npm audit vulnerabilities
 
 = 1.11.0 =
 * Performance: Replaced per-site WP_Site::get_details() calls with a single batch SQL query, eliminating hidden switch_to_blog() overhead in the REST endpoint

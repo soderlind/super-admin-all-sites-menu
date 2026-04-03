@@ -56,15 +56,49 @@
 }
 
 #wp-admin-bar-all-sites-search {
-	height: 38px;
+	height: 38px !important;
 }
 
 #wp-admin-bar-all-sites-search .ab-item {
-	height: 34px;
+	height: 34px !important;
 }
 
-#wp-admin-bar-all-sites-search input {
-	padding: 0 2px;
+#wpadminbar #wp-admin-bar-all-sites-search input,
+#wpadminbar #wp-admin-bar-all-sites-search input[type="text"],
+#wpadminbar #all-sites-search-text {
+	padding: 0 8px !important;
 	width: 95%;
 	width: calc( 100% - 4px);
+	/* Light background for visibility */
+	background: #fff !important;
+	background-color: #fff !important;
+	border: 1px solid #8c8f94 !important;
+	border-radius: 3px !important;
+	box-sizing: border-box !important;
+	box-shadow: none !important;
+	color: #2c3338 !important;
+	font-size: 13px !important;
+	line-height: 22px !important;
+	height: 28px !important;
+	min-height: 28px !important;
+	max-height: 28px !important;
+	margin: 5px 0 !important;
+	outline: none !important;
+}
+
+#wpadminbar #wp-admin-bar-all-sites-search input:focus,
+#wpadminbar #wp-admin-bar-all-sites-search input[type="text"]:focus,
+#wpadminbar #all-sites-search-text:focus {
+	background: #fff !important;
+	background-color: #fff !important;
+	border-color: #2271b1 !important;
+	color: #2c3338 !important;
+	box-shadow: 0 0 0 1px #2271b1 !important;
+	outline: none !important;
+}
+
+#wpadminbar #wp-admin-bar-all-sites-search input::placeholder,
+#wpadminbar #all-sites-search-text::placeholder {
+	color: #646970 !important;
+	opacity: 1 !important;
 }
