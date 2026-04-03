@@ -1,6 +1,24 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### 1.11.1
+
+#### Fixed
+
+- Fixed search box styling inconsistency between admin and front-end pages
+- Fixed `action_enqueue_scripts` parameter type error on front-end (wp_enqueue_scripts passes no arguments)
+
+#### Updated
+
+- @wordpress/api-fetch 7.9.0 → 7.43.0
+- @wordpress/i18n 5.9.0 → 6.16.0
+- @wordpress/scripts 31.6.0 → 31.8.0
+- dexie 4.2.0 → 4.4.2
+
+#### Security
+
+- Resolved all npm audit vulnerabilities (lodash, path-to-regexp, picomatch, yaml)
+
 ### 1.11.0
 
 #### Performance
