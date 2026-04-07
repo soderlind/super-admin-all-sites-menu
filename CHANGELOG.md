@@ -1,6 +1,13 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### 1.12.0
+
+#### Added
+
+- Menu colors now follow the user's Administration Color Scheme instead of being hardcoded to the default "Fresh" palette
+- Hover/focus on menu items uses the scheme's highlight background (via `--wp-admin-theme-color`), matching the admin sidebar behavior
+
 ### 1.11.1
 
 #### Fixed

@@ -15,10 +15,9 @@
 	}
 	#wp-admin-bar-my-sites>.ab-sub-wrapper #wp-admin-bar-network-admin-default {
 		position: fixed;
-		background: #32373c;
+		background: inherit;
 	}
 	#wp-admin-bar-my-sites>.ab-sub-wrapper ul#wp-admin-bar-my-sites-list {
-		background-color: #464b50;
 		/* padding-bottom: 32px !important; */
 	}
 	#wp-admin-bar-my-sites>.ab-sub-wrapper ul#wp-admin-bar-my-sites-list li.menupop {
@@ -29,7 +28,15 @@
 		/* padding: 2em; */
 		/* left: 50%; */
 		/* transform: translate(-50%, -50%); */
-		background-color: #464b50;
+		background-color: inherit;
+	}
+	/* Match admin sidebar hover: highlight background + contrasting text. */
+	#wpadminbar .quicklinks .menupop ul.ab-sub-secondary > li > a:hover,
+	#wpadminbar .quicklinks .menupop ul.ab-sub-secondary > li > a:focus,
+	#wpadminbar .quicklinks .menupop ul.ab-sub-secondary .ab-submenu > li > a:hover,
+	#wpadminbar .quicklinks .menupop ul.ab-sub-secondary .ab-submenu > li > a:focus {
+		background-color: var(--wp-admin-theme-color, #2271b1);
+		color: #fff;
 	}
 	#wp-admin-bar-my-sites>.ab-sub-wrapper.site_single {
 		height: auto;

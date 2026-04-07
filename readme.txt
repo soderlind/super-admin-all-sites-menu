@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.11.1
+Stable tag: 1.12.0
 Requires at least: 5.6  
 Tested up to: 7.0  
 Requires PHP: 8.0  
@@ -120,6 +120,10 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.12.0 =
+* Added: Menu colors now follow the user's Administration Color Scheme
+* Added: Hover/focus on menu items uses the scheme's highlight background, matching the admin sidebar
 
 = 1.11.1 =
 * Fixed search box styling inconsistency between admin and front-end pages
