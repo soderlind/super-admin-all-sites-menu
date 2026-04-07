@@ -1,6 +1,6 @@
 /*!
  * super-admin-all-sites-menu
- * version: 1.11.1
+ * version: 1.12.0
  * address: https://github.com/soderlind/super-admin-all-sites-menu#readme
  * author:  Per Søderlind
  * license: GPLv2
