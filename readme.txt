@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.12.0
+Stable tag: 1.12.1
 Requires at least: 5.6  
 Tested up to: 7.0  
 Requires PHP: 8.0  
@@ -120,6 +120,16 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.12.1 =
+* Fixed: Menu sometimes not loading after a REST API error — partial data is cleared and the next page load retries automatically
+* Fixed: Nonce middleware stacking on every REST batch request, causing slowdowns on large networks
+* Fixed: Infinite REST requests when API returns empty data — loading now terminates correctly
+* Fixed: Infinite loop when `loadincrements` is falsy/0 — defaults to 100
+* Fixed: `refreshAdminbar()` duplicating event listeners on repeated calls, causing erratic hover/toggle
+* Changed: Converted recursive REST loader to iterative loop to prevent stack overflow on large networks
+* Fixed: Fatal error in `wp-portable-text` plugin — broken `stringNAMESPACE` constant and `self::NAMESPACE` (reserved keyword) references renamed to `REST_NAMESPACE`
+* Added: Test coverage for REST loading edge cases and refresh idempotency
 
 = 1.12.0 =
 * Added: Menu colors now follow the user's Administration Color Scheme
