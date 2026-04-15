@@ -1,6 +1,25 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+
+### 1.12.1
+
+#### Fixed
+
+- Fixed menu sometimes not loading after a REST API error — `populateDB` now re-throws so the "Loading.." indicator stays visible and the next page load retries automatically
+- Fixed nonce middleware being stacked on every REST batch request, causing slowdowns on large networks
+- Fixed `loadSites` running forever when the API returns an empty data array — now terminates correctly
+- Fixed `loadSites` infinite recursion when `loadincrements` is falsy/0 — defaults to 100
+- Fixed `refreshAdminbar()` duplicating event listeners on repeated calls, causing erratic hover/toggle behaviour
+- Converted recursive `loadSites` to an iterative loop to prevent stack overflow on large networks
+- Removed unused `elements.timestamp` reference in init
+
+
+#### Added
+
+- Added `rest.test.js` covering nonce idempotency, empty-data termination, maxSites limit, error propagation, and loadincrements fallback
+- Added refresh idempotency test to `refresh.test.js`
+
 ### 1.12.0
 
 #### Added

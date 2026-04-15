@@ -4,11 +4,15 @@
  * Submenu offset adjustment based on:
  * @see https://qiita.com/zephyr7501/items/dd0967fddabd888b28c4
  */
+
+let listenersAttached = false;
+
 export function refreshAdminbar() {
 	const sitemenu = document.getElementById( 'wp-admin-bar-my-sites-list' );
-	if ( ! sitemenu ) {
+	if ( ! sitemenu || listenersAttached ) {
 		return;
 	}
+	listenersAttached = true;
 
 	sitemenu.addEventListener(
 		'mouseenter',

@@ -41,7 +41,6 @@ async function init() {
 	const elements = {
 		load: document.querySelector( '#wp-admin-bar-load-more' ),
 		menu: document.querySelector( '#wp-admin-bar-my-sites-list' ),
-		timestamp: document.querySelector( '#load-more-timestamp' ),
 	};
 
 	if ( ! elements.load || ! elements.menu ) return;
@@ -98,9 +97,10 @@ async function populateDB( db ) {
 				offset: 0,
 				delayMs: 200,
 			} );
-		} catch {
+		} catch ( err ) {
 			// Clear partial data so next page load retries from scratch.
 			await db.delete();
+			throw err;
 		}
 	}
 }
