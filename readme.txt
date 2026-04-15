@@ -128,7 +128,6 @@ You can use the following filters to override the defaults:
 * Fixed: Infinite loop when `loadincrements` is falsy/0 — defaults to 100
 * Fixed: `refreshAdminbar()` duplicating event listeners on repeated calls, causing erratic hover/toggle
 * Changed: Converted recursive REST loader to iterative loop to prevent stack overflow on large networks
-* Fixed: Fatal error in `wp-portable-text` plugin — broken `stringNAMESPACE` constant and `self::NAMESPACE` (reserved keyword) references renamed to `REST_NAMESPACE`
 * Added: Test coverage for REST loading edge cases and refresh idempotency
 
 = 1.12.0 =
