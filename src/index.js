@@ -7,8 +7,11 @@
  */
 
 import { addSearch } from './modules/search.js';
-import { IndexedDB } from './modules/db.js';
-import { loadSites } from './modules/rest.js';
+import {
+	createAllSitesCatalog,
+	createDexieSnapshotStore,
+} from './modules/catalog.js';
+import { createRemoteCatalogPort } from './modules/rest.js';
 import { observeContainer, observeMenuHeight } from './modules/observe.js';
 import { refreshAdminbar } from './modules/refresh.js';
 import { siteMenu } from './modules/menu.js';
@@ -20,11 +23,6 @@ import { siteMenu } from './modules/menu.js';
 const SETTINGS = {
 	DB_NAME: 'allsites',
 	TABLE_NAME: 'sites',
-	DB_VERSIONS: [
-		'id,name,url',
-		'id,name,url,timestamp',
-		'id,name,url,timestamp,blog_id',
-	],
 };
 
 /**
@@ -46,19 +44,24 @@ async function init() {
 	if ( ! elements.load || ! elements.menu ) return;
 
 	try {
-		const db = new IndexedDB(
-			SETTINGS.DB_NAME,
-			SETTINGS.TABLE_NAME,
-			SETTINGS.DB_VERSIONS
-		);
+		const catalog = createAllSitesCatalog( {
+			remote: createRemoteCatalogPort(),
+			store: createDexieSnapshotStore( {
+				dbName: SETTINGS.DB_NAME,
+				sitesTable: SETTINGS.TABLE_NAME,
+			} ),
+		} );
 
 		if ( pluginAllSitesMenu.displaySearch ) {
 			addSearch();
 		}
 
 		observeMenuHeight( elements.menu );
-		await populateDB( db );
-		setupLoadMoreObserver( elements.load, db );
+		await catalog.boot( {
+			revision: pluginAllSitesMenu.revision,
+			pageSize: pluginAllSitesMenu.loadincrements,
+		} );
+		setupLoadMoreObserver( elements.load, catalog );
 	} catch ( error ) {
 		console.error( 'Initialization failed:', error );
 	}
@@ -67,52 +70,13 @@ async function init() {
 document.addEventListener( 'DOMContentLoaded', init );
 
 /**
- * Populate the database with sites.
- *
- * @author Per Søderlind
- * @param {IndexedDB} db
- * @param {object} el
- */
-
-/**
- * Sets up database population and handles timestamp verification
- *
- * @async
- * @param {IndexedDB} db - Database instance to populate
- * @throws {Error} When database operations fail
- */
-async function populateDB( db ) {
-	const data = await db.getFirstRow();
-	if (
-		typeof data !== 'undefined' &&
-		typeof data.timestamp !== 'undefined' &&
-		pluginAllSitesMenu.timestamp > data.timestamp
-	) {
-		await db.delete();
-	}
-
-	if ( ( await db.count() ) === 0 ) {
-		try {
-			await loadSites( db, {
-				offset: 0,
-				delayMs: 200,
-			} );
-		} catch ( err ) {
-			// Clear partial data so next page load retries from scratch.
-			await db.delete();
-			throw err;
-		}
-	}
-}
-
-/**
  * Configures the intersection observer for loading more sites
  *
  * @param {HTMLElement} loadElement - The load more trigger element
- * @param {IndexedDB} db - Database instance containing sites
+ * @param {{list: (orderBy?: string) => Promise<Array>}} catalog - Catalog boundary containing sites
  * @returns {IntersectionObserver} The configured observer
  */
-function setupLoadMoreObserver( loadElement, db ) {
+function setupLoadMoreObserver( loadElement, catalog ) {
 	let loaded = false;
 	const observedLoadMore = observeContainer( loadElement, async () => {
 		if ( loaded ) {
@@ -124,7 +88,7 @@ function setupLoadMoreObserver( loadElement, db ) {
 			pluginAllSitesMenu.orderBy === 'id'
 				? 'blog_id'
 				: pluginAllSitesMenu.orderBy;
-		const sites = await db.read( orderBy );
+		const sites = await catalog.list( orderBy );
 		const sitesMenu = sites.reduce( ( acc, site ) => {
 			return acc + siteMenu( site );
 		}, '' );

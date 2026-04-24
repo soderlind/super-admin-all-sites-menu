@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+### 1.12.2
+
+#### Changed
+
+- Replaced row-level freshness checks with a revision-based snapshot protocol for IndexedDB cache hydration
+- Added a dedicated JS catalog boundary so startup no longer coordinates cache invalidation and REST refill directly
+
+#### Fixed
+
+- REST responses now echo the cache revision so hydration can detect cross-runtime mismatches during batched loads
+
+#### Added
+
+- Added boundary-focused tests covering cache reuse, stale refresh, hydration failures, and revision mismatches
+
 ### 1.12.1
 
 #### Fixed

@@ -156,25 +156,25 @@ Try it in [WordPress Playground](https://playground.wordpress.net/?blueprint-url
 ```
 PHP (server)                        JS (browser)
 ─────────────                       ────────────
-get_timestamp() ──inline_script──▶  pluginAllSitesMenu.timestamp
-                                         │
-                                    Compare with IndexedDB timestamp
-                                         │
-                              ┌──────────┴──────────┐
-                              │ mismatch             │ match
-                              ▼                      ▼
-                         Clear DB              Use cached data
-                              │                      │
-                              ▼                      │
-                    REST /sites?offset=0             │
-                    REST /sites?offset=100           │
-                    …(batched)                       │
-                              │                      │
-                              ▼                      ▼
-                         Store in IndexedDB ──▶ Render menu
+get_revision() ──inline_script──▶   pluginAllSitesMenu.revision
+                                 │
+                        Compare with snapshot metadata revision
+                                 │
+                        ┌──────────┴──────────┐
+                        │ mismatch             │ match
+                        ▼                      ▼
+                    Clear DB              Use cached snapshot
+                        │                      │
+                        ▼                      │
+                REST /sites?offset=0             │
+                REST /sites?offset=100           │
+                …(batched)                       │
+                        │                      │
+                        ▼                      ▼
+                    Store in IndexedDB ──▶ Render menu
 ```
 
-The PHP timestamp acts as a cache version. It is bumped whenever a site is added/deleted, a blog name changes, or a monitored plugin is (de)activated. On the client side, a mismatch triggers a full re-fetch; a match means the cached data is used as-is.
+The PHP revision acts as an opaque cache version. It is bumped whenever a site is added/deleted, a blog name changes, or a monitored plugin is (de)activated. On the client side, a mismatch triggers a full re-fetch; a match means the cached snapshot is used as-is.
 
 <details>
 <summary>IndexedDB storage</summary>

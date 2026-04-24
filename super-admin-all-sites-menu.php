@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.12.1
+ * Version:     1.12.2
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -275,14 +275,14 @@ final class SuperAdminAllSitesMenu {
 		}
 
 		// Add an observable container, used by the IntersectionObserver in src/modules/observe.js.
-		$timestamp = $this->get_timestamp();
+		$revision = $this->get_revision();
 		$wp_admin_bar->add_menu(
 			[
 				'id'     => 'load-more',
 				'parent' => 'my-sites-list',
 				'title'  => __( 'Loading..', 'super-admin-all-sites-menu' ),
 				'meta'   => [
-					'html'     => sprintf( '<span id="load-more-timestamp" data-timestamp="%s"></span>', $timestamp ),
+					'html'     => sprintf( '<span id="load-more-revision" data-revision="%s"></span>', esc_attr( $revision ) ),
 					'class'    => 'load-more hide-if-no-js',
 					'tabindex' => -1,
 				],
@@ -337,7 +337,7 @@ final class SuperAdminAllSitesMenu {
 		$params = $request->get_params();
 		$offset = ( isset( $params[ 'offset' ] ) ) ? filter_var( wp_unslash( $params[ 'offset' ] ), FILTER_VALIDATE_INT, [ 'default' => 0 ] ) : 0;
 
-		$sites     = \get_sites(
+		$sites = \get_sites(
 			[
 				'orderby'  => 'path',
 				'number'   => $this->load_increments,
@@ -353,15 +353,15 @@ final class SuperAdminAllSitesMenu {
 		// avoiding per-site switch_to_blog() calls from WP_Site::get_details().
 		$site_options = $this->batch_get_site_options( $sites );
 
-		$menu      = [];
-		$timestamp = $this->get_timestamp();
+		$menu     = [];
+		$revision = $this->get_revision();
 		foreach ( (array) $sites as $site ) {
 
 			$blogid   = $site->blog_id;
-			$blogname = $site_options[ $blogid ]['blogname'] ?? '';
+			$blogname = $site_options[ $blogid ][ 'blogname' ] ?? '';
 			$menu_id  = 'blog-' . $blogid;
 			$blavatar = '<div class="blavatar"></div>';
-			$siteurl  = $site_options[ $blogid ]['siteurl'] ?? $site->siteurl;
+			$siteurl  = $site_options[ $blogid ][ 'siteurl' ] ?? $site->siteurl;
 			$adminurl = $siteurl . '/wp-admin';
 
 			if ( ! $blogname ) {
@@ -395,24 +395,25 @@ final class SuperAdminAllSitesMenu {
 			$submenu = \apply_filters( 'all_sites_menu_submenu_items', $submenu, (int) $blogid, $adminurl, $siteurl );
 
 			$menu[] = [
-				'parent'    => 'my-sites-list',
-				'id'        => $menu_id,
-				'blog_id'   => (int) $blogid,
-				'name'      => strtoupper( $blogname ), // Index in local storage.
-				'title'     => $blavatar . $blogname,
-				'admin'     => $adminurl,
-				'url'       => $siteurl,
-				'submenu'   => $submenu,
-				'timestamp' => $timestamp,
+				'parent'  => 'my-sites-list',
+				'id'      => $menu_id,
+				'blog_id' => (int) $blogid,
+				'name'    => strtoupper( $blogname ), // Index in local storage.
+				'title'   => $blavatar . $blogname,
+				'admin'   => $adminurl,
+				'url'     => $siteurl,
+				'submenu' => $submenu,
 			];
 		}
 
 		if ( [] !== $menu ) {
 			$response[ 'response' ] = 'success';
 			$response[ 'data' ]     = $menu;
+			$response[ 'revision' ] = $revision;
 		} else {
 			$response[ 'response' ] = 'unobserve';
 			$response[ 'data' ]     = '';
+			$response[ 'revision' ] = $revision;
 		}
 
 		return $response;
@@ -448,7 +449,7 @@ final class SuperAdminAllSitesMenu {
 				'loadincrements' => $this->load_increments,
 				'orderBy'        => $this->order_by,
 				'displaySearch'  => ( $this->number_of_sites > $this->search_threshold ) ? true : false,
-				'timestamp'      => $this->get_timestamp(),
+				'revision'       => $this->get_revision(),
 			]
 		);
 
@@ -573,13 +574,13 @@ final class SuperAdminAllSitesMenu {
 	 *
 	 * @return string
 	 */
-	private function get_timestamp(): string {
-		$timestamp = get_site_transient( 'allsitemenutimestamp' );
-		if ( ! $timestamp ) {
-			$timestamp = (string) time();
-			set_site_transient( 'allsitemenutimestamp', $timestamp, $this->cache_expiration );
+	private function get_revision(): string {
+		$revision = get_site_transient( 'allsitemenurevision' );
+		if ( ! $revision ) {
+			$revision = (string) time();
+			set_site_transient( 'allsitemenurevision', $revision, $this->cache_expiration );
 		}
-		return $timestamp;
+		return $revision;
 	}
 
 	/**
@@ -588,7 +589,7 @@ final class SuperAdminAllSitesMenu {
 	 * @return void
 	 */
 	private function remove_timestamp(): void {
-		delete_site_transient( 'allsitemenutimestamp' );
+		delete_site_transient( 'allsitemenurevision' );
 	}
 
 }
