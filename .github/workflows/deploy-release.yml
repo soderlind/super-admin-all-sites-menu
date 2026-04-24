@@ -7,6 +7,7 @@ jobs:
   tag:
     name: Deploy new tagged release to WordPress.org
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     permissions:
       attestations: write
       contents: read
@@ -24,7 +25,30 @@ jobs:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
         with:
           generate-zip: true
+      - name: Wait for WordPress.org zip
+        shell: bash
+        env:
+          PLUGIN: ${{ github.event.repository.name }}
+          VERSION: ${{ github.ref_name }}
+        run: |
+          zip_url="https://downloads.wordpress.org/plugin/${PLUGIN}.${VERSION}.zip"
+          echo "Waiting for ${zip_url} to become available..."
+
+          for attempt in {1..60}; do
+            status="$(curl -sS -o /dev/null -w '%{http_code}' -I "${zip_url}")"
+            if [ "${status}" = "200" ]; then
+              echo "Zip is available."
+              exit 0
+            fi
+
+            echo "Zip not available yet (HTTP ${status}), retrying in 60 seconds..."
+            sleep 60
+          done
+
+          echo "Timed out waiting for ${zip_url}" >&2
+          exit 1
       - name: Generate build provenance attestation
         uses: johnbillion/action-wordpress-plugin-attestation@0.7.2
         with:
           zip-path: ${{ steps.deploy.outputs.zip-path }}
+          timeout: 60
