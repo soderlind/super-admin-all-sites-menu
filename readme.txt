@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.12.1
+Stable tag: 1.12.2
 Requires at least: 5.6  
 Tested up to: 7.0  
 Requires PHP: 8.0  
@@ -120,6 +120,12 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.12.2 =
+* Changed: Replaced row-level freshness checks with a revision-based snapshot protocol for IndexedDB cache hydration
+* Changed: Added a dedicated JS catalog boundary so startup no longer coordinates cache invalidation and REST refill directly
+* Fixed: REST responses now echo the cache revision so hydration can detect cross-runtime mismatches during batched loads
+* Added: Boundary-focused tests covering cache reuse, stale refresh, hydration failures, and revision mismatches
 
 = 1.12.1 =
 * Fixed: Menu sometimes not loading after a REST API error — partial data is cleared and the next page load retries automatically
