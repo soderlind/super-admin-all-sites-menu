@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+### 1.12.3
+
+#### Fixed
+
+- Removed last indirect `switch_to_blog()` path — siteurl fallback now derives URL from `$site->domain` + `$site->path` instead of accessing `$site->siteurl` (which triggers `WP_Site::get_details()`)
+
 ### 1.12.2
 
 #### Changed

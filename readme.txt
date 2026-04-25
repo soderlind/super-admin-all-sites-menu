@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.12.2
+Stable tag: 1.12.3
 Requires at least: 5.6  
 Tested up to: 7.0  
 Requires PHP: 8.0  
@@ -120,6 +120,9 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.12.3 =
+* Fixed: Removed last indirect `switch_to_blog()` path — siteurl fallback now derives URL from `$site->domain` + `$site->path` instead of accessing `$site->siteurl` (which triggers `WP_Site::get_details()`)
 
 = 1.12.2 =
 * Changed: Replaced row-level freshness checks with a revision-based snapshot protocol for IndexedDB cache hydration
