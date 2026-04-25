@@ -157,20 +157,20 @@ Try it in [WordPress Playground](https://playground.wordpress.net/?blueprint-url
 PHP (server)                        JS (browser)
 ─────────────                       ────────────
 get_revision() ──inline_script──▶   pluginAllSitesMenu.revision
-                                 │
+                                   │
                         Compare with snapshot metadata revision
-                                 │
+                                   │
                         ┌──────────┴──────────┐
-                        │ mismatch             │ match
-                        ▼                      ▼
+                        │ mismatch            │ match
+                        ▼                     ▼
                     Clear DB              Use cached snapshot
-                        │                      │
-                        ▼                      │
-                REST /sites?offset=0             │
-                REST /sites?offset=100           │
-                …(batched)                       │
-                        │                      │
-                        ▼                      ▼
+                        │                     │
+                        ▼                     │
+                REST /sites?offset=0          │
+                REST /sites?offset=100        │
+                …(batched)                    │
+                        │                     │
+                        ▼                     ▼
                     Store in IndexedDB ──▶ Render menu
 ```
 
