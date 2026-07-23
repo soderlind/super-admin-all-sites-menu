@@ -1,5 +1,5 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.12.3
+Stable tag: 1.12.4
 Requires at least: 5.6  
 Tested up to: 7.0  
 Requires PHP: 8.0  
@@ -120,6 +120,9 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.12.4 =
+* Fixed: Compatibility with WordPress MU Domain Mapping plugin — site URLs and name fallbacks now use the mapped domain instead of the original subdomain, restoring behaviour that regressed in 1.11.0
 
 = 1.12.3 =
 * Fixed: Removed last indirect `switch_to_blog()` path — siteurl fallback now derives URL from `$site->domain` + `$site->path` instead of accessing `$site->siteurl` (which triggers `WP_Site::get_details()`)

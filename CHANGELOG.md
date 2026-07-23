@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+### 1.12.4
+
+#### Fixed
+
+- Fixed compatibility with WordPress MU Domain Mapping plugin — site URLs and name fallbacks now use the mapped domain instead of the original subdomain, restoring behaviour that regressed in 1.11.0
+
 ### 1.12.3
 
 #### Fixed

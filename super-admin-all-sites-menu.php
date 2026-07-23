@@ -12,7 +12,7 @@
  * Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * GitHub Plugin URI: https://github.com/soderlind/super-admin-all-sites-menu
  * Description: For the super admin, replace WP Admin Bar My Sites menu with an All Sites menu.
- * Version:     1.12.3
+ * Version:     1.12.4
  * Author:      Per Soderlind
  * Network:     true
  * Author URI:  https://soderlind.no
@@ -556,7 +556,60 @@ final class SuperAdminAllSitesMenu {
 			$options[ (int) $row->blog_id ][ $row->option_name ] = $row->option_value;
 		}
 
+		// Override siteurl with the mapped domain when WordPress MU Domain Mapping is active.
+		$blog_ids    = array_map( fn( $site ) => (int) $site->blog_id, $sites );
+		$dm_mappings = $this->get_mu_domain_mappings( $blog_ids );
+		foreach ( $dm_mappings as $blog_id => $mapped_url ) {
+			$options[ $blog_id ][ 'siteurl' ] = $mapped_url;
+		}
+
 		return $options;
+	}
+
+	/**
+	 * Fetch active domain mappings from wp_domain_mapping for the given blog IDs.
+	 *
+	 * Supports the WordPress MU Domain Mapping plugin (0.5.x by Donncha O Caoimh).
+	 * That plugin stores mapped domains in a separate wp_domain_mapping table and
+	 * only overrides siteurl/home at runtime via pre_option filters. Because
+	 * batch_get_site_options reads the DB directly (bypassing those filters), the
+	 * original subdomain URL would otherwise be used instead of the mapped domain.
+	 *
+	 * Returns an empty array when the plugin is not active.
+	 *
+	 * @param int[] $blog_ids Blog IDs to look up.
+	 * @return array<int, string> Scheme + mapped domain URL keyed by blog_id.
+	 */
+	private function get_mu_domain_mappings( array $blog_ids ): array {
+		if ( [] === $blog_ids ) {
+			return [];
+		}
+
+		// The domain_mapping_siteurl() function is defined by the MU Domain Mapping
+		// plugin (0.5.x). Checking function_exists() is more reliable than SHOW TABLES
+		// because it confirms the plugin is actually loaded, not just that a table
+		// exists from a previous install.
+		if ( ! function_exists( 'domain_mapping_siteurl' ) ) {
+			return [];
+		}
+
+		global $wpdb;
+
+		$dm_table = $wpdb->base_prefix . 'domain_mapping';
+		$ids      = implode( ',', array_map( 'intval', $blog_ids ) );
+		$scheme   = is_ssl() ? 'https' : 'http';
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name from base_prefix, IDs cast to int via intval.
+		$rows = $wpdb->get_results(
+			"SELECT blog_id, domain FROM {$dm_table} WHERE blog_id IN ({$ids}) AND active = 1"
+		);
+
+		$mappings = [];
+		foreach ( (array) $rows as $row ) {
+			$mappings[ (int) $row->blog_id ] = $scheme . '://' . $row->domain;
+		}
+
+		return $mappings;
 	}
 
 	/**
