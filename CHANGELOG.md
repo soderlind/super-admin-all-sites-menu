@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### 1.12.5
+
+#### Changed
+
+- Menu links now point to the subsite URL instead of the domain-mapped site (removed the WordPress MU Domain Mapping override)
+- Tested up to WordPress 7.1
+
 ### 1.12.4
 
 #### Fixed
