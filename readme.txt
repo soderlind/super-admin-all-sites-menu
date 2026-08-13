@@ -1,7 +1,7 @@
 === Super Admin All Sites Menu ===
-Stable tag: 1.12.4
+Stable tag: 1.12.5
 Requires at least: 5.6  
-Tested up to: 7.0  
+Tested up to: 7.1  
 Requires PHP: 8.0  
 License: GPL v2 or later  
 Tags: superadmin, multisite, management  
@@ -120,6 +120,10 @@ You can use the following filters to override the defaults:
 2. Menu data are stored locally in IndexedDB.
 
 == Changelog ==
+
+= 1.12.5 =
+* Changed: Menu links now point to the subsite URL instead of the domain-mapped site (removed the WordPress MU Domain Mapping override)
+* Changed: Tested up to WordPress 7.1
 
 = 1.12.4 =
 * Fixed: Compatibility with WordPress MU Domain Mapping plugin — site URLs and name fallbacks now use the mapped domain instead of the original subdomain, restoring behaviour that regressed in 1.11.0
